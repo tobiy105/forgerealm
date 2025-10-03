@@ -1,6 +1,6 @@
 export default function Partners() {
     return (
-      <section
+      <div
         aria-label="Trusted by"
         className="py-10 border-y border-white/10 bg-white/5 backdrop-blur"
       >
@@ -20,7 +20,7 @@ export default function Partners() {
             </div>
           </div>
         </div>
-      </section>
+      </div>
     );
   }
   

@@ -38,7 +38,7 @@ body {
   display: none;
 }
 
-section {
+/* section {
   min-width: 100vw;
   min-height: 100vh;
   display: flex;
@@ -46,4 +46,13 @@ section {
   justify-content: center;
   flex-direction: column;
   padding: 2rem;
+} */
+
+.hero-spline {
+  position: absolute !important;
+  top: 0;
+  left: 0;
+  width: 100vw !important;
+  height: 100vh !important;
+  object-fit: cover;
 }
