@@ -43,7 +43,7 @@ export default function Hero() {
           <div className="relative inline-block">
             <span className="absolute -inset-1 bg-gradient-to-r from-blue-500 to-indigo-600 blur-xl opacity-40 rounded-lg hidden lg:block" />
             <h1 className="relative font-display text-5xl sm:text-6xl lg:text-7xl font-extrabold text-white tracking-tight">
-              Flash<span className="text-blue-400">Realm</span>
+              Forge<span className="text-blue-400">Realm</span>
             </h1>
           </div>
           <p className="mt-4 text-xl text-blue-200 hidden lg:block">

@@ -10,7 +10,7 @@ export default function Services() {
               Our Services
             </h2>
             <p className="mt-3 text-white/70">
-              FlashRealm is a UK-based business offering unique, customisable 3D-printed products. You can order online, contact us for bespoke prints, or visit us at our pop-up stalls and booths around Leeds.
+              ForgeRealm is a UK-based business offering unique, customisable 3D-printed products. You can order online, contact us for bespoke prints, or visit us at our pop-up stalls and booths around Leeds.
             </p>
           </div>
           <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">

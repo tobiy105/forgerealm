@@ -23,7 +23,7 @@ export default function Navbar() {
           {/* Logo */}
           <a href="#" className="inline-flex items-center">
             <span className="font-extrabold tracking-widest text-sm font-display text-white uppercase">
-              FLASH<span className="text-black">REALM</span>
+              Forge<span className="text-black">REALM</span>
             </span>
           </a>
 
