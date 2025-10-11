@@ -42,7 +42,7 @@ export default function Hero() {
       <div className="relative grid grid-cols-1 lg:grid-cols-2 items-center max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 py-24 lg:py-32 gap-16 lg:gap-20">
         {/* Left Side Content */}
         <div>
-          {/* Brand Row: Logo + Title (logo on LEFT) */}
+          {/* Brand Row: Logo + Title */}
           <div className="flex items-center gap-6 mb-2 justify-center lg:justify-start">
             <Image
               src="/notitlefrwatermark.png"
@@ -53,7 +53,6 @@ export default function Hero() {
               priority
             />
             <div className="relative inline-block">
-              {/* Glow visible on all viewports */}
               <span className="absolute -inset-1 bg-gradient-to-r from-blue-500 to-indigo-600 blur-xl opacity-40 rounded-lg block" />
               <h1 className="relative font-display text-4xl sm:text-5xl lg:text-7xl font-extrabold text-white tracking-tight">
                 Forge<span className="text-blue-400">Realm</span>
@@ -80,18 +79,33 @@ export default function Hero() {
             transition={{ duration: 0.8, ease: "easeOut" }}
             className="mt-10 flex flex-wrap justify-center lg:justify-start gap-4"
           >
+            {/* Explore Models */}
             <a
               href="#shop"
-              className="px-4 py-2 rounded-full bg-gradient-to-r from-blue-500 to-indigo-600 text-white font-semibold text-sm uppercase tracking-wide hover:scale-105 hover:shadow-[0_0_20px_rgba(96,165,250,0.7)] transition-all duration-200"
+              className="flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-blue-500 to-indigo-600 text-white font-semibold text-sm uppercase tracking-wide hover:scale-105 hover:shadow-[0_0_20px_rgba(96,165,250,0.7)] transition-all duration-200"
             >
+              <Image
+                src="/explore.gif"
+                alt="Explore Icon"
+                width={24}
+                height={24}
+                className="inline-block"
+              />
               Explore Models
             </a>
 
-            {/* Yellow Standout Button */}
+            {/* Learn More */}
             <a
               href="#about"
-              className="px-4 py-2 rounded-full border border-white text-white font-semibold text-sm uppercase tracking-wide bg-gradient-to-r from-yellow-400 to-amber-500 hover:from-yellow-300 hover:to-yellow-500 hover:scale-105 hover:shadow-[0_0_25px_rgba(255,255,255,0.6)] transition-all duration-200"
+              className="flex items-center gap-2 px-4 py-2 rounded-full border border-white text-white font-semibold text-sm uppercase tracking-wide bg-gradient-to-r from-yellow-400 to-amber-500 hover:from-yellow-300 hover:to-yellow-500 hover:scale-105 hover:shadow-[0_0_25px_rgba(255,255,255,0.6)] transition-all duration-200"
             >
+              <Image
+                src="/learn.gif"
+                alt="Learn Icon"
+                width={24}
+                height={24}
+                className="inline-block"
+              />
               Learn More
             </a>
           </motion.div>

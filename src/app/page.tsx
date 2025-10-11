@@ -4,10 +4,10 @@ import Partners from "@/components/Partners";
 import Services from "@/components/Services";
 import Materials from "@/components/Materials";
 import Work from "@/components/Work";
-import Process from "@/components/Process";
-import Pricing from "@/components/Pricing";
+// import Process from "@/components/Process";
+// import Pricing from "@/components/Pricing";
 import Testimonials from "@/components/Testimonials";
-import QuoteForm from "@/components/QuoteForm";
+// import QuoteForm from "@/components/QuoteForm";
 import Faq from "@/components/Faq";
 import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
@@ -21,10 +21,10 @@ export default function Home() {
       <Services />
       <Materials />
       <Work />
-      <Process />
-      <Pricing />
+      {/* <Process />
+      <Pricing /> */}
       <Testimonials />
-      <QuoteForm />
+      {/* <QuoteForm /> */}
       <Faq />
       <Contact />
       <Footer />
