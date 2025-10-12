@@ -37,7 +37,7 @@ export default function Materials() {
           variants={fadeUp}
           initial="hidden"
           animate={inView ? "visible" : "hidden"}
-          className="max-w-2xl flex items-center gap-3"
+          className="max-w-2xl flex items-center"
         >
           <h2 className="font-display text-3xl sm:text-4xl font-extrabold text-white whitespace-nowrap">
             Materials
@@ -53,7 +53,7 @@ export default function Materials() {
               alt="Materials Animation"
               width={56}
               height={56}
-              className="w-10 sm:w-14 h-auto opacity-90 drop-shadow-[0_0_14px_rgba(99,102,241,0.6)]"
+              className="mt-3 w-10 sm:w-14 h-auto opacity-90 drop-shadow-[0_0_14px_rgba(99,102,241,0.6)]"
               priority
             />
           </motion.div>

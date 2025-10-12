@@ -22,11 +22,11 @@ export default function Footer() {
           <div>
             <div className="inline-flex items-center gap-3">
               <Image
-                src="/fr.png"
+                src="/frhead.png"
                 alt="ForgeRealm Logo"
                 width={32}
                 height={32}
-                className="rounded-full border border-white/40"
+                className="rounded-full"
               />
               <span className="font-bold text-white text-lg tracking-wide">
                 ForgeRealm
