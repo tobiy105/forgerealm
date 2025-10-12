@@ -45,14 +45,14 @@ export default function Navbar() {
           </nav>
 
           {/* --- Desktop CTA: Blog --- */}
-          <div className="hidden sm:flex items-center">
+          {/* <div className="hidden sm:flex items-center">
             <a
               href="#blog"
               className="rounded-full bg-white px-5 py-1.5 text-xs font-bold uppercase tracking-wide text-blue-600 hover:bg-black hover:text-white transition-colors duration-200"
             >
               Blog
             </a>
-          </div>
+          </div> */}
 
           {/* --- Mobile Menu Toggle --- */}
           <button
