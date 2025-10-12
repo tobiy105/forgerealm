@@ -11,7 +11,6 @@ export default function Navbar() {
     ["Services", "#services"],
     ["Materials", "#materials"],
     ["Work", "#work"],
-    ["Pricing", "#pricing"],
     ["FAQ", "#faq"],
     ["Contact", "#contact"],
   ];
@@ -19,15 +18,15 @@ export default function Navbar() {
   return (
     <header className="fixed top-6 z-50 w-full flex justify-center">
       <div className="mx-auto max-w-7xl w-full px-4">
-        <div className="flex items-center justify-between px-8 py-2.5 rounded-full bg-gradient-to-r from-blue-500 to-indigo-600 shadow-lg">
-          {/* Logo */}
+        <div className="flex border border-white/60 items-center justify-between px-8 py-2.5 rounded-full bg-gradient-to-r from-blue-500 to-indigo-600 shadow-lg backdrop-blur-sm">
+          {/* --- Logo --- */}
           <a href="#" className="inline-flex items-center">
             <span className="font-extrabold tracking-widest text-sm font-display text-white uppercase">
               Forge<span className="text-black">REALM</span>
             </span>
           </a>
 
-          {/* Desktop Nav */}
+          {/* --- Desktop Navigation --- */}
           <nav className="hidden md:flex items-center gap-16 text-xs font-semibold uppercase tracking-wide">
             {navLinks.map(([label, href]) => (
               <a
@@ -40,17 +39,17 @@ export default function Navbar() {
             ))}
           </nav>
 
-          {/* Desktop CTA */}
+          {/* --- Desktop CTA: Blog --- */}
           <div className="hidden sm:flex items-center">
             <a
-              href="#quote"
+              href="#blog"
               className="rounded-full bg-white px-5 py-1.5 text-xs font-bold uppercase tracking-wide text-blue-600 hover:bg-black hover:text-white transition-colors duration-200"
             >
-              Instant Quote
+              Blog
             </a>
           </div>
 
-          {/* Mobile Menu Toggle */}
+          {/* --- Mobile Menu Toggle --- */}
           <button
             onClick={() => setOpen(true)}
             className="md:hidden text-white text-2xl"
@@ -61,11 +60,11 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* Mobile Drawer with Animation */}
+      {/* --- Mobile Drawer with Framer Motion --- */}
       <AnimatePresence>
         {open && (
           <>
-            {/* Overlay */}
+            {/* Background overlay */}
             <motion.div
               className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm"
               initial={{ opacity: 0 }}
@@ -75,7 +74,7 @@ export default function Navbar() {
               onClick={() => setOpen(false)}
             />
 
-            {/* Drawer */}
+            {/* Drawer menu */}
             <motion.div
               className="fixed right-0 top-0 bottom-0 z-50 w-64 bg-gradient-to-b from-blue-600 to-indigo-700 shadow-lg p-6 flex flex-col"
               initial={{ x: "100%" }}
@@ -83,7 +82,7 @@ export default function Navbar() {
               exit={{ x: "100%" }}
               transition={{ type: "tween", duration: 0.3 }}
             >
-              {/* Close Button */}
+              {/* Close button */}
               <button
                 onClick={() => setOpen(false)}
                 className="self-end text-white text-2xl mb-6"
@@ -92,7 +91,7 @@ export default function Navbar() {
                 <HiX />
               </button>
 
-              {/* Links */}
+              {/* Navigation links */}
               <nav className="flex flex-col gap-6 text-sm font-semibold uppercase tracking-wide text-white">
                 {navLinks.map(([label, href]) => (
                   <a
@@ -109,13 +108,13 @@ export default function Navbar() {
               {/* Divider */}
               <div className="my-6 border-t border-white/20" />
 
-              {/* CTA in Drawer */}
+              {/* Blog button inside drawer */}
               <a
-                href="#quote"
+                href="#blog"
                 className="rounded-full bg-white px-5 py-2 text-xs font-bold uppercase tracking-wide text-blue-600 hover:bg-black hover:text-white transition-colors duration-200 text-center"
                 onClick={() => setOpen(false)}
               >
-                Instant Quote
+                Blog
               </a>
             </motion.div>
           </>
