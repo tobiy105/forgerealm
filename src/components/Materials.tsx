@@ -1,78 +1,176 @@
+"use client";
+
+import Image from "next/image";
+import { motion, useInView } from "framer-motion";
+import { useRef } from "react";
+
 export default function Materials() {
+  const ref = useRef(null);
+  const inView = useInView(ref, { once: true, margin: "-100px" });
+
+  const fadeUp = {
+    hidden: { opacity: 0, y: 40 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.8, ease: "easeOut" },
+    },
+  } as const;
+
   return (
     <section
       id="materials"
-      className="relative py-24 bg-[linear-gradient(315deg,_#0b0b0e_0%,_#101018_40%,_#6366f1_40%,_#3b82f6_100%)]"
+      className="relative py-24 bg-[linear-gradient(315deg,_#0b0b0e_0%,_#101018_40%,_#6366f1_40%,_#3b82f6_100%)] overflow-hidden"
     >
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        {/* Header */}
-        <div className="max-w-2xl">
-          <h2 className="font-display text-3xl sm:text-4xl font-extrabold text-white">
-            Materials &amp; Filaments
+      {/* Subtle background lights */}
+      <div className="absolute inset-0 -z-10">
+        <div className="absolute left-1/3 top-1/4 h-72 w-72 rounded-full bg-blue-500/20 blur-[120px]" />
+        <div className="absolute right-1/4 bottom-1/4 h-72 w-72 rounded-full bg-indigo-500/20 blur-[120px]" />
+      </div>
+
+      <div
+        ref={ref}
+        className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative"
+      >
+        {/* Header with floating GIF */}
+        <motion.div
+          variants={fadeUp}
+          initial="hidden"
+          animate={inView ? "visible" : "hidden"}
+          className="max-w-2xl flex items-center gap-3"
+        >
+          <h2 className="font-display text-3xl sm:text-4xl font-extrabold text-white whitespace-nowrap">
+            Materials
           </h2>
-          <p className="mt-3 text-white/70">
-            We offer the following filaments for 3D printing:
-          </p>
-        </div>
+          <motion.div
+            initial={{ y: 0 }}
+            animate={{ y: [0, -5, 0] }}
+            transition={{ repeat: Infinity, duration: 3, ease: "easeInOut" }}
+            className="relative flex-shrink-0"
+          >
+            <Image
+              src="/material.gif"
+              alt="Materials Animation"
+              width={56}
+              height={56}
+              className="w-10 sm:w-14 h-auto opacity-90 drop-shadow-[0_0_14px_rgba(99,102,241,0.6)]"
+              priority
+            />
+          </motion.div>
+        </motion.div>
+
+        <motion.p
+          variants={fadeUp}
+          initial="hidden"
+          animate={inView ? "visible" : "hidden"}
+          transition={{ delay: 0.1 }}
+          className="mt-3 text-white/70 max-w-xl"
+        >
+          We offer the following filaments for 3D printing:
+        </motion.p>
 
         {/* Grid */}
         <div className="mt-12 grid gap-8 sm:grid-cols-1 lg:grid-cols-2">
-          {/* PLA */}
-          <div className="group relative overflow-hidden rounded-3xl border border-white/10 bg-white/5 p-8 backdrop-blur-xl transition-all hover:border-blue-400 hover:bg-white/10 hover:shadow-[0_0_25px_-5px_rgba(59,130,246,0.3)]">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold text-white">PLA</h3>
-              <span className="text-xs rounded-full border border-green-400/50 bg-green-400/10 px-2 py-0.5 text-green-400">
-                Eco-friendly
-              </span>
-            </div>
-            <p className="text-sm text-white/70 leading-relaxed">
-              Biodegradable and made from renewable resources. Our main filament, eco-friendly, safe, and perfect for customisation.
-            </p>
+          {[
+            {
+              title: "PLA",
+              label: "Eco-friendly",
+              labelColor: "text-green-400 border-green-400/50 bg-green-400/10",
+              points: [
+                "Biodegradable and sustainable",
+                "Renewable and low impact",
+              ],
+              colorDot: "bg-green-400",
+              desc: "Biodegradable and made from renewable resources. Our main filament, eco-friendly, safe, and perfect for customisation.",
+            },
+            {
+              title: "PETG",
+              label: "Recyclable",
+              labelColor: "text-blue-400 border-blue-400/50 bg-blue-400/10",
+              points: [
+                "Durable and flexible structure",
+                "Ideal for high-stress parts",
+              ],
+              colorDot: "bg-blue-400",
+              desc: "Recyclable and durable. A strong, flexible option for prints needing extra toughness.",
+            },
+          ].map((item, i) => (
+            <motion.div
+              key={i}
+              variants={fadeUp}
+              initial="hidden"
+              animate={inView ? "visible" : "hidden"}
+              transition={{
+                delay: 0.15 + i * 0.15,
+                duration: 0.8,
+                ease: "easeOut",
+              }}
+              className="group relative overflow-hidden rounded-3xl border border-white/20 bg-white/10 p-8 backdrop-blur-xl transition-all hover:border-blue-400 hover:bg-white/15 hover:shadow-[0_0_25px_-5px_rgba(59,130,246,0.3)]"
+            >
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-lg font-semibold text-white">
+                  {item.title}
+                </h3>
+                <span
+                  className={`text-xs rounded-full border px-2 py-0.5 ${item.labelColor}`}
+                >
+                  {item.label}
+                </span>
+              </div>
+              <p className="text-sm text-white/70 leading-relaxed">
+                {item.desc}
+              </p>
 
-            <ul className="mt-5 space-y-2 text-sm text-white/70">
-              <li className="flex items-start gap-2">
-                <span className="mt-1 h-1.5 w-1.5 rounded-full bg-green-400 flex-shrink-0" />
-                <span>Biodegradable and sustainable</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <span className="mt-1 h-1.5 w-1.5 rounded-full bg-green-400 flex-shrink-0" />
-                <span>Renewable and low impact</span>
-              </li>
-            </ul>
-          </div>
-
-          {/* PETG */}
-          <div className="group relative overflow-hidden rounded-3xl border border-white/10 bg-white/5 p-8 backdrop-blur-xl transition-all hover:border-blue-400 hover:bg-white/10 hover:shadow-[0_0_25px_-5px_rgba(59,130,246,0.3)]">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold text-white">PETG</h3>
-              <span className="text-xs rounded-full border border-blue-400/50 bg-blue-400/10 px-2 py-0.5 text-blue-400">
-                Recyclable
-              </span>
-            </div>
-            <p className="text-sm text-white/70 leading-relaxed">
-              Recyclable and durable. A strong, flexible option for prints needing extra toughness.
-            </p>
-
-            <ul className="mt-5 space-y-2 text-sm text-white/70">
-              <li className="flex items-start gap-2">
-                <span className="mt-1 h-1.5 w-1.5 rounded-full bg-blue-400 flex-shrink-0" />
-                <span>Durable and flexible structure</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <span className="mt-1 h-1.5 w-1.5 rounded-full bg-blue-400 flex-shrink-0" />
-                <span>Ideal for high-stress parts</span>
-              </li>
-            </ul>
-          </div>
+              <ul className="mt-5 space-y-2 text-sm text-white/70">
+                {item.points.map((p, idx) => (
+                  <li key={idx} className="flex items-start gap-2">
+                    <span
+                      className={`mt-1 h-1.5 w-1.5 rounded-full ${item.colorDot} flex-shrink-0`}
+                    />
+                    <span>{p}</span>
+                  </li>
+                ))}
+              </ul>
+            </motion.div>
+          ))}
         </div>
 
-        {/* Footer note */}
-        <div className="max-w-2xl mt-12">
-          <p className="text-white/60 text-sm">
-            We focus on sustainable materials. More filament types and resin printing coming soon.
-          </p>
-        </div>
+        {/* Footer capsule */}
+        <motion.div
+          variants={fadeUp}
+          initial="hidden"
+          animate={inView ? "visible" : "hidden"}
+          transition={{ delay: 0.5 }}
+          className="max-w-2xl mt-12"
+        >
+          <motion.div
+            whileHover={{ scale: 1.03 }}
+            transition={{ duration: 0.3 }}
+            className="inline-block px-5 py-2 rounded-lg bg-gradient-to-r from-emerald-900 to-emerald-800 text-white text-sm font-semibold shadow-[0_0_20px_-5px_rgba(16,185,129,0.3)]"
+          >
+            We focus on sustainable materials. More filament types and resin
+            printing coming soon.
+          </motion.div>
+        </motion.div>
       </div>
+
+      {/* Float animation keyframes */}
+      <style jsx>{`
+        @keyframes float {
+          0% {
+            transform: translateY(0);
+          }
+          50% {
+            transform: translateY(-6px);
+          }
+          100% {
+            transform: translateY(0);
+          }
+        }
+        .animate-float {
+          animation: float 3s ease-in-out infinite;
+        }
+      `}</style>
     </section>
   );
 }

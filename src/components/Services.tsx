@@ -1,6 +1,31 @@
-import { FaShoppingCart, FaCogs, FaStore, FaInstagram, FaFacebook, FaTwitter } from "react-icons/fa";
+"use client";
+
+import Image from "next/image";
+import { motion, useInView } from "framer-motion";
+import { useRef } from "react";
+import {
+  FaShoppingCart,
+  FaCogs,
+  FaStore,
+  FaInstagram,
+  FaFacebook,
+  FaTwitter,
+} from "react-icons/fa";
 
 export default function Services() {
+  const ref = useRef(null);
+  const inView = useInView(ref, { once: true, margin: "-100px" });
+
+  // ✅ Define type-safe variants
+  const fadeUp = {
+    hidden: { opacity: 0, y: 40 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.8, ease: "easeOut" },
+    },
+  } as const;
+
   return (
     <section
       id="services"
@@ -12,72 +37,133 @@ export default function Services() {
         <div className="absolute right-1/4 bottom-1/3 h-72 w-72 rounded-full bg-indigo-500/20 blur-[120px]" />
       </div>
 
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative">
-        {/* Header */}
-        <div className="max-w-2xl">
-          <h2 className="font-display text-3xl sm:text-4xl font-extrabold text-white">
+      <div
+        ref={ref}
+        className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative"
+      >
+        {/* Header with GIF */}
+        <motion.div
+          variants={fadeUp}
+          initial="hidden"
+          animate={inView ? "visible" : "hidden"}
+          transition={{ duration: 0.8 }}
+          className="max-w-2xl flex items-center gap-4"
+        >
+          <h2 className="font-display text-3xl sm:text-4xl font-extrabold text-white flex items-center">
             Our Services
           </h2>
-          <p className="mt-3 text-white/70">
-            ForgeRealm is a UK-based business offering unique, customisable 3D-printed products. You can order online, contact us for bespoke prints, or visit us at our pop-up stalls and booths around Leeds.
-          </p>
-        </div>
+          <motion.div
+            initial={{ rotate: 0 }}
+            animate={{ rotate: [0, 5, -5, 0] }}
+            transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
+          >
+            <Image
+              src="/services.gif"
+              alt="Services Animation"
+              width={56}
+              height={56}
+              className="w-10 sm:w-14 h-auto opacity-90 drop-shadow-[0_0_12px_rgba(99,102,241,0.6)]"
+              priority
+            />
+          </motion.div>
+        </motion.div>
+
+        <motion.p
+          variants={fadeUp}
+          initial="hidden"
+          animate={inView ? "visible" : "hidden"}
+          transition={{ delay: 0.15, duration: 0.8 }}
+          className="mt-3 text-white/70 max-w-2xl"
+        >
+          ForgeRealm is a UK-based business offering unique, customisable
+          3D-printed products. You can order online, contact us for bespoke
+          prints, or visit us at our pop-up stalls and booths around Leeds.
+        </motion.p>
 
         {/* Service grid */}
         <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {/* Online Orders */}
-          <article className="rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-xl hover:bg-white/10 hover:border-blue-400 transition flex flex-col">
-            <div className="flex items-center gap-3 mb-2">
-              <FaShoppingCart className="text-blue-400 text-xl" />
-              <h3 className="text-lg font-semibold text-white">Order Online</h3>
-            </div>
-            <p className="mt-2 text-sm text-white/70">
-              Browse and buy our 3D-printed products directly from our website, or find us on Etsy, eBay, and Vinted.
-            </p>
-          </article>
-
-          {/* Custom Prints */}
-          <article className="rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-xl hover:bg-white/10 hover:border-blue-400 transition flex flex-col">
-            <div className="flex items-center gap-3 mb-2">
-              <FaCogs className="text-blue-400 text-xl" />
-              <h3 className="text-lg font-semibold text-white">Custom & Bespoke Prints</h3>
-            </div>
-            <p className="mt-2 text-sm text-white/70">
-              Contact us to discuss your ideas or request a personalised print.
-            </p>
-          </article>
-
-          {/* Leeds Stalls */}
-          <article className="rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-xl hover:bg-white/10 hover:border-blue-400 transition flex flex-col">
-            <div className="flex items-center gap-3 mb-2">
-              <FaStore className="text-blue-400 text-xl" />
-              <h3 className="text-lg font-semibold text-white">Leeds Booths & Stalls</h3>
-            </div>
-            <p className="mt-2 text-sm text-white/70">
-              Find us at local markets, fairs, and events across Leeds. Follow us on social media for updates on where we&apos;ll be next.
-            </p>
-          </article>
+          {[
+            {
+              icon: <FaShoppingCart className="text-blue-400 text-xl" />,
+              title: "Order Online",
+              text: "Browse and buy our 3D-printed products directly from our website, or find us on Etsy, eBay, and Vinted.",
+            },
+            {
+              icon: <FaCogs className="text-blue-400 text-xl" />,
+              title: "Custom & Bespoke Prints",
+              text: "Contact us to discuss your ideas or request a personalised print.",
+            },
+            {
+              icon: <FaStore className="text-blue-400 text-xl" />,
+              title: "Leeds Booths & Stalls",
+              text: "Find us at local markets, fairs, and events across Leeds. Follow us on social media for updates on where we’ll be next.",
+            },
+          ].map((service, i) => (
+            <motion.article
+              key={i}
+              variants={fadeUp}
+              initial="hidden"
+              animate={inView ? "visible" : "hidden"}
+              transition={{
+                delay: 0.2 + i * 0.1,
+                duration: 0.8,
+                ease: "easeOut",
+              }}
+              className="rounded-2xl border border-white/20 bg-white/10 p-6 backdrop-blur-xl hover:bg-white/10 hover:border-blue-400 transition flex flex-col"
+            >
+              <div className="flex items-center gap-3 mb-2">
+                {service.icon}
+                <h3 className="text-lg font-semibold text-white">
+                  {service.title}
+                </h3>
+              </div>
+              <p className="mt-2 text-sm text-white/70">{service.text}</p>
+            </motion.article>
+          ))}
         </div>
 
         {/* Follow us capsule */}
-        <div className="max-w-2xl mt-16 rounded-lg border border-white/10 bg-white/5 backdrop-blur-xl p-6 hover:bg-white/10 hover:border-blue-400 transition">
+        <motion.div
+          variants={fadeUp}
+          initial="hidden"
+          animate={inView ? "visible" : "hidden"}
+          transition={{ delay: 0.6, duration: 0.8 }}
+          className="max-w-2xl mt-16 rounded-lg border border-white/20 bg-white/10 backdrop-blur-xl p-6 hover:bg-white/10 hover:border-blue-400 transition"
+        >
           <p className="text-white/60 text-sm mb-4">
-            Follow us on Instagram and other socials for the latest news, stall locations, and new product launches. More services, including workshops and collaborations, coming soon!
+            Follow us on Instagram and other socials for the latest news, stall
+            locations, and new product launches. More services, including
+            workshops and collaborations, coming soon!
           </p>
 
           {/* Social icons */}
           <div className="flex items-center gap-4 text-white/70 mt-2">
-            <a href="#" aria-label="Instagram" className="hover:text-pink-400 transition">
+            <motion.a
+              whileHover={{ scale: 1.2 }}
+              href="#"
+              aria-label="Instagram"
+              className="hover:text-pink-400 transition"
+            >
               <FaInstagram className="text-lg" />
-            </a>
-            <a href="#" aria-label="Facebook" className="hover:text-blue-400 transition">
+            </motion.a>
+            <motion.a
+              whileHover={{ scale: 1.2 }}
+              href="#"
+              aria-label="Facebook"
+              className="hover:text-blue-400 transition"
+            >
               <FaFacebook className="text-lg" />
-            </a>
-            <a href="#" aria-label="Twitter" className="hover:text-sky-400 transition">
+            </motion.a>
+            <motion.a
+              whileHover={{ scale: 1.2 }}
+              href="#"
+              aria-label="Twitter"
+              className="hover:text-sky-400 transition"
+            >
               <FaTwitter className="text-lg" />
-            </a>
+            </motion.a>
           </div>
-        </div>
+        </motion.div>
       </div>
     </section>
   );
