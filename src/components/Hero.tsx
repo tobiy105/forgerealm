@@ -99,7 +99,7 @@ export default function Hero({ onLoadComplete }: HeroProps) {
       >
         {/* Left side */}
         <div>
-          <div className="flex items-center gap-6 mb-2 justify-center lg:justify-start">
+          <div className="flex items-center gap-6 mb-2 justify-center mt-4 lg:justify-start">
             <Image
               src="/notitlefrwatermark.png"
               alt="ForgeRealm Logo"
