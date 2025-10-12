@@ -1,6 +1,7 @@
 "use client";
 
-import { FaEnvelope, FaMapMarkerAlt, FaPhoneAlt, FaClock } from "react-icons/fa";
+import Image from "next/image";
+import { FaEnvelope, FaMapMarkerAlt, FaClock } from "react-icons/fa";
 
 export default function Contact() {
   return (
@@ -19,9 +20,23 @@ export default function Contact() {
         <div className="grid lg:grid-cols-2 gap-10 items-start">
           {/* Contact Info */}
           <div>
-            <h2 className="font-display text-3xl sm:text-4xl font-extrabold text-white">
-              Contact
-            </h2>
+            {/* Header with floating GIF */}
+            <div className="flex items-center">
+              <h2 className="font-display text-3xl sm:text-4xl font-extrabold text-white">
+                Contact
+              </h2>
+              <div className="relative animate-float flex-shrink-0 mt-1 sm:mt-1">
+                <Image
+                  src="/contact.gif"
+                  alt="Contact Animation"
+                  width={56}
+                  height={56}
+                  className="w-10 sm:w-14 h-auto opacity-90 drop-shadow-[0_0_14px_rgba(99,102,241,0.6)]"
+                  priority
+                />
+              </div>
+            </div>
+
             <p className="mt-3 text-white/70">
               Have a design, concept, or a project idea? Let’s talk.
             </p>
@@ -35,10 +50,6 @@ export default function Contact() {
                 <FaEnvelope className="text-blue-400" />
                 <span>forgerealmltd@gmail.com</span>
               </div>
-              {/* <div className="flex items-center gap-2">
-                <FaPhoneAlt className="text-blue-400" />
-                <span>+44 (0)11 111111</span>
-              </div> */}
             </div>
 
             <div className="mt-8 rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-xl hover:bg-white/10 hover:border-blue-400 transition">
@@ -68,10 +79,10 @@ export default function Contact() {
 
             <a href="mailto:forgerealmltd@gmail.com">
               <button className="relative inline-flex h-12 w-60 overflow-hidden rounded-lg p-[1px] focus:outline-none group">
-                {/* Animated border gradient */}
-                <span className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#6366f1_0%,#3b82f6_50%,#6366f1_100%)]" />
+                {/* Animated glowing ring */}
+                <span className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#ffffff_0%,#3b82f6_50%,#ffffff_100%)]" />
                 {/* Inner button */}
-                <span className="inline-flex h-full w-full items-center justify-center rounded-lg bg-[#0b0b0e] px-7 text-sm font-semibold text-white backdrop-blur-3xl transition group-hover:bg-[#101018] gap-2">
+                <span className="inline-flex h-full w-full items-center justify-center rounded-lg bg-[#0b0b0e] px-7 text-sm font-semibold text-white backdrop-blur-3xl transition group-hover:bg-[#101018] gap-2 border border-white/40">
                   Send an Email
                   <FaEnvelope className="text-blue-400" />
                 </span>
