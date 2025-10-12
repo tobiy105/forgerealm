@@ -122,9 +122,9 @@ export default function Work() {
                   light softly, giving a natural glow. Printed in precision
                   gradient PLA for strength and style.
                 </p>
-                <div className="inline-block rounded-full border border-fuchsia-500 bg-fuchsia-500/10 px-6 py-3 text-sm sm:text-base font-semibold text-fuchsia-300 transition hover:bg-fuchsia-500/30 cursor-pointer w-fit mx-auto md:mx-0">
+                {/* <div className="inline-block rounded-full border border-fuchsia-500 bg-fuchsia-500/10 px-6 py-3 text-sm sm:text-base font-semibold text-fuchsia-300 transition hover:bg-fuchsia-500/30 cursor-pointer w-fit mx-auto md:mx-0">
                   See project details →
-                </div>
+                </div> */}
               </div>
             </div>
           </div>
@@ -150,9 +150,9 @@ export default function Work() {
                 the feet to soft pink at the head. Inspired by the Leeds Coat of
                 Arms and Leeds United’s heritage.
               </p>
-              <div className="inline-block rounded-full border border-pink-400 bg-pink-400/10 px-4 py-2 text-sm font-semibold text-pink-300 transition group-hover:bg-pink-400/30">
+              {/* <div className="inline-block rounded-full border border-pink-400 bg-pink-400/10 px-4 py-2 text-sm font-semibold text-pink-300 transition group-hover:bg-pink-400/30">
                 Learn More →
-              </div>
+              </div> */}
             </div>
           </div>
 
@@ -173,9 +173,9 @@ export default function Work() {
                 A forest dragon printed in green PLA with tones that shift in
                 the light. The natural finish gives a lifelike, earthy feel.
               </p>
-              <div className="inline-block rounded-full border border-emerald-400 bg-emerald-400/10 px-4 py-2 text-sm font-semibold text-emerald-300 transition group-hover:bg-emerald-400/30">
+              {/* <div className="inline-block rounded-full border border-emerald-400 bg-emerald-400/10 px-4 py-2 text-sm font-semibold text-emerald-300 transition group-hover:bg-emerald-400/30">
                 Learn More →
-              </div>
+              </div> */}
             </div>
           </div>
 
@@ -196,9 +196,9 @@ export default function Work() {
                 A metallic blue dragon head built to hold a full set of D&D
                 dice. Compact, sleek, and printed in biodegradable PLA.
               </p>
-              <div className="inline-block rounded-full border border-sky-400 bg-sky-400/10 px-4 py-2 text-sm font-semibold text-sky-300 transition group-hover:bg-sky-400/30">
+              {/* <div className="inline-block rounded-full border border-sky-400 bg-sky-400/10 px-4 py-2 text-sm font-semibold text-sky-300 transition group-hover:bg-sky-400/30">
                 Learn More →
-              </div>
+              </div> */}
             </div>
           </div>
         </div>
