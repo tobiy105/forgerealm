@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { HiOutlineMenu, HiX } from "react-icons/hi";
-import { motion, AnimatePresence } from "framer-motion";
+import { AnimatePresence } from "framer-motion";
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
@@ -70,23 +70,13 @@ export default function Navbar() {
         {open && (
           <>
             {/* Background overlay */}
-            <motion.div
+            <div
               className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.2 }}
               onClick={() => setOpen(false)}
             />
 
             {/* Drawer menu */}
-            <motion.div
-              className="fixed right-0 top-0 bottom-0 z-50 w-64 bg-gradient-to-b from-blue-600 to-indigo-700 shadow-lg p-6 flex flex-col"
-              initial={{ x: "100%" }}
-              animate={{ x: 0 }}
-              exit={{ x: "100%" }}
-              transition={{ type: "tween", duration: 0.3 }}
-            >
+            <div className="fixed right-0 top-0 bottom-0 z-50 w-64 bg-gradient-to-b from-blue-600 to-indigo-700 shadow-lg p-6 flex flex-col">
               {/* Close button */}
               <button
                 onClick={() => setOpen(false)}
@@ -121,7 +111,7 @@ export default function Navbar() {
               >
                 Blog
               </a>
-            </motion.div>
+            </div>
           </>
         )}
       </AnimatePresence>
