@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { motion, AnimatePresence } from "framer-motion";
+import { AnimatePresence } from "framer-motion";
 import { useState } from "react";
 
 export default function Work() {
@@ -31,12 +31,7 @@ export default function Work() {
             <h2 className="font-display text-4xl sm:text-5xl font-extrabold text-white whitespace-nowrap">
               Recent Work
             </h2>
-            <motion.div
-              initial={{ y: 0 }}
-              animate={{ y: [0, -6, 0] }}
-              transition={{ repeat: Infinity, duration: 3, ease: "easeInOut" }}
-              className="mt-2 relative flex-shrink-0"
-            >
+            <div className="mt-2 relative flex-shrink-0">
               <Image
                 src="/work.gif"
                 alt="Work Animation"
@@ -45,7 +40,7 @@ export default function Work() {
                 className="w-10 sm:w-16 h-auto opacity-90 drop-shadow-[0_0_14px_rgba(236,72,153,0.6)]"
                 priority
               />
-            </motion.div>
+            </div>
           </div>
         </div>
 
@@ -67,17 +62,14 @@ export default function Work() {
           <div className="overflow-hidden rounded-[2rem] border border-white/10 bg-white/5 backdrop-blur-md hover:bg-white/10 transition-all duration-500 hover:shadow-[0_0_100px_-10px_rgba(99,102,241,0.5)]">
             <div className="grid grid-cols-1 md:grid-cols-2 items-stretch">
               {/* Image Carousel */}
-              <div className="relative overflow-hidden h-[60vh] sm:h-[70vh] md:h-[90vh] w-full">
+              <div className="relative overflow-hidden h-[50vh] sm:h-[60vh] md:h-[70vh] w-full">
                 <AnimatePresence mode="wait">
-                  <motion.img
+                  <img
                     key={index}
                     src={images[index]}
                     alt={`Aurora Bloom ${index + 1}`}
                     className="w-full h-full object-cover absolute top-0 left-0"
-                    initial={{ opacity: 0, scale: 1.05 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.95 }}
-                    transition={{ duration: 0.8, ease: "easeInOut" }}
+                    // static image, removed framer-motion animation
                   />
                 </AnimatePresence>
 
@@ -122,9 +114,6 @@ export default function Work() {
                   light softly, giving a natural glow. Printed in precision
                   gradient PLA for strength and style.
                 </p>
-                {/* <div className="inline-block rounded-full border border-fuchsia-500 bg-fuchsia-500/10 px-6 py-3 text-sm sm:text-base font-semibold text-fuchsia-300 transition hover:bg-fuchsia-500/30 cursor-pointer w-fit mx-auto md:mx-0">
-                  See project details →
-                </div> */}
               </div>
             </div>
           </div>
@@ -150,9 +139,6 @@ export default function Work() {
                 the feet to soft pink at the head. Inspired by the Leeds Coat of
                 Arms and Leeds United’s heritage.
               </p>
-              {/* <div className="inline-block rounded-full border border-pink-400 bg-pink-400/10 px-4 py-2 text-sm font-semibold text-pink-300 transition group-hover:bg-pink-400/30">
-                Learn More →
-              </div> */}
             </div>
           </div>
 
@@ -173,9 +159,6 @@ export default function Work() {
                 A forest dragon printed in green PLA with tones that shift in
                 the light. The natural finish gives a lifelike, earthy feel.
               </p>
-              {/* <div className="inline-block rounded-full border border-emerald-400 bg-emerald-400/10 px-4 py-2 text-sm font-semibold text-emerald-300 transition group-hover:bg-emerald-400/30">
-                Learn More →
-              </div> */}
             </div>
           </div>
 
@@ -196,15 +179,12 @@ export default function Work() {
                 A metallic blue dragon head built to hold a full set of D&D
                 dice. Compact, sleek, and printed in biodegradable PLA.
               </p>
-              {/* <div className="inline-block rounded-full border border-sky-400 bg-sky-400/10 px-4 py-2 text-sm font-semibold text-sky-300 transition group-hover:bg-sky-400/30">
-                Learn More →
-              </div> */}
             </div>
           </div>
         </div>
 
         {/* CTA */}
-        <div className="mt-24 sm:mt-32 text-center">
+        {/* <div className="mt-24 sm:mt-32 text-center">
           <p className="text-white/70 mb-4 text-sm sm:text-lg">
             Want to see more designs or behind-the-scenes prints?
           </p>
@@ -212,7 +192,19 @@ export default function Work() {
             href="#"
             className="inline-block rounded-full border border-blue-400 bg-blue-400/10 px-8 py-4 text-sm sm:text-base font-semibold text-blue-300 transition hover:bg-blue-400/30"
           >
-            View full gallery →
+            View full gallery → 
+          </a>
+        </div> */}
+        
+        <div className="mt-24 sm:mt-32 text-center">
+          <p className="text-white/70 mb-4 text-sm sm:text-lg">
+            More to come! Scroll back to the top to explore again.
+          </p>
+          <a
+            href="#homepage"
+            className="inline-block rounded-full border border-blue-400 bg-blue-400/10 px-8 py-4 text-sm sm:text-base font-semibold text-blue-300 transition hover:bg-blue-400/30"
+          >
+            Scroll back to top ↑
           </a>
         </div>
       </div>

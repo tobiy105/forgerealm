@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { AnimatePresence } from "framer-motion";
 
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
@@ -11,7 +11,7 @@ import Materials from "@/components/Materials";
 import Work from "@/components/Work";
 // import Process from "@/components/Process";
 // import Pricing from "@/components/Pricing";
-import Testimonials from "@/components/Testimonials";
+// import Testimonials from "@/components/Testimonials";
 // import QuoteForm from "@/components/QuoteForm";
 import Faq from "@/components/Faq";
 import Contact from "@/components/Contact";
@@ -32,11 +32,7 @@ export default function Home() {
       {/* AnimatePresence allows smooth fade-in when Hero completes loading */}
       <AnimatePresence>
         {heroLoaded && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 1.2, ease: "easeOut" }}
-          >
+          <div>
             {/* The rest of the site only appears once Hero’s preloader finishes */}
             <Partners />
             <Services />
@@ -44,12 +40,12 @@ export default function Home() {
             <Work />
             {/* <Process />
             <Pricing /> */}
-            <Testimonials />
+            {/* <Testimonials /> */}
             {/* <QuoteForm /> */}
             <Faq />
             <Contact />
             <Footer />
-          </motion.div>
+          </div>
         )}
       </AnimatePresence>
     </>

@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { FaEnvelope, FaMapMarkerAlt, FaClock } from "react-icons/fa";
+import { FaPhoneAlt } from "react-icons/fa"; // Add the phone icon import
 
 export default function Contact() {
   return (
@@ -50,6 +51,10 @@ export default function Contact() {
                 <FaEnvelope className="text-blue-400" />
                 <span>forgerealmltd@gmail.com</span>
               </div>
+              <div className="flex items-center gap-2">
+                <FaPhoneAlt className="text-blue-400" /> {/* Phone icon */}
+                <span>+44 (0) 7344 237800</span> {/* International format */}
+              </div>
             </div>
 
             <div className="mt-8 rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-xl hover:bg-white/10 hover:border-blue-400 transition">
@@ -90,7 +95,7 @@ export default function Contact() {
             </a>
 
             <p className="mt-6 text-xs text-white/60">
-              We usually respond within 24 hours on weekdays.
+              We usually respond within 24 hours on working days.
             </p>
           </div>
         </div>

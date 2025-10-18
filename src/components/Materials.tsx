@@ -1,21 +1,10 @@
 "use client";
 
 import Image from "next/image";
-import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
 
 export default function Materials() {
   const ref = useRef(null);
-  const inView = useInView(ref, { once: true, margin: "-100px" });
-
-  const fadeUp = {
-    hidden: { opacity: 0, y: 40 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.8, ease: "easeOut" },
-    },
-  } as const;
 
   return (
     <section
@@ -33,21 +22,11 @@ export default function Materials() {
         className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative"
       >
         {/* Header with floating GIF */}
-        <motion.div
-          variants={fadeUp}
-          initial="hidden"
-          animate={inView ? "visible" : "hidden"}
-          className="max-w-2xl flex items-center"
-        >
+        <div className="max-w-2xl flex items-center">
           <h2 className="font-display text-3xl sm:text-4xl font-extrabold text-white whitespace-nowrap">
             Materials
           </h2>
-          <motion.div
-            initial={{ y: 0 }}
-            animate={{ y: [0, -5, 0] }}
-            transition={{ repeat: Infinity, duration: 3, ease: "easeInOut" }}
-            className="relative flex-shrink-0"
-          >
+          <div className="relative flex-shrink-0">
             <Image
               src="/material.gif"
               alt="Materials Animation"
@@ -56,18 +35,12 @@ export default function Materials() {
               className="mt-3 w-10 sm:w-14 h-auto opacity-90 drop-shadow-[0_0_14px_rgba(99,102,241,0.6)]"
               priority
             />
-          </motion.div>
-        </motion.div>
+          </div>
+        </div>
 
-        <motion.p
-          variants={fadeUp}
-          initial="hidden"
-          animate={inView ? "visible" : "hidden"}
-          transition={{ delay: 0.1 }}
-          className="mt-3 text-white/70 max-w-xl"
-        >
+        <p className="mt-3 text-white/70 max-w-xl">
           We offer the following filaments for 3D printing:
-        </motion.p>
+        </p>
 
         {/* Grid */}
         <div className="mt-12 grid gap-8 sm:grid-cols-1 lg:grid-cols-2">
@@ -95,16 +68,8 @@ export default function Materials() {
               desc: "Recyclable and durable. A strong, flexible option for prints needing extra toughness.",
             },
           ].map((item, i) => (
-            <motion.div
+            <div
               key={i}
-              variants={fadeUp}
-              initial="hidden"
-              animate={inView ? "visible" : "hidden"}
-              transition={{
-                delay: 0.15 + i * 0.15,
-                duration: 0.8,
-                ease: "easeOut",
-              }}
               className="group relative overflow-hidden rounded-3xl border border-white/20 bg-white/10 p-8 backdrop-blur-xl transition-all hover:border-blue-400 hover:bg-white/15 hover:shadow-[0_0_25px_-5px_rgba(59,130,246,0.3)]"
             >
               <div className="flex items-center justify-between mb-4">
@@ -123,35 +88,25 @@ export default function Materials() {
 
               <ul className="mt-5 space-y-2 text-sm text-white/70">
                 {item.points.map((p, idx) => (
-                  <li key={idx} className="flex items-start gap-2">
+                  <li key={idx} className="flex items-center gap-3">
                     <span
-                      className={`mt-1 h-1.5 w-1.5 rounded-full ${item.colorDot} flex-shrink-0`}
+                      className={`h-2 w-2 rounded-full ${item.colorDot} flex-shrink-0`}
                     />
-                    <span>{p}</span>
+                    <span className="leading-snug">{p}</span>
                   </li>
                 ))}
               </ul>
-            </motion.div>
+            </div>
           ))}
         </div>
 
         {/* Footer capsule */}
-        <motion.div
-          variants={fadeUp}
-          initial="hidden"
-          animate={inView ? "visible" : "hidden"}
-          transition={{ delay: 0.5 }}
-          className="max-w-2xl mt-12"
-        >
-          <motion.div
-            whileHover={{ scale: 1.03 }}
-            transition={{ duration: 0.3 }}
-            className="inline-block px-5 py-2 rounded-lg bg-gradient-to-r from-emerald-900 to-emerald-800 text-white text-sm font-semibold shadow-[0_0_20px_-5px_rgba(16,185,129,0.3)]"
-          >
+        <div className="max-w-2xl mt-12">
+          <div className="inline-block px-5 py-2 rounded-lg bg-gradient-to-r from-emerald-900 to-emerald-800 text-white text-sm font-semibold shadow-[0_0_20px_-5px_rgba(16,185,129,0.3)]">
             We focus on sustainable materials. More filament types and resin
             printing coming soon.
-          </motion.div>
-        </motion.div>
+          </div>
+        </div>
       </div>
 
       {/* Float animation keyframes */}

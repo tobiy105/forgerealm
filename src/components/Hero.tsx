@@ -3,7 +3,7 @@
 import Spline from "@splinetool/react-spline";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
-import { motion, AnimatePresence, useInView } from "framer-motion";
+import { AnimatePresence } from "framer-motion";
 import { BsRocketTakeoff } from "react-icons/bs";
 import { FiStar } from "react-icons/fi";
 import { TbLeaf } from "react-icons/tb";
@@ -22,7 +22,6 @@ export default function Hero({ onLoadComplete }: HeroProps) {
   const [splineLoaded, setSplineLoaded] = useState(false);
   const widgetRef = useRef(null);
   const buttonsRef = useRef(null);
-  const buttonsInView = useInView(buttonsRef, { once: true, margin: "-100px" });
 
   useEffect(() => {
     const observer = new IntersectionObserver(([entry]) => {
@@ -40,10 +39,10 @@ export default function Hero({ onLoadComplete }: HeroProps) {
   };
 
   return (
-    <section className="relative min-h-screen overflow-hidden">
+    <section id="homepage" className="relative min-h-screen overflow-hidden">
       {/* Background */}
-      <div className="absolute inset-0 -z-20">
-        <Spline scene="/scene.splinecode" onLoad={handleSplineLoad} />
+      <div className="absolute inset-0 -z-20 flex items-center justify-center">
+        <Spline className="spline-scene" scene="/scene.splinecode" onLoad={handleSplineLoad} />
       </div>
 
       {/* Ambient lighting */}
@@ -56,14 +55,7 @@ export default function Hero({ onLoadComplete }: HeroProps) {
       {/* Preloader */}
       <AnimatePresence mode="wait">
         {!splineLoaded && (
-          <motion.div
-            key="preloader"
-            initial={{ opacity: 1 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.8, ease: "easeInOut" }}
-            className="absolute inset-0 bg-[#0b0b0e] flex flex-col items-center justify-center z-50"
-          >
+          <div className="absolute inset-0 bg-[#0b0b0e] flex flex-col items-center justify-center z-50">
             <div className="relative w-28 h-28 mb-6 flex items-center justify-center">
               <div className="absolute inset-0 rounded-full border-4 border-blue-500/20" />
               <div className="absolute inset-0 rounded-full border-t-4 border-blue-400 animate-spin-smooth" />
@@ -84,18 +76,14 @@ export default function Hero({ onLoadComplete }: HeroProps) {
             <div className="mt-4 h-1.5 w-40 bg-gradient-to-r from-blue-500 via-indigo-400 to-blue-500 rounded-full overflow-hidden">
               <div className="h-full w-1/3 bg-white/50 animate-shimmer" />
             </div>
-          </motion.div>
+          </div>
         )}
       </AnimatePresence>
 
       {/* Main Hero */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={splineLoaded ? { opacity: 1 } : { opacity: 0 }}
-        transition={{ duration: 1, ease: "easeOut" }}
-        className={`relative grid grid-cols-1 lg:grid-cols-2 items-center max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 py-24 lg:py-32 gap-16 lg:gap-20 transition-opacity duration-700 ${
-          splineLoaded ? "opacity-100" : "opacity-0"
-        }`}
+      <div
+        className={`relative grid grid-cols-1 lg:grid-cols-2 items-center max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 py-24 lg:py-32 gap-16 lg:gap-20 transition-opacity duration-700 ${splineLoaded ? "opacity-100" : "opacity-0"
+          }`}
       >
         {/* Left side */}
         <div>
@@ -126,41 +114,17 @@ export default function Hero({ onLoadComplete }: HeroProps) {
           </p>
 
           {/* Buttons */}
-          <motion.div
+          <div
             ref={buttonsRef}
-            initial={{ opacity: 0, y: 40 }}
-            animate={buttonsInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.8, ease: "easeOut" }}
-            className="mt-10 flex flex-wrap justify-center lg:justify-start gap-4"
+            className="mt-10 flex flex-wrap justify-center text-center lg:justify-start text-center gap-3"
           >
             <a
-              href="#shop"
-              className="flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-blue-500 to-indigo-600 text-white font-semibold text-sm uppercase tracking-wide hover:scale-105 hover:shadow-[0_0_20px_rgba(96,165,250,0.7)] transition-all duration-200"
+              href="#work"
+              className="items-center px-6 py-2 rounded-full bg-gradient-to-r from-blue-500 to-indigo-600 text-white font-semibold text-base sm:text-lg uppercase tracking-wide hover:scale-105 hover:shadow-[0_0_20px_rgba(96,165,250,0.7)] transition-all duration-200"
             >
-              <Image
-                src="/explore.gif"
-                alt="Explore Icon"
-                width={24}
-                height={24}
-                className="inline-block"
-              />
               Explore Models
             </a>
-
-            <a
-              href="#about"
-              className="flex items-center gap-2 px-4 py-2 rounded-full border border-white text-white font-semibold text-sm uppercase tracking-wide bg-gradient-to-r from-yellow-400 to-amber-500 hover:from-yellow-300 hover:to-yellow-500 hover:scale-105 hover:shadow-[0_0_25px_rgba(255,255,255,0.6)] transition-all duration-200"
-            >
-              <Image
-                src="/learn.gif"
-                alt="Learn Icon"
-                width={24}
-                height={24}
-                className="inline-block"
-              />
-              Learn More
-            </a>
-          </motion.div>
+          </div>
 
           {/* Tags */}
           <div className="hidden lg:flex gap-2 mt-10">
@@ -182,9 +146,8 @@ export default function Hero({ onLoadComplete }: HeroProps) {
         {/* Right side */}
         <div
           ref={widgetRef}
-          className={`hidden lg:flex flex-col gap-12 transition-all duration-700 ease-out ${
-            visible ? "translate-x-0 opacity-100" : "translate-x-20 opacity-0"
-          }`}
+          className={`hidden lg:flex flex-col gap-12 transition-all duration-700 ease-out ${visible ? "translate-x-0 opacity-100" : "translate-x-20 opacity-0"
+            }`}
         >
           <div className="flex items-start gap-4">
             <BsRocketTakeoff className="text-blue-400 text-3xl shrink-0" />
@@ -226,34 +189,7 @@ export default function Hero({ onLoadComplete }: HeroProps) {
             </div>
           </div>
         </div>
-      </motion.div>
-
-      {/* Animations */}
-      <style jsx>{`
-        @keyframes spin-smooth {
-          from { transform: rotate(0deg); }
-          to { transform: rotate(360deg); }
-        }
-        .animate-spin-smooth { animation: spin-smooth 2.2s linear infinite; }
-
-        @keyframes pulse-soft {
-          0%, 100% { opacity: 0.4; transform: scale(0.95); }
-          50% { opacity: 0.8; transform: scale(1); }
-        }
-        .animate-pulse-soft { animation: pulse-soft 2.5s ease-in-out infinite; }
-
-        @keyframes fade-glow {
-          0%, 100% { opacity: 0.7; filter: drop-shadow(0 0 10px rgba(96,165,250,0.4)); }
-          50% { opacity: 1; filter: drop-shadow(0 0 18px rgba(96,165,250,0.6)); }
-        }
-        .animate-fade-glow { animation: fade-glow 3s ease-in-out infinite; }
-
-        @keyframes shimmer {
-          0% { transform: translateX(-100%); }
-          100% { transform: translateX(300%); }
-        }
-        .animate-shimmer { animation: shimmer 1.8s linear infinite; }
-      `}</style>
+      </div>
     </section>
   );
 }
