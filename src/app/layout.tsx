@@ -104,7 +104,18 @@ export default function RootLayout({
   return (
     <html lang="en">
       {/* ✅ No manual preconnects — handled automatically by next/font */}
-      <head />
+      <head>
+        <Script src="/theme-init.js" strategy="beforeInteractive" />
+        {process.env.NEXT_PUBLIC_MAILCHIMP_MCJS_URL ? (
+          <Script
+            id="mcjs"
+            strategy="afterInteractive"
+            dangerouslySetInnerHTML={{
+              __html: `!function(c,h,i,m,p){m=c.createElement(h),p=c.getElementsByTagName(h)[0],m.async=1,m.src="${process.env.NEXT_PUBLIC_MAILCHIMP_MCJS_URL}",p.parentNode.insertBefore(m,p)}(document,"script");`,
+            }}
+          />
+        ) : null}
+      </head>
 
       {/* ✅ Hydration mismatch permanently suppressed here */}
       <body
@@ -155,12 +166,6 @@ export default function RootLayout({
         </Script>
 
         {/* ✅ External component loader */}
-        <Script
-          id="spline-viewer"
-          src="https://unpkg.com/@splinetool/viewer/build/spline-viewer.js"
-          type="module"
-          strategy="afterInteractive"
-        />
       </body>
     </html>
   );

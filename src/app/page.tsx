@@ -20,18 +20,20 @@ export default function Home() {
       <Navbar />
       {/* Keep Hero's own preloader, but do not block rest of content for LCP */}
       <Hero />
-      <Partners />
-      <Services />
-      <Materials />
-      <Work />
-      {/* <Process />
-      <Pricing /> */}
-      {/* <Testimonials /> */}
-      {/* <QuoteForm /> */}
-      <Faq />
-      <Contact />
+      {/* Theme scope: everything below can switch themes */}
+      <div id="theme-scope">
+        <Partners />
+        <Services />
+        <Materials />
+        <Work />
+        {/* <Process />
+        <Pricing /> */}
+        {/* <Testimonials /> */}
+        {/* <QuoteForm /> */}
+        <Faq />
+        <Contact />
+      </div>
       <Footer />
     </>
   );
 }
-

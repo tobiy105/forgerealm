@@ -20,7 +20,6 @@ export default function Testimonials() {
               width={56}
               height={56}
               className="w-10 sm:w-14 h-auto opacity-90 drop-shadow-[0_0_14px_rgba(96,165,250,0.6)]"
-              priority
             />
           </div>
         </div>
@@ -73,4 +72,3 @@ export default function Testimonials() {
     </section>
   );
 }
-

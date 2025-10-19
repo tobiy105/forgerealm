@@ -52,6 +52,7 @@ const nextConfig: NextConfig = {
 
   // ✅ Reduce build size (helps with F44)
   experimental: {
+    // Disable Critters-based CSS inlining to avoid missing 'critters' module in dev
     optimizeCss: true,
     optimizePackageImports: ["react-icons"],
   },

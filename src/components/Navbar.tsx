@@ -1,12 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
-import { HiOutlineMenu, HiX } from "react-icons/hi";
+import { HiOutlineMenu, HiX, HiOutlineMoon, HiOutlineSun } from "react-icons/hi";
 import { AnimatePresence } from "framer-motion";
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
+  const [theme, setTheme] = useState<"light" | "dark">("light");
 
   const navLinks = [
     ["Services", "#services"],
@@ -15,6 +16,23 @@ export default function Navbar() {
     ["FAQ", "#faq"],
     ["Contact", "#contact"],
   ];
+
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem("fr-theme") as "light" | "dark" | null;
+      const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+      const initial = saved || (prefersDark ? "dark" : "light");
+      setTheme(initial);
+      document.documentElement.setAttribute("data-theme", initial);
+    } catch {}
+  }, []);
+
+  const toggleTheme = () => {
+    const next = theme === "dark" ? "light" : "dark";
+    setTheme(next);
+    try { localStorage.setItem("fr-theme", next); } catch {}
+    document.documentElement.setAttribute("data-theme", next);
+  };
 
   return (
     <header className="fixed top-6 z-50 w-full flex justify-center">
@@ -48,15 +66,17 @@ export default function Navbar() {
             ))}
           </nav>
 
-          {/* --- Desktop CTA: Blog --- */}
-          {/* <div className="hidden sm:flex items-center">
-            <a
-              href="#blog"
-              className="rounded-full bg-white px-5 py-1.5 text-xs font-bold uppercase tracking-wide text-blue-600 hover:bg-black hover:text-white transition-colors duration-200"
+          {/* Theme toggle (desktop) */}
+          <div className="hidden sm:flex items-center">
+            <button
+              onClick={toggleTheme}
+              aria-label="Toggle theme"
+              title={theme === "dark" ? "Switch to light" : "Switch to dark"}
+              className="rounded-full bg-white/10 px-3 py-2 text-white hover:bg-white/20 transition-colors"
             >
-              Blog
-            </a>
-          </div> */}
+              {theme === "dark" ? <HiOutlineSun /> : <HiOutlineMoon />}
+            </button>
+          </div>
 
           {/* --- Mobile Menu Toggle --- */}
           <button
@@ -107,14 +127,14 @@ export default function Navbar() {
               {/* Divider */}
               <div className="my-6 border-t border-white/20" />
 
-              {/* Blog button inside drawer */}
-              <a
-                href="#blog"
+              {/* Theme toggle (mobile) */}
+              <button
+                onClick={() => { toggleTheme(); setOpen(false); }}
                 className="rounded-full bg-white px-5 py-2 text-xs font-bold uppercase tracking-wide text-blue-600 hover:bg-black hover:text-white transition-colors duration-200 text-center"
-                onClick={() => setOpen(false)}
+                aria-label="Toggle theme"
               >
-                Blog
-              </a>
+                {theme === "dark" ? "Light Mode" : "Dark Mode"}
+              </button>
             </div>
           </>
         )}
