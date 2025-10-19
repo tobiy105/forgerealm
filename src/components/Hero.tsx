@@ -1,8 +1,20 @@
 "use client";
 
-import Spline from "@splinetool/react-spline";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
+import type React from "react";
+
+// Type the custom element so refs and props are valid in TS
+declare global {
+  namespace JSX {
+    interface IntrinsicElements {
+      "spline-viewer": React.DetailedHTMLProps<
+        React.HTMLAttributes<HTMLElement>,
+        HTMLElement
+      > & { url?: string; loading?: string };
+    }
+  }
+}
 import { AnimatePresence } from "framer-motion";
 import { BsRocketTakeoff } from "react-icons/bs";
 import { FiStar } from "react-icons/fi";
@@ -20,8 +32,9 @@ interface HeroProps {
 export default function Hero({ onLoadComplete }: HeroProps) {
   const [visible, setVisible] = useState(false);
   const [splineLoaded, setSplineLoaded] = useState(false);
-  const widgetRef = useRef(null);
-  const buttonsRef = useRef(null);
+  const widgetRef = useRef<HTMLDivElement | null>(null);
+  const viewerRef = useRef<HTMLElement | null>(null);
+  const buttonsRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     const observer = new IntersectionObserver(([entry]) => {
@@ -31,19 +44,43 @@ export default function Hero({ onLoadComplete }: HeroProps) {
     return () => observer.disconnect();
   }, []);
 
-  const handleSplineLoad = () => {
-    setTimeout(() => {
+  useEffect(() => {
+    const el = viewerRef.current as unknown as HTMLElement | null;
+    const onLoad = () => {
       setSplineLoaded(true);
-      if (onLoadComplete) onLoadComplete();
-    }, 600);
-  };
+      onLoadComplete?.();
+    };
+    if (el) el.addEventListener("load", onLoad as EventListener);
+    const t = setTimeout(onLoad, 1500);
+    return () => {
+      if (el) el.removeEventListener("load", onLoad as EventListener);
+      clearTimeout(t);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <section id="homepage" className="relative min-h-screen overflow-hidden">
       {/* Background */}
       <div className="absolute inset-0 -z-20 flex items-center justify-center">
-        <Spline className="spline-scene" scene="/scene.splinecode" onLoad={handleSplineLoad} />
+        <spline-viewer
+          ref={viewerRef}
+          url="/scene.splinecode"
+          loading="lazy"
+          style={{ width: "100vw", height: "100vh" }}
+          className="spline-scene"
+        />
       </div>
+
+      {/* Subtle mask to cover Spline watermark (bottom-right) */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute right-0 bottom-0 z-0 h-20 w-32"
+        style={{
+          background:
+            "linear-gradient(135deg, rgba(11,11,14,0) 0%, rgba(11,11,14,0.6) 35%, rgba(11,11,14,0.9) 100%)",
+        }}
+      />
 
       {/* Ambient lighting */}
       <div className="hidden lg:block absolute inset-0 -z-10">
@@ -105,18 +142,17 @@ export default function Hero({ onLoadComplete }: HeroProps) {
           </div>
 
           <p className="mt-4 text-xl text-blue-200 text-center lg:text-left">
-            A creative hub for sleek, eco-friendly models.
+            A creative hub for sleek, sustainable 3D models.
           </p>
 
           <p className="mt-6 text-md sm:text-lg lg:text-xl text-gray-300 max-w-lg leading-relaxed text-center lg:text-left mx-auto lg:mx-0">
-            Eco-friendly models designed to bring your ideas into focus. Sleek
-            collectibles, modern accessories, and bold designs for everyday life.
+            Thoughtfully made pieces that bring your ideas into focus. Sleek collectibles, modern accessories, and bold designs for everyday life, crafted with planet‑friendly materials.
           </p>
 
           {/* Buttons */}
           <div
-            ref={buttonsRef}
-            className="mt-10 flex flex-wrap justify-center text-center lg:justify-start text-center gap-3"
+            ref={buttonsRef as React.RefObject<HTMLDivElement>}
+            className="mt-10 flex flex-wrap justify-center text-center lg:justify-start gap-3"
           >
             <a
               href="#work"
@@ -145,7 +181,7 @@ export default function Hero({ onLoadComplete }: HeroProps) {
 
         {/* Right side */}
         <div
-          ref={widgetRef}
+          ref={widgetRef as React.RefObject<HTMLDivElement>}
           className={`hidden lg:flex flex-col gap-12 transition-all duration-700 ease-out ${visible ? "translate-x-0 opacity-100" : "translate-x-20 opacity-0"
             }`}
         >
@@ -189,6 +225,14 @@ export default function Hero({ onLoadComplete }: HeroProps) {
             </div>
           </div>
         </div>
+      </div>
+
+      {/* Scroll cue */}
+      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 text-white/70 text-xs tracking-widest uppercase hidden sm:block">
+        <a href="#services" className="flex items-center gap-2 hover:text-white transition-colors">
+          <span>Scroll</span>
+          <span className="inline-block animate-bounce">▾</span>
+        </a>
       </div>
     </section>
   );

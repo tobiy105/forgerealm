@@ -21,20 +21,10 @@ export default function Footer() {
           {/* Brand */}
           <div>
             <div className="inline-flex items-center gap-3">
-              <Image
-                src="/frhead.png"
-                alt="ForgeRealm Logo"
-                width={32}
-                height={32}
-                className="rounded-full"
-              />
-              <span className="font-bold text-white text-lg tracking-wide">
-                ForgeRealm
-              </span>
+              <Image src="/frhead.png" alt="ForgeRealm Logo" width={32} height={32} className="rounded-full" />
+              <span className="font-bold text-white text-lg tracking-wide">ForgeRealm</span>
             </div>
-            <p className="mt-3 text-white/60 max-w-xs">
-              UK-based creators of custom, sustainable 3D prints — from concept to craft.
-            </p>
+            <p className="mt-3 text-white/60 max-w-xs">UK-based creators of custom, sustainable 3D prints from concept to craft.</p>
 
             {/* Social icons */}
             <div className="flex gap-4 mt-5 text-lg text-white/60">
@@ -57,10 +47,26 @@ export default function Footer() {
           <div>
             <div className="font-semibold text-white">Services</div>
             <ul className="mt-3 space-y-2">
-              <li><a href="#services" className="hover:text-white transition">Custom Prints</a></li>
-              <li><a href="#services" className="hover:text-white transition">Online Orders</a></li>
-              <li><a href="#services" className="hover:text-white transition">Leeds Booths</a></li>
-              <li><a href="#materials" className="hover:text-white transition">Materials</a></li>
+              <li>
+                <a href="#services" className="hover:text-white transition">
+                  Custom Prints
+                </a>
+              </li>
+              <li>
+                <a href="#services" className="hover:text-white transition">
+                  Online Orders
+                </a>
+              </li>
+              <li>
+                <a href="#services" className="hover:text-white transition">
+                  Leeds Booths
+                </a>
+              </li>
+              <li>
+                <a href="#materials" className="hover:text-white transition">
+                  Materials
+                </a>
+              </li>
             </ul>
           </div>
 
@@ -68,10 +74,26 @@ export default function Footer() {
           <div>
             <div className="font-semibold text-white">Company</div>
             <ul className="mt-3 space-y-2">
-              <li><a href="#work" className="hover:text-white transition">Recent Work</a></li>
-              <li><a href="#about" className="hover:text-white transition">About</a></li>
-              <li><a href="#contact" className="hover:text-white transition">Contact</a></li>
-              <li><a href="#faq" className="hover:text-white transition">FAQ</a></li>
+              <li>
+                <a href="#work" className="hover:text-white transition">
+                  Recent Work
+                </a>
+              </li>
+              <li>
+                <a href="#about" className="hover:text-white transition">
+                  About
+                </a>
+              </li>
+              <li>
+                <a href="#contact" className="hover:text-white transition">
+                  Contact
+                </a>
+              </li>
+              <li>
+                <a href="#faq" className="hover:text-white transition">
+                  FAQ
+                </a>
+              </li>
             </ul>
           </div>
 
@@ -85,15 +107,9 @@ export default function Footer() {
                 placeholder="you@example.com"
                 className="w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-white outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-white/40"
               />
-              <button className="rounded-xl bg-blue-500 hover:bg-blue-400 text-white px-4 py-2 font-semibold transition">
-                Join
-              </button>
+              <button className="rounded-xl bg-blue-500 hover:bg-blue-400 text-white px-4 py-2 font-semibold transition">Join</button>
             </form>
-            {subscribed && (
-              <p className="mt-2 text-xs text-emerald-400">
-                You’re in! Check your inbox soon.
-              </p>
-            )}
+            {subscribed && <p className="mt-2 text-xs text-emerald-400">You're in! Check your inbox soon.</p>}
           </div>
         </div>
 
@@ -101,12 +117,19 @@ export default function Footer() {
         <div className="mt-10 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-white/50">
           <div>© {new Date().getFullYear()} ForgeRealm Ltd. All rights reserved.</div>
           <div className="flex items-center gap-4">
-            <a href="#" className="hover:text-white transition">Privacy</a>
-            <a href="#" className="hover:text-white transition">Terms</a>
-            <a href="#" className="hover:text-white transition">SLA</a>
+            <a href="#" className="hover:text-white transition">
+              Privacy
+            </a>
+            <a href="#" className="hover:text-white transition">
+              Terms
+            </a>
+            <a href="#" className="hover:text-white transition">
+              SLA
+            </a>
           </div>
         </div>
       </div>
     </footer>
   );
 }
+

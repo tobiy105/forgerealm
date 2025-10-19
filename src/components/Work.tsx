@@ -3,20 +3,17 @@
 import Image from "next/image";
 import { AnimatePresence } from "framer-motion";
 import { useState } from "react";
+import { HiChevronLeft, HiChevronRight } from "react-icons/hi";
 
 export default function Work() {
   const images = ["/ablamp.jpeg", "/ablamp2.jpeg"];
   const [index, setIndex] = useState(0);
 
   const nextSlide = () => setIndex((prev) => (prev + 1) % images.length);
-  const prevSlide = () =>
-    setIndex((prev) => (prev - 1 + images.length) % images.length);
+  const prevSlide = () => setIndex((prev) => (prev - 1 + images.length) % images.length);
 
   return (
-    <section
-      id="work"
-      className="relative overflow-hidden bg-gradient-to-br from-[#0b0b0e] via-[#101018] to-[#0d0f15]"
-    >
+    <section id="work" className="relative overflow-hidden bg-gradient-to-br from-[#0b0b0e] via-[#101018] to-[#0d0f15]">
       {/* Ambient background lighting */}
       <div className="absolute inset-0 -z-10">
         <div className="absolute left-1/3 top-1/4 h-[40rem] w-[40rem] rounded-full bg-pink-500/20 blur-[200px]" />
@@ -28,9 +25,7 @@ export default function Work() {
         {/* Header */}
         <div className="flex items-end justify-between gap-6 flex-wrap mb-10">
           <div className="flex items-center gap-3">
-            <h2 className="font-display text-4xl sm:text-5xl font-extrabold text-white whitespace-nowrap">
-              Recent Work
-            </h2>
+            <h2 className="font-display text-4xl sm:text-5xl font-extrabold text-white whitespace-nowrap">Recent Work</h2>
             <div className="mt-2 relative flex-shrink-0">
               <Image
                 src="/work.gif"
@@ -46,12 +41,8 @@ export default function Work() {
 
         {/* Highlights */}
         <div className="flex flex-wrap items-center gap-3 text-white/60 text-sm sm:text-base mb-12">
-          <span className="inline-flex items-center gap-1 bg-white/5 px-3 py-1 sm:px-4 sm:py-2 rounded-full border border-white/10">
-            ⚙️ Multi-material capability
-          </span>
-          <span className="inline-flex items-center gap-1 bg-white/5 px-3 py-1 sm:px-4 sm:py-2 rounded-full border border-white/10">
-            🌱 100% biodegradable PLA used
-          </span>
+          <span className="inline-flex items-center gap-1 bg-white/5 px-3 py-1 sm:px-4 sm:py-2 rounded-full border border-white/10">• Multi-material capability</span>
+          <span className="inline-flex items-center gap-1 bg-white/5 px-3 py-1 sm:px-4 sm:py-2 rounded-full border border-white/10">• 100% biodegradable PLA used</span>
         </div>
 
         {/* Featured Carousel with Glow */}
@@ -64,12 +55,14 @@ export default function Work() {
               {/* Image Carousel */}
               <div className="relative overflow-hidden h-[50vh] sm:h-[60vh] md:h-[70vh] w-full">
                 <AnimatePresence mode="wait">
-                  <img
+                  <Image
                     key={index}
                     src={images[index]}
                     alt={`Aurora Bloom ${index + 1}`}
-                    className="w-full h-full object-cover absolute top-0 left-0"
-                    // static image, removed framer-motion animation
+                    fill
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 50vw"
+                    className="object-cover absolute top-0 left-0"
+                    priority={index === 0}
                   />
                 </AnimatePresence>
 
@@ -79,14 +72,14 @@ export default function Work() {
                   className="hidden md:flex absolute left-8 top-1/2 -translate-y-1/2 bg-black/40 hover:bg-black/70 text-white rounded-full p-6 sm:p-7 transition text-xl"
                   aria-label="Previous"
                 >
-                  ←
+                  <HiChevronLeft />
                 </button>
                 <button
                   onClick={nextSlide}
                   className="hidden md:flex absolute right-8 top-1/2 -translate-y-1/2 bg-black/40 hover:bg-black/70 text-white rounded-full p-6 sm:p-7 transition text-xl"
                   aria-label="Next"
                 >
-                  →
+                  <HiChevronRight />
                 </button>
 
                 {/* Dots */}
@@ -95,9 +88,8 @@ export default function Work() {
                     <button
                       key={i}
                       onClick={() => setIndex(i)}
-                      className={`h-3 w-3 rounded-full transition ${
-                        i === index ? "bg-fuchsia-400" : "bg-white/40"
-                      }`}
+                      aria-label={`Show image ${i + 1}`}
+                      className={`h-3 w-3 rounded-full transition ${i === index ? "bg-fuchsia-400" : "bg-white/40"}`}
                     />
                   ))}
                 </div>
@@ -105,14 +97,11 @@ export default function Work() {
 
               {/* Text Content */}
               <div className="p-8 sm:p-12 lg:p-20 flex flex-col justify-center text-center md:text-left max-w-2xl mx-auto">
-                <h3 className="text-3xl sm:text-4xl lg:text-5xl font-semibold text-white mb-5">
-                  Featured: Aurora Bloom
-                </h3>
+                <h3 className="text-3xl sm:text-4xl lg:text-5xl font-semibold text-white mb-5">Featured: Aurora Bloom</h3>
                 <p className="text-white/70 text-base sm:text-lg leading-relaxed mb-8">
-                  Aurora Bloom is a 3D printed lamp shade with a gradient flowing
-                  from green to yellow to pink. Its spiral layering diffuses
-                  light softly, giving a natural glow. Printed in precision
-                  gradient PLA for strength and style.
+                  Aurora Bloom is a 3D printed lamp shade with a gradient flowing from green to yellow to pink. Its spiral
+                  layering diffuses light softly, giving a natural glow. Printed in precision gradient PLA for strength and
+                  style.
                 </p>
               </div>
             </div>
@@ -123,83 +112,68 @@ export default function Work() {
         <div className="mt-24 sm:mt-32 grid gap-10 sm:grid-cols-2 lg:grid-cols-3">
           {/* Owl */}
           <div className="group relative overflow-hidden rounded-3xl border border-white/10 bg-white/5 backdrop-blur-md transition-all duration-500 hover:border-pink-400/50 hover:shadow-[0_0_50px_-5px_rgba(236,72,153,0.5)] hover:-translate-y-3">
-            <div className="aspect-square overflow-hidden">
-              <img
+            <div className="aspect-square overflow-hidden relative">
+              <Image
                 src="/owl.jpg"
                 alt="Coat of Arms Owl"
-                className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110 group-hover:rotate-1"
+                fill
+                sizes="(max-width: 1024px) 100vw, 33vw"
+                className="object-cover transition-transform duration-700 group-hover:scale-110 group-hover:rotate-1"
               />
             </div>
             <div className="p-6 sm:p-8 text-center sm:text-left">
-              <h3 className="text-lg sm:text-2xl font-semibold text-white mb-3">
-                Coat of Arms Owl
-              </h3>
+              <h3 className="text-lg sm:text-2xl font-semibold text-white mb-3">Coat of Arms Owl</h3>
               <p className="text-sm sm:text-base text-white/70 mb-5">
-                A Leeds-inspired owl printed in PLA, fading from warm yellow at
-                the feet to soft pink at the head. Inspired by the Leeds Coat of
-                Arms and Leeds United’s heritage.
+                A Leeds-inspired owl printed in PLA, fading from warm yellow at the feet to soft pink at the head. Inspired
+                by the Leeds Coat of Arms and local heritage.
               </p>
             </div>
           </div>
 
           {/* Forest Dragon */}
           <div className="group relative overflow-hidden rounded-3xl border border-white/10 bg-white/5 backdrop-blur-md transition-all duration-500 hover:border-emerald-400/50 hover:shadow-[0_0_50px_-5px_rgba(16,185,129,0.5)] hover:-translate-y-3">
-            <div className="aspect-square overflow-hidden">
-              <img
+            <div className="aspect-square overflow-hidden relative">
+              <Image
                 src="/dragon.jpg"
                 alt="Forest Dragon"
-                className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110 group-hover:rotate-1"
+                fill
+                sizes="(max-width: 1024px) 100vw, 33vw"
+                className="object-cover transition-transform duration-700 group-hover:scale-110 group-hover:rotate-1"
               />
             </div>
             <div className="p-6 sm:p-8 text-center sm:text-left">
-              <h3 className="text-lg sm:text-2xl font-semibold text-white mb-3">
-                Forest Dragon
-              </h3>
+              <h3 className="text-lg sm:text-2xl font-semibold text-white mb-3">Forest Dragon</h3>
               <p className="text-sm sm:text-base text-white/70 mb-5">
-                A forest dragon printed in green PLA with tones that shift in
-                the light. The natural finish gives a lifelike, earthy feel.
+                A forest dragon printed in green PLA with tones that shift in the light. The natural finish gives a
+                lifelike, earthy feel.
               </p>
             </div>
           </div>
 
           {/* Dice Dragon */}
           <div className="group relative overflow-hidden rounded-3xl border border-white/10 bg-white/5 backdrop-blur-md transition-all duration-500 hover:border-sky-400/50 hover:shadow-[0_0_50px_-5px_rgba(56,189,248,0.5)] hover:-translate-y-3">
-            <div className="aspect-square overflow-hidden">
-              <img
+            <div className="aspect-square overflow-hidden relative">
+              <Image
                 src="/dice-dragon.jpg"
                 alt="Dice Holder Dragon"
-                className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110 group-hover:rotate-1"
+                fill
+                sizes="(max-width: 1024px) 100vw, 33vw"
+                className="object-cover transition-transform duration-700 group-hover:scale-110 group-hover:rotate-1"
               />
             </div>
             <div className="p-6 sm:p-8 text-center sm:text-left">
-              <h3 className="text-lg sm:text-2xl font-semibold text-white mb-3">
-                Dice Holder Dragon
-              </h3>
+              <h3 className="text-lg sm:text-2xl font-semibold text-white mb-3">Dice Holder Dragon</h3>
               <p className="text-sm sm:text-base text-white/70 mb-5">
-                A metallic blue dragon head built to hold a full set of D&D
-                dice. Compact, sleek, and printed in biodegradable PLA.
+                A metallic blue dragon head built to hold a full set of D&amp;D dice. Compact, sleek, and printed in
+                biodegradable PLA.
               </p>
             </div>
           </div>
         </div>
 
         {/* CTA */}
-        {/* <div className="mt-24 sm:mt-32 text-center">
-          <p className="text-white/70 mb-4 text-sm sm:text-lg">
-            Want to see more designs or behind-the-scenes prints?
-          </p>
-          <a
-            href="#"
-            className="inline-block rounded-full border border-blue-400 bg-blue-400/10 px-8 py-4 text-sm sm:text-base font-semibold text-blue-300 transition hover:bg-blue-400/30"
-          >
-            View full gallery → 
-          </a>
-        </div> */}
-        
         <div className="mt-24 sm:mt-32 text-center">
-          <p className="text-white/70 mb-4 text-sm sm:text-lg">
-            More to come! Scroll back to the top to explore again.
-          </p>
+          <p className="text-white/70 mb-4 text-sm sm:text-lg">More to come! Scroll back to the top to explore again.</p>
           <a
             href="#homepage"
             className="inline-block rounded-full border border-blue-400 bg-blue-400/10 px-8 py-4 text-sm sm:text-base font-semibold text-blue-300 transition hover:bg-blue-400/30"
@@ -211,3 +185,4 @@ export default function Work() {
     </section>
   );
 }
+

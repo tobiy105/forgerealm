@@ -1,8 +1,28 @@
 "use client";
 
 import Image from "next/image";
+import Script from "next/script";
+import { HiChevronDown } from "react-icons/hi";
 
 export default function Faq() {
+  const faqs = [
+    {
+      q: "Where do you sell and ship?",
+      a:
+        "We're based in Leeds and you'll often find us at local stalls. We ship 3D prints anywhere in the UK. Order online or visit us in person for friendly, expert advice.",
+    },
+    {
+      q: "Are your materials eco-friendly?",
+      a:
+        "We care about the impact of every part we sell. Our PLA is biodegradable, and we offer PETG with recyclable properties. We're always working to make 3D printing more sustainable.",
+    },
+    {
+      q: "Can I order custom prints?",
+      a:
+        "Absolutely! Contact us with your ideas or designs. We're happy to help and love bringing your projects to life. Expect quality prints and friendly service.",
+    },
+  ];
+
   return (
     <section
       id="faq"
@@ -15,9 +35,7 @@ export default function Faq() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Section header with floating GIF */}
         <div className="flex items-center">
-          <h2 className="font-display text-3xl sm:text-4xl font-extrabold text-white">
-            FAQs
-          </h2>
+          <h2 className="font-display text-3xl sm:text-4xl font-extrabold text-white">FAQs</h2>
           <div className="relative animate-float flex-shrink-0">
             <Image
               src="/faq.gif"
@@ -32,52 +50,33 @@ export default function Faq() {
 
         {/* FAQ items */}
         <div className="mt-8 divide-y divide-white/10 rounded-2xl border border-white/10 bg-white/5 backdrop-blur-md">
-          {/* Item 1 - Where do you sell and ship? */}
-          <details className="group p-6">
-            <summary className="flex cursor-pointer list-none items-center justify-between text-white/80">
-              <span>Where do you sell and ship?</span>
-              <span className="transition-transform duration-300 group-open:rotate-180">
-                ⌄
-              </span>
-            </summary>
-            <div className="mt-3 text-sm text-white/70">
-              We’re based in Leeds and you’ll often find us at local stalls.
-              We ship 3D prints anywhere in the UK — order online or visit us
-              in person for friendly, expert advice.
-            </div>
-          </details>
-
-          {/* Item 2 - Are your materials eco-friendly? */}
-          <details className="group p-6">
-            <summary className="flex cursor-pointer list-none items-center justify-between text-white/80">
-              <span>Are your materials eco-friendly?</span>
-              <span className="transition-transform duration-300 group-open:rotate-180">
-                ⌄
-              </span>
-            </summary>
-            <div className="mt-3 text-sm text-white/70">
-              We care about the impact of every part we sell. Our PLA is
-              biodegradable, and we offer PETG for recycling. We’re always
-              working to make 3D printing more sustainable.
-            </div>
-          </details>
-
-          {/* Item 3 - Can I order custom prints? */}
-          <details className="group p-6">
-            <summary className="flex cursor-pointer list-none items-center justify-between text-white/80">
-              <span>Can I order custom prints?</span>
-              <span className="transition-transform duration-300 group-open:rotate-180">
-                ⌄
-              </span>
-            </summary>
-            <div className="mt-3 text-sm text-white/70">
-              Absolutely! Contact us with your ideas or designs — we’re happy
-              to help and love bringing your projects to life. Trust us to
-              deliver quality prints and friendly service every time.
-            </div>
-          </details>
+          {faqs.map((item) => (
+            <details key={item.q} className="group p-6">
+              <summary className="flex cursor-pointer list-none items-center justify-between text-white/80">
+                <span>{item.q}</span>
+                <span aria-hidden className="transition-transform duration-300 group-open:rotate-180">
+                  <HiChevronDown />
+                </span>
+              </summary>
+              <div className="mt-3 text-sm text-white/70">{item.a}</div>
+            </details>
+          ))}
         </div>
+
+        {/* FAQPage JSON-LD */}
+        <Script id="ld-faq" type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            mainEntity: faqs.map((f) => ({
+              "@type": "Question",
+              name: f.q,
+              acceptedAnswer: { "@type": "Answer", text: f.a },
+            })),
+          })}
+        </Script>
       </div>
     </section>
   );
 }
+
