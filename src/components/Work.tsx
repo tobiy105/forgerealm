@@ -26,7 +26,8 @@ export default function Work() {
         <div className="flex items-end justify-between gap-6 flex-wrap mb-10">
           <div className="flex items-center gap-3">
             <h2 className="font-display text-4xl sm:text-5xl font-extrabold text-white whitespace-nowrap">Recent Work</h2>
-            <div className="mt-2 relative flex-shrink-0">
+            {/* Use flex alignment to vertically center the GIF with the heading */}
+            <div className="relative flex-shrink-0 flex items-center">
               <Image
                 src="/work.gif"
                 alt="Work Animation"

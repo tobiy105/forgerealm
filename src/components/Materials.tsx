@@ -22,17 +22,17 @@ export default function Materials() {
         className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative"
       >
         {/* Header with floating GIF */}
-        <div className="max-w-2xl flex items-center">
+        <div className="max-w-2xl flex items-center gap-3">
           <h2 className="font-display text-3xl sm:text-4xl font-extrabold text-white whitespace-nowrap">
             Materials
           </h2>
-          <div className="relative flex-shrink-0">
+          <div className="relative flex-shrink-0 flex items-center">
             <Image
               src="/material.gif"
               alt="Materials Animation"
               width={56}
               height={56}
-              className="mt-3 w-10 sm:w-14 h-auto opacity-90 drop-shadow-[0_0_14px_rgba(99,102,241,0.6)]"
+              className="w-10 sm:w-14 h-auto opacity-90 drop-shadow-[0_0_14px_rgba(99,102,241,0.6)]"
               priority
             />
           </div>

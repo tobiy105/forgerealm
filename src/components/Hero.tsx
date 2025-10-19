@@ -20,8 +20,8 @@ interface HeroProps {
 export default function Hero({ onLoadComplete }: HeroProps) {
   const [visible, setVisible] = useState(false);
   const [splineLoaded, setSplineLoaded] = useState(false);
-  const widgetRef = useRef<HTMLElement | null>(null);
-  const viewerRef = useRef<HTMLElement | null>(null);
+  const widgetRef = useRef<HTMLDivElement | null>(null);
+  const viewerRef = useRef<HTMLDivElement | null>(null);
   const buttonsRef = useRef(null);
 
   useEffect(() => {

@@ -3,16 +3,22 @@ import { Geist, Geist_Mono } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
 
+// ✅ Google Fonts with local fallbacks & swap behavior
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
+  display: "swap", // prevent flash of invisible text
+  fallback: ["ui-sans-serif", "system-ui", "-apple-system", "sans-serif"],
 });
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
+  display: "swap",
+  fallback: ["ui-monospace", "SFMono-Regular", "Menlo", "monospace"],
 });
 
+// ✅ Safe site URL for metadata
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://forgerealm.vercel.app";
 
 export const metadata: Metadata = {
@@ -80,9 +86,9 @@ export const metadata: Metadata = {
       index: true,
       follow: true,
       noimageindex: false,
-      maxSnippet: -1,
-      maxImagePreview: "large",
-      maxVideoPreview: -1,
+      "max-snippet": -1,
+      "max-image-preview": "large",
+      "max-video-preview": -1,
     },
   },
   icons: {
@@ -97,25 +103,28 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      {/* Preconnects for font performance */}
-      <head>
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link rel="dns-prefetch" href="https://fonts.gstatic.com" />
-      </head>
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        {/* Skip link for accessibility */}
+      {/* ✅ No manual preconnects — handled automatically by next/font */}
+      <head />
+
+      {/* ✅ Hydration mismatch permanently suppressed here */}
+      <body
+        suppressHydrationWarning
+        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+      >
+        {/* Accessibility: Skip to main content */}
         <a
           href="#main-content"
           className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[100] focus:bg-black focus:text-white focus:px-4 focus:py-2 focus:rounded"
         >
           Skip to content
         </a>
+
         <main id="main-content" role="main">
           {children}
         </main>
 
-        {/* Organization + WebSite JSON-LD */}
-        <Script id="ld-org" type="application/ld+json">
+        {/* ✅ JSON-LD: Organization Schema */}
+        <Script id="ld-org" type="application/ld+json" strategy="afterInteractive">
           {JSON.stringify({
             "@context": "https://schema.org",
             "@type": "Organization",
@@ -129,7 +138,9 @@ export default function RootLayout({
             ],
           })}
         </Script>
-        <Script id="ld-website" type="application/ld+json">
+
+        {/* ✅ JSON-LD: WebSite Schema */}
+        <Script id="ld-website" type="application/ld+json" strategy="afterInteractive">
           {JSON.stringify({
             "@context": "https://schema.org",
             "@type": "WebSite",
@@ -142,7 +153,8 @@ export default function RootLayout({
             },
           })}
         </Script>
-        {/* Spline Web Component loader */}
+
+        {/* ✅ External component loader */}
         <Script
           id="spline-viewer"
           src="https://unpkg.com/@splinetool/viewer/build/spline-viewer.js"
