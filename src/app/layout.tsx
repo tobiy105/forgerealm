@@ -106,15 +106,15 @@ export default function RootLayout({
       {/* ✅ No manual preconnects — handled automatically by next/font */}
       <head>
         <Script src="/theme-init.js" strategy="beforeInteractive" />
-        {process.env.NEXT_PUBLIC_MAILCHIMP_MCJS_URL ? (
-          <Script
-            id="mcjs"
-            strategy="afterInteractive"
-            dangerouslySetInnerHTML={{
-              __html: `!function(c,h,i,m,p){m=c.createElement(h),p=c.getElementsByTagName(h)[0],m.async=1,m.src="${process.env.NEXT_PUBLIC_MAILCHIMP_MCJS_URL}",p.parentNode.insertBefore(m,p)}(document,"script");`,
-            }}
-          />
-        ) : null}
+        {/* Mailchimp: site connection code (hard-coded as provided) */}
+        <Script
+          id="mcjs"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html:
+              '!function(c,h,i,m,p){m=c.createElement(h),p=c.getElementsByTagName(h)[0],m.async=1,m.src=i,p.parentNode.insertBefore(m,p)}(document,\"script\",\"https://chimpstatic.com/mcjs-connected/js/users/ce1d7fb1b345f9a78d8548647/f2f78c14b37105a81914697a3.js\");',
+          }}
+        />
       </head>
 
       {/* ✅ Hydration mismatch permanently suppressed here */}
