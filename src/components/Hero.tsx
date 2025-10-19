@@ -2,19 +2,6 @@
 
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
-import type React from "react";
-
-// Type the custom element so refs and props are valid in TS
-declare global {
-  namespace JSX {
-    interface IntrinsicElements {
-      "spline-viewer": React.DetailedHTMLProps<
-        React.HTMLAttributes<HTMLElement>,
-        HTMLElement
-      > & { url?: string; loading?: string };
-    }
-  }
-}
 import { AnimatePresence } from "framer-motion";
 import { BsRocketTakeoff } from "react-icons/bs";
 import { FiStar } from "react-icons/fi";
@@ -24,6 +11,7 @@ import { GiDragonHead } from "react-icons/gi";
 import { RiEarthLine } from "react-icons/ri";
 import { HiOutlineLightBulb } from "react-icons/hi";
 import { FaRecycle } from "react-icons/fa";
+import Spline from "@splinetool/react-spline";
 
 interface HeroProps {
   onLoadComplete?: () => void;
@@ -32,9 +20,9 @@ interface HeroProps {
 export default function Hero({ onLoadComplete }: HeroProps) {
   const [visible, setVisible] = useState(false);
   const [splineLoaded, setSplineLoaded] = useState(false);
-  const widgetRef = useRef<HTMLDivElement | null>(null);
+  const widgetRef = useRef<HTMLElement | null>(null);
   const viewerRef = useRef<HTMLElement | null>(null);
-  const buttonsRef = useRef<HTMLDivElement | null>(null);
+  const buttonsRef = useRef(null);
 
   useEffect(() => {
     const observer = new IntersectionObserver(([entry]) => {
@@ -43,6 +31,11 @@ export default function Hero({ onLoadComplete }: HeroProps) {
     if (widgetRef.current) observer.observe(widgetRef.current);
     return () => observer.disconnect();
   }, []);
+
+  const handleSplineLoad = () => {
+    setSplineLoaded(true);
+    onLoadComplete?.();
+  };
 
   useEffect(() => {
     const el = viewerRef.current as unknown as HTMLElement | null;
@@ -63,13 +56,7 @@ export default function Hero({ onLoadComplete }: HeroProps) {
     <section id="homepage" className="relative min-h-screen overflow-hidden">
       {/* Background */}
       <div className="absolute inset-0 -z-20 flex items-center justify-center">
-        <spline-viewer
-          ref={viewerRef}
-          url="/scene.splinecode"
-          loading="lazy"
-          style={{ width: "100vw", height: "100vh" }}
-          className="spline-scene"
-        />
+       <Spline className="spline-scene" scene="/scene.splinecode" onLoad={handleSplineLoad} />
       </div>
 
       {/* Subtle mask to cover Spline watermark (bottom-right) */}
@@ -151,7 +138,7 @@ export default function Hero({ onLoadComplete }: HeroProps) {
 
           {/* Buttons */}
           <div
-            ref={buttonsRef as React.RefObject<HTMLDivElement>}
+            ref={buttonsRef}
             className="mt-10 flex flex-wrap justify-center text-center lg:justify-start gap-3"
           >
             <a
@@ -181,7 +168,7 @@ export default function Hero({ onLoadComplete }: HeroProps) {
 
         {/* Right side */}
         <div
-          ref={widgetRef as React.RefObject<HTMLDivElement>}
+          ref={widgetRef}
           className={`hidden lg:flex flex-col gap-12 transition-all duration-700 ease-out ${visible ? "translate-x-0 opacity-100" : "translate-x-20 opacity-0"
             }`}
         >
