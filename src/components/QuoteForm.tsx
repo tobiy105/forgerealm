@@ -8,7 +8,7 @@ export default function QuoteForm() {
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    setMessage("Thanks! We'll email you a quote shortly.");
+    setMessage("Thanks! We&apos;ll email you a quote shortly.");
     setTimeout(() => setMessage(""), 5000);
   }
 
@@ -24,7 +24,7 @@ export default function QuoteForm() {
         <div className="rounded-3xl border border-white/10 bg-white/5 p-8 backdrop-blur-xl shadow-2xl">
           {/* Section header */}
           <h2 className="font-display text-2xl sm:text-3xl font-extrabold text-white">Instant quote</h2>
-          <p className="mt-2 text-white/70">Upload up to 5 files to receive pricing. We'll email a quote within minutes.</p>
+          <p className="mt-2 text-white/70">Upload up to 5 files to receive pricing. We&apos;ll email a quote within minutes.</p>
 
           {/* Form */}
           <form onSubmit={handleSubmit} className="mt-6 space-y-6" aria-label="Instant quote form">

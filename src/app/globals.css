@@ -8,6 +8,8 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+
+  /* ✅ Link to Next.js font variables */
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
@@ -19,12 +21,18 @@
   }
 }
 
+/* ✅ Use Geist fonts with local fallbacks for instant render */
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans), ui-sans-serif, system-ui, -apple-system, sans-serif;
 }
 
+code, pre {
+  font-family: var(--font-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+/* Animations & custom utilities (unchanged) */
 @keyframes marquee {
   from {
     transform: translateX(0);
@@ -47,20 +55,20 @@ body {
 /* For tablets (max-width: 1024px), reduce the size a bit */
 @media (max-width: 1024px) {
   .spline-scene {
-    width: 85vw;  /* 85% of viewport width */
-    height: 85vh;  /* 85% of viewport height */
+    width: 85vw;
+    height: 85vh;
   }
 }
 
 /* For mobile screens (max-width: 640px), scale down even more */
 @media (max-width: 640px) {
   .spline-scene {
-    width: 75vw;  /* 75% of viewport width */
-    height: 75vh;  /* 75% of viewport height */
+    width: 75vw;
+    height: 75vh;
   }
 }
 
-/* Animations for the preloader and other effects */
+/* Smooth spinning animation */
 @keyframes spin-smooth {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
@@ -69,6 +77,7 @@ body {
   animation: spin-smooth 2.2s linear infinite;
 }
 
+/* Soft pulse animation */
 @keyframes pulse-soft {
   0%, 100% { opacity: 0.4; transform: scale(0.95); }
   50% { opacity: 0.8; transform: scale(1); }
@@ -77,6 +86,7 @@ body {
   animation: pulse-soft 2.5s ease-in-out infinite;
 }
 
+/* Glowing fade animation */
 @keyframes fade-glow {
   0%, 100% { opacity: 0.7; filter: drop-shadow(0 0 10px rgba(96,165,250,0.4)); }
   50% { opacity: 1; filter: drop-shadow(0 0 18px rgba(96,165,250,0.6)); }
@@ -85,6 +95,7 @@ body {
   animation: fade-glow 3s ease-in-out infinite;
 }
 
+/* Shimmer animation */
 @keyframes shimmer {
   0% { transform: translateX(-100%); }
   100% { transform: translateX(300%); }
@@ -93,15 +104,16 @@ body {
   animation: shimmer 1.8s linear infinite;
 }
 
-/* Optional: You can add these to your global CSS file */
+/* Button adjustments */
 .button-explore {
   padding-left: 24px;
   padding-right: 24px;
   padding-top: 12px;
   padding-bottom: 12px;
-  font-size: 1.125rem; /* Adjust text size */
+  font-size: 1.125rem;
 }
 
+/* Hero spline positioning */
 .hero-spline {
   position: absolute !important;
   top: 0;
