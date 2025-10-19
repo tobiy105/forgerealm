@@ -9,7 +9,7 @@ export default function Materials() {
   return (
     <section
       id="materials"
-      className="relative py-24 bg-[linear-gradient(315deg,_#0b0b0e_0%,_#101018_40%,_#6366f1_40%,_#3b82f6_100%)] overflow-hidden"
+      className="theme-surface relative py-24 bg-[linear-gradient(315deg,_#0b0b0e_0%,_#101018_40%,_#6366f1_40%,_#3b82f6_100%)] overflow-hidden"
     >
       {/* Subtle background lights */}
       <div className="absolute inset-0 -z-10">
@@ -23,7 +23,7 @@ export default function Materials() {
       >
         {/* Header with floating GIF */}
         <div className="max-w-2xl flex items-center gap-3">
-          <h2 className="font-display text-3xl sm:text-4xl font-extrabold text-white whitespace-nowrap">
+          <h2 className="font-display text-3xl sm:text-4xl font-extrabold text-[color:var(--fg)] whitespace-nowrap">
             Materials
           </h2>
           <div className="relative flex-shrink-0 flex items-center">
@@ -33,12 +33,11 @@ export default function Materials() {
               width={56}
               height={56}
               className="w-10 sm:w-14 h-auto opacity-90 drop-shadow-[0_0_14px_rgba(99,102,241,0.6)]"
-              priority
             />
           </div>
         </div>
 
-        <p className="mt-3 text-white/70 max-w-xl">
+        <p className="mt-3 text-[color:var(--fg-muted)] max-w-xl">
           We offer the following filaments for 3D printing:
         </p>
 
@@ -70,10 +69,10 @@ export default function Materials() {
           ].map((item, i) => (
             <div
               key={i}
-              className="group relative overflow-hidden rounded-3xl border border-white/20 bg-white/10 p-8 backdrop-blur-xl transition-all hover:border-blue-400 hover:bg-white/15 hover:shadow-[0_0_25px_-5px_rgba(59,130,246,0.3)]"
+              className="group relative overflow-hidden rounded-3xl border border-[color:var(--border)] bg-[color:var(--surface)] p-8 backdrop-blur-xl transition-all hover:border-blue-400 hover:shadow-[0_0_25px_-5px_rgba(59,130,246,0.3)]"
             >
               <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-semibold text-white">
+                <h3 className="text-lg font-semibold text-[color:var(--fg)]">
                   {item.title}
                 </h3>
                 <span
@@ -82,11 +81,11 @@ export default function Materials() {
                   {item.label}
                 </span>
               </div>
-              <p className="text-sm text-white/70 leading-relaxed">
+              <p className="text-sm text-[color:var(--fg-muted)] leading-relaxed">
                 {item.desc}
               </p>
 
-              <ul className="mt-5 space-y-2 text-sm text-white/70">
+              <ul className="mt-5 space-y-2 text-sm text-[color:var(--fg-muted)]">
                 {item.points.map((p, idx) => (
                   <li key={idx} className="flex items-center gap-3">
                     <span

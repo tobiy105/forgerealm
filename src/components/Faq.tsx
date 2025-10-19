@@ -26,7 +26,7 @@ export default function Faq() {
   return (
     <section
       id="faq"
-      className="relative py-24 overflow-hidden bg-gradient-to-bl from-[#0b0b0e] via-[#101018] to-yellow-900"
+      className="theme-surface relative py-24 overflow-hidden bg-gradient-to-bl from-[#0b0b0e] via-[#101018] to-yellow-900"
     >
       {/* Ambient yellow glow lights */}
       <div className="absolute left-0 top-0 h-80 w-80 rounded-full bg-yellow-200/30 blur-[120px] -z-10" />
@@ -35,7 +35,7 @@ export default function Faq() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Section header with floating GIF */}
         <div className="flex items-center">
-          <h2 className="font-display text-3xl sm:text-4xl font-extrabold text-white">FAQs</h2>
+          <h2 className="font-display text-3xl sm:text-4xl font-extrabold text-[color:var(--fg)]">FAQs</h2>
           <div className="relative animate-float flex-shrink-0">
             <Image
               src="/faq.gif"
@@ -43,22 +43,21 @@ export default function Faq() {
               width={56}
               height={56}
               className="w-10 sm:w-14 h-auto opacity-90 drop-shadow-[0_0_14px_rgba(250,204,21,0.6)]"
-              priority
             />
           </div>
         </div>
 
         {/* FAQ items */}
-        <div className="mt-8 divide-y divide-white/10 rounded-2xl border border-white/10 bg-white/5 backdrop-blur-md">
+        <div className="mt-8 divide-y divide-[color:var(--border)] rounded-2xl border border-[color:var(--border)] bg-[color:var(--surface)] backdrop-blur-md">
           {faqs.map((item) => (
             <details key={item.q} className="group p-6">
-              <summary className="flex cursor-pointer list-none items-center justify-between text-white/80">
+              <summary className="flex cursor-pointer list-none items-center justify-between text-[color:var(--fg)]/80">
                 <span>{item.q}</span>
                 <span aria-hidden className="transition-transform duration-300 group-open:rotate-180">
                   <HiChevronDown />
                 </span>
               </summary>
-              <div className="mt-3 text-sm text-white/70">{item.a}</div>
+              <div className="mt-3 text-sm text-[color:var(--fg)]/70">{item.a}</div>
             </details>
           ))}
         </div>
@@ -79,4 +78,3 @@ export default function Faq() {
     </section>
   );
 }
-

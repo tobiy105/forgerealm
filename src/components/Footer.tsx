@@ -5,13 +5,37 @@ import { FaInstagram, FaFacebook, FaTwitter, FaEtsy } from "react-icons/fa";
 import Image from "next/image";
 
 export default function Footer() {
-  const [subscribed, setSubscribed] = useState(false);
+  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+  const [error, setError] = useState("");
 
-  function handleSubscribe(e: React.FormEvent<HTMLFormElement>) {
+  async function handleSubscribe(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    e.currentTarget.reset();
-    setSubscribed(true);
-    setTimeout(() => setSubscribed(false), 4000);
+    setStatus("loading");
+    setError("");
+    const form = e.currentTarget;
+    const formData = new FormData(form);
+    const email = String(formData.get("email") || "").trim();
+    if (!email) {
+      setStatus("error");
+      setError("Please enter a valid email.");
+      return;
+    }
+    try {
+      const res = await fetch("/api/subscribe", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data?.message || "Subscription failed");
+      setStatus("success");
+      form.reset();
+      setTimeout(() => setStatus("idle"), 5000);
+    } catch (err: unknown) {
+      setStatus("error");
+      const message = err instanceof Error ? err.message : "Something went wrong. Please try again.";
+      setError(message);
+    }
   }
 
   return (
@@ -104,12 +128,23 @@ export default function Footer() {
               <input
                 required
                 type="email"
+                name="email"
                 placeholder="you@example.com"
                 className="w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-white outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-white/40"
               />
-              <button className="rounded-xl bg-blue-500 hover:bg-blue-400 text-white px-4 py-2 font-semibold transition">Join</button>
+              <button
+                disabled={status === "loading"}
+                className="rounded-xl bg-blue-500 hover:bg-blue-400 disabled:opacity-50 disabled:cursor-not-allowed text-white px-4 py-2 font-semibold transition"
+              >
+                {status === "loading" ? "Joining..." : "Join"}
+              </button>
             </form>
-            {subscribed && <p className="mt-2 text-xs text-emerald-400">You&apos;re in! Check your inbox soon.</p>}
+            {status === "success" && (
+              <p className="mt-2 text-xs text-emerald-400">You&apos;re in! Check your inbox soon.</p>
+            )}
+            {status === "error" && (
+              <p className="mt-2 text-xs text-red-400">{error}</p>
+            )}
           </div>
         </div>
 
