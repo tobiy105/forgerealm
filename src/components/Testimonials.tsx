@@ -12,9 +12,7 @@ export default function Testimonials() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Header with floating GIF */}
         <div className="flex items-center justify-center gap-3 sm:gap-4 text-center">
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-white whitespace-nowrap">
-            Testimonials
-          </h2>
+          <h2 className="text-3xl sm:text-4xl font-extrabold text-white whitespace-nowrap">Testimonials</h2>
           <div className="relative animate-float flex-shrink-0 mt-1 sm:mt-2">
             <Image
               src="/testimonials.gif"
@@ -31,13 +29,10 @@ export default function Testimonials() {
         <div className="mt-16 grid gap-8 md:grid-cols-3">
           {/* Testimonial 1 */}
           <div className="group flex flex-col rounded-3xl border border-white/10 text-center bg-white/5 p-6 backdrop-blur-md transition-all duration-500 hover:border-blue-400/50 hover:shadow-[0_8px_40px_-8px_rgba(96,165,250,0.5)] hover:-translate-y-2 relative max-md:border-blue-400/50 max-md:shadow-[0_8px_40px_-8px_rgba(96,165,250,0.5)]">
-            <p className="text-xl font-bold text-white mb-2">
-              Absolutely brilliant service!
-            </p>
+            <p className="text-xl font-bold text-white mb-2">Absolutely brilliant service!</p>
             <blockquote className="mt-4 text-white leading-relaxed">
-              I ordered a custom figurine from the shop and it arrived in just a
-              few days. The detail and finish were amazing — will definitely buy
-              again!
+              I ordered a custom figurine from the shop and it arrived in just a few days. The detail and finish were
+              amazing. I will definitely buy again!
             </blockquote>
             <div className="mt-8">
               <p className="text-base font-bold text-white">Oliver Bennett</p>
@@ -48,12 +43,10 @@ export default function Testimonials() {
 
           {/* Testimonial 2 */}
           <div className="group flex flex-col rounded-3xl border border-white/10 text-center bg-white/5 p-6 backdrop-blur-md transition-all duration-500 hover:border-blue-400/50 hover:shadow-[0_8px_40px_-8px_rgba(96,165,250,0.5)] hover:-translate-y-2 relative max-md:border-blue-400/50 max-md:shadow-[0_8px_40px_-8px_rgba(96,165,250,0.5)]">
-            <p className="text-xl font-bold text-white mb-2">
-              Great prices & instant quotes!
-            </p>
+            <p className="text-xl font-bold text-white mb-2">Great prices & instant quotes!</p>
             <blockquote className="mt-4 text-white leading-relaxed">
-              Bought a set of keychains and a vase — checkout was easy and the
-              quality is top notch. Highly recommend for unique gifts!
+              Bought a set of keychains and a vase. Checkout was easy and the quality is top notch. Highly recommend for
+              unique gifts!
             </blockquote>
             <div className="mt-8">
               <p className="text-base font-bold text-white">Sophie Clarke</p>
@@ -64,13 +57,10 @@ export default function Testimonials() {
 
           {/* Testimonial 3 */}
           <div className="group flex flex-col rounded-3xl border border-white/10 text-center bg-white/5 p-6 backdrop-blur-md transition-all duration-500 hover:border-blue-400/50 hover:shadow-[0_8px_40px_-8px_rgba(96,165,250,0.5)] hover:-translate-y-2 relative max-md:border-blue-400/50 max-md:shadow-[0_8px_40px_-8px_rgba(96,165,250,0.5)]">
-            <p className="text-xl font-bold text-white mb-2">
-              Fantastic quality and service
-            </p>
+            <p className="text-xl font-bold text-white mb-2">Fantastic quality and service</p>
             <blockquote className="mt-4 text-white leading-relaxed">
-              Bought a custom gift and some accessories from the shop.
-              Everything arrived quickly, looked amazing, and the team was super
-              helpful. Highly recommended!
+              Bought a custom gift and some accessories from the shop. Everything arrived quickly, looked amazing, and the
+              team was super helpful. Highly recommended!
             </blockquote>
             <div className="mt-8">
               <p className="text-base font-bold text-white">Charlotte Evans</p>
@@ -83,3 +73,4 @@ export default function Testimonials() {
     </section>
   );
 }
+

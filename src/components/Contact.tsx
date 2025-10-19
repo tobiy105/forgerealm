@@ -2,14 +2,11 @@
 
 import Image from "next/image";
 import { FaEnvelope, FaMapMarkerAlt, FaClock } from "react-icons/fa";
-import { FaPhoneAlt } from "react-icons/fa"; // Add the phone icon import
+import { FaPhoneAlt } from "react-icons/fa";
 
 export default function Contact() {
   return (
-    <section
-      id="contact"
-      className="relative py-24 overflow-hidden bg-gradient-to-br from-[#0b0b0e] via-[#101018] to-[#0d0f15]"
-    >
+    <section id="contact" className="relative py-24 overflow-hidden bg-gradient-to-br from-[#0b0b0e] via-[#101018] to-[#0d0f15]">
       {/* Ambient lights */}
       <div className="absolute inset-0 -z-10">
         <div className="absolute left-1/3 top-1/4 h-72 w-72 rounded-full bg-blue-500/20 blur-[140px]" />
@@ -23,9 +20,7 @@ export default function Contact() {
           <div>
             {/* Header with floating GIF */}
             <div className="flex items-center">
-              <h2 className="font-display text-3xl sm:text-4xl font-extrabold text-white">
-                Contact
-              </h2>
+              <h2 className="font-display text-3xl sm:text-4xl font-extrabold text-white">Contact</h2>
               <div className="relative animate-float flex-shrink-0 mt-1 sm:mt-1">
                 <Image
                   src="/contact.gif"
@@ -38,9 +33,7 @@ export default function Contact() {
               </div>
             </div>
 
-            <p className="mt-3 text-white/70">
-              Have a design, concept, or a project idea? Let’s talk.
-            </p>
+            <p className="mt-3 text-white/70">Have a design, concept, or a project idea? Let’s talk.</p>
 
             <div className="mt-8 space-y-3 text-sm text-white/70">
               <div className="flex items-center gap-2">
@@ -52,8 +45,8 @@ export default function Contact() {
                 <span>forgerealmltd@gmail.com</span>
               </div>
               <div className="flex items-center gap-2">
-                <FaPhoneAlt className="text-blue-400" /> {/* Phone icon */}
-                <span>+44 (0) 7344 237800</span> {/* International format */}
+                <FaPhoneAlt className="text-blue-400" />
+                <span>+44 (0) 7344 237800</span>
               </div>
             </div>
 
@@ -75,12 +68,10 @@ export default function Contact() {
 
           {/* Fancy Email CTA */}
           <div className="flex flex-col items-center justify-center text-center">
-            <h1 className="text-3xl sm:text-4xl font-display font-extrabold text-white max-w-[28rem]">
+            <h2 className="text-3xl sm:text-4xl font-display font-extrabold text-white max-w-[28rem]">
               <span className="text-blue-400">Get in touch</span> with ForgeRealm
-            </h1>
-            <p className="text-white/70 mt-5 mb-8 max-w-md">
-              Reach out directly for collaborations, custom prints, or wholesale orders.
-            </p>
+            </h2>
+            <p className="text-white/70 mt-5 mb-8 max-w-md">Reach out directly for collaborations, custom prints, or wholesale orders.</p>
 
             <a href="mailto:forgerealmltd@gmail.com">
               <button className="relative inline-flex h-12 w-60 overflow-hidden rounded-lg p-[1px] focus:outline-none group">
@@ -94,12 +85,11 @@ export default function Contact() {
               </button>
             </a>
 
-            <p className="mt-6 text-xs text-white/60">
-              We usually respond within 24 hours on working days.
-            </p>
+            <p className="mt-6 text-xs text-white/60">We usually respond within 24 hours on working days.</p>
           </div>
         </div>
       </div>
     </section>
   );
 }
+
