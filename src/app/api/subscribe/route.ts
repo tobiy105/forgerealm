@@ -54,7 +54,7 @@ export async function POST(request: Request) {
       { message: data?.detail || data?.title || "Mailchimp error" },
       { status: 400 }
     );
-  } catch (err) {
+  } catch { 
     return NextResponse.json({ message: "Unexpected error" }, { status: 500 });
   }
 }
