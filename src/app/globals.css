@@ -5,9 +5,9 @@
   --foreground: #171717;
   /* theme tokens for adaptive UI */
   --fg: var(--foreground);
-  --fg-muted: #4b5563; /* gray-600 for light */
-  --surface: rgba(0, 0, 0, 0.04);
-  --border: rgba(0, 0, 0, 0.10);
+  --fg-muted: #374151; /* gray-700 for stronger contrast on light */
+  --surface: rgba(255, 255, 255, 0.88); /* translucent white for overlays on blue */
+  --border: rgba(0, 0, 0, 0.12);
 }
 
 /* Explicit theme override via data-theme attribute */
