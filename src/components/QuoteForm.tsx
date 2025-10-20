@@ -31,7 +31,7 @@ export default function QuoteForm() {
             {/* Name + Email */}
             <div className="grid sm:grid-cols-2 gap-4">
               <label className="block">
-                <span className="text-sm text-white/80">Name</span>
+                <span className="text-sm text-white/80 font-semibold">Name</span>
                 <input
                   required
                   type="text"
@@ -41,7 +41,7 @@ export default function QuoteForm() {
                 />
               </label>
               <label className="block">
-                <span className="text-sm text-white/80">Email</span>
+                <span className="text-sm text-white/80 font-semibold">Email</span>
                 <input
                   required
                   type="email"
@@ -55,7 +55,7 @@ export default function QuoteForm() {
             {/* Process / Material / Finish */}
             <div className="grid sm:grid-cols-3 gap-4">
               <label className="block">
-                <span className="text-sm text-white/80">Process</span>
+                <span className="text-sm text-white/80 font-semibold">Process</span>
                 <select className="mt-2 w-full rounded-xl border border-white/10 bg-black/40 px-3 py-2 outline-none focus:ring-2 focus:ring-brand-500">
                   <option>FDM</option>
                   <option>SLA / DLP</option>
@@ -65,7 +65,7 @@ export default function QuoteForm() {
                 </select>
               </label>
               <label className="block">
-                <span className="text-sm text-white/80">Material</span>
+                <span className="text-sm text-white/80 font-semibold">Material</span>
                 <select className="mt-2 w-full rounded-xl border border-white/10 bg-black/40 px-3 py-2 outline-none focus:ring-2 focus:ring-brand-500">
                   <option>PLA</option>
                   <option>ABS</option>
@@ -75,7 +75,7 @@ export default function QuoteForm() {
                 </select>
               </label>
               <label className="block">
-                <span className="text-sm text-white/80">Finish</span>
+                <span className="text-sm text-white/80 font-semibold">Finish</span>
                 <select className="mt-2 w-full rounded-xl border border-white/10 bg-black/40 px-3 py-2 outline-none focus:ring-2 focus:ring-brand-500">
                   <option>Standard</option>
                   <option>Painted</option>

@@ -49,7 +49,7 @@ export default function SubscribePage() {
             noValidate
             className="mt-6 flex flex-col gap-5 rounded-2xl border border-white/10 bg-white/5 p-8 backdrop-blur-xl shadow-xl"
           >
-            <label className="block text-sm text-white/70" htmlFor="mce-FNAME">
+            <label className="block text-sm text-white/80 font-semibold" htmlFor="mce-FNAME">
               First Name
               <input
                 required
@@ -61,7 +61,7 @@ export default function SubscribePage() {
               />
             </label>
 
-            <label className="block text-sm text-white/70" htmlFor="mce-EMAIL">
+            <label className="block text-sm text-white/80 font-semibold" htmlFor="mce-EMAIL">
               Email Address
               <input
                 required

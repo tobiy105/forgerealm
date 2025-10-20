@@ -51,7 +51,7 @@ export default function Faq() {
         <div className="mt-8 divide-y divide-[color:var(--border)] rounded-2xl border border-[color:var(--border)] bg-[color:var(--surface)] backdrop-blur-md">
           {faqs.map((item) => (
             <details key={item.q} className="group p-6">
-              <summary className="flex cursor-pointer list-none items-center justify-between text-[color:var(--fg)]/80">
+              <summary className="flex cursor-pointer list-none items-center justify-between text-[color:var(--fg)]/80 font-semibold">
                 <span>{item.q}</span>
                 <span aria-hidden className="transition-transform duration-300 group-open:rotate-180">
                   <HiChevronDown />

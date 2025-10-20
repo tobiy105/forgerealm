@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, JetBrains_Mono } from "next/font/google";
+import { Inter, JetBrains_Mono, Sora } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
 
@@ -16,6 +16,15 @@ const geistMono = JetBrains_Mono({
   subsets: ["latin"],
   display: "swap",
   fallback: ["ui-monospace", "SFMono-Regular", "Menlo", "monospace"],
+});
+
+// Display font for brand/title usage (modern, business-friendly)
+const displayGrotesk = Sora({
+  variable: "--font-display",
+  weight: ["400", "500", "600", "700", "800"],
+  subsets: ["latin"],
+  display: "swap",
+  fallback: ["ui-sans-serif", "system-ui", "-apple-system", "sans-serif"],
 });
 
 // ✅ Safe site URL for metadata
@@ -113,7 +122,13 @@ export default function RootLayout({
       {/* ✅ Hydration mismatch permanently suppressed here */}
       <body
         suppressHydrationWarning
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`
+          ${geistSans.variable}
+          ${geistMono.variable}
+          ${displayGrotesk.variable}
+          ${displayGrotesk.className}
+          antialiased
+        `}
       >
         {/* Accessibility: Skip to main content */}
         <a
