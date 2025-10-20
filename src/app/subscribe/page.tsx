@@ -1,7 +1,12 @@
-"use client";
-
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+
+export const metadata: Metadata = {
+  title: "Subscribe | ForgeRealm Booth & Product Updates",
+  description:
+    "Subscribe to get notified about ForgeRealm booth locations, dates, new products and special offers.",
+};
 
 export default function SubscribePage() {
   return (
@@ -18,15 +23,12 @@ export default function SubscribePage() {
             className="mx-auto rounded-2xl object-cover opacity-90 drop-shadow-[0_0_40px_rgba(59,130,246,0.6)]"
           />
           <h2 className="mt-10 text-4xl font-bold leading-tight tracking-tight text-white">
-            Stay ahead with{" "}
-            <span className="border-b-8 border-blue-500 text-blue-400">
-              ForgeRealm
-            </span>
+            Stay ahead with {" "}
+            <span className="border-b-8 border-blue-500 text-blue-400">ForgeRealm</span>
           </h2>
           <p className="mt-6 text-lg text-white/70 max-w-md">
-            Join our community to get early access to new services, exclusive
-            offers, and updates on our next booth appearances and creative
-            showcases.
+            Join our community to get early access to new services, exclusive offers, and updates on our next booth
+            appearances and creative showcases.
           </p>
         </div>
       </div>
@@ -34,9 +36,7 @@ export default function SubscribePage() {
       {/* RIGHT SIDE */}
       <div className="flex w-full flex-col justify-center px-8 py-16 md:w-1/2 lg:px-16">
         <div className="max-w-md mx-auto w-full space-y-8">
-          <h1 className="text-center md:text-left text-3xl font-extrabold tracking-tight">
-            Get ForgeRealm Updates
-          </h1>
+          <h1 className="text-center md:text-left text-3xl font-extrabold tracking-tight">Get ForgeRealm Updates</h1>
           <p className="text-center md:text-left text-white/70 text-base">
             Be the first to know about upcoming booths, new products, and special offers.
           </p>
@@ -75,12 +75,7 @@ export default function SubscribePage() {
 
             {/* Honeypot for spam protection */}
             <div aria-hidden="true" style={{ position: "absolute", left: "-5000px" }}>
-              <input
-                type="text"
-                name="b_ce1d7fb1b345f9a78d8548647_6be3589439"
-                tabIndex={-1}
-                defaultValue=""
-              />
+              <input type="text" name="b_ce1d7fb1b345f9a78d8548647_6be3589439" tabIndex={-1} defaultValue="" />
             </div>
 
             <div className="pt-2 text-xs text-white/50">
@@ -89,13 +84,13 @@ export default function SubscribePage() {
 
             <button
               type="submit"
-              className="mt-4 w-full rounded-full bg-gradient-to-r from-blue-500 to-indigo-600 px-6 py-3 font-semibold uppercase tracking-wider text-white shadow-md transition hover:from-blue-400 hover:to-indigo-500 hover:shadow-[0_0_20px_rgba(96,165,250,0.5)]"
+              className="mt-2 w-full rounded-full bg-gradient-to-r from-blue-500 to-indigo-600 px-6 py-3 font-semibold uppercase tracking-wider text-white shadow-md transition hover:from-blue-400 hover:to-indigo-500 hover:shadow-[0_0_20px_rgba(96,165,250,0.5)]"
             >
-              SUBSCRIBE
+              Subscribe
             </button>
           </form>
 
-          <div className="mt-8 text-center text-sm text-white/60">
+          <div className="mt-6 text-center text-sm text-white/60">
             <Link href="/" className="underline hover:text-blue-300">
               ← Back to Home
             </Link>
@@ -105,3 +100,4 @@ export default function SubscribePage() {
     </section>
   );
 }
+
