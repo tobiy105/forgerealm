@@ -55,7 +55,7 @@ export default function Hero({ onLoadComplete }: HeroProps) {
     <section id="homepage" className="relative min-h-screen overflow-hidden">
       {/* Background */}
       <div className="absolute inset-0 -z-20 flex items-center justify-center">
-       <Spline className="spline-scene" scene="/scene.splinecode" onLoad={handleSplineLoad} />
+        <Spline className="spline-scene" scene="/scene.splinecode" onLoad={handleSplineLoad} />
       </div>
 
       {/* Subtle mask to cover Spline watermark (bottom-right) */}
@@ -143,6 +143,12 @@ export default function Hero({ onLoadComplete }: HeroProps) {
               className="items-center px-6 py-2 rounded-full bg-gradient-to-r from-blue-500 to-indigo-600 text-white font-semibold text-base sm:text-lg uppercase tracking-wide hover:scale-105 hover:shadow-[0_0_20px_rgba(96,165,250,0.7)] transition-all duration-200"
             >
               Explore Models
+            </a>
+            <a
+              href="/subscribe"
+              className="items-center px-6 py-2 rounded-full border border-blue-400 text-blue-300 font-semibold text-base sm:text-lg uppercase tracking-wide hover:bg-blue-500 hover:text-white hover:shadow-[0_0_20px_rgba(96,165,250,0.5)] transition-all duration-200"
+            >
+              Join Us!
             </a>
           </div>
 

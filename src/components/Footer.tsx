@@ -1,42 +1,8 @@
 "use client";
-
-import { useState } from "react";
 import { FaInstagram, FaFacebook, FaTwitter, FaEtsy } from "react-icons/fa";
 import Image from "next/image";
 
 export default function Footer() {
-  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
-  const [error, setError] = useState("");
-
-  async function handleSubscribe(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    setStatus("loading");
-    setError("");
-    const form = e.currentTarget;
-    const formData = new FormData(form);
-    const email = String(formData.get("email") || "").trim();
-    if (!email) {
-      setStatus("error");
-      setError("Please enter a valid email.");
-      return;
-    }
-    try {
-      const res = await fetch("/api/subscribe", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data?.message || "Subscription failed");
-      setStatus("success");
-      form.reset();
-      setTimeout(() => setStatus("idle"), 5000);
-    } catch (err: unknown) {
-      setStatus("error");
-      const message = err instanceof Error ? err.message : "Something went wrong. Please try again.";
-      setError(message);
-    }
-  }
 
   return (
     <footer className="py-16 bg-gradient-to-br from-[#0b0b0e] via-[#101018] to-[#0d0f15] border-t border-white/10">
@@ -121,49 +87,73 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Subscribe */}
+          {/* Subscribe (Mailchimp embedded) */}
           <div>
             <div className="font-semibold text-white">Stay Updated</div>
-            <form onSubmit={handleSubscribe} className="mt-3 flex gap-2">
+
+            <form
+              action="https://app.us12.list-manage.com/subscribe/post?u=ce1d7fb1b345f9a78d8548647&id=6be3589439&f_id=00c366e9f0"
+              method="post"
+              target="_blank"
+              noValidate
+              className="mt-3 flex flex-col gap-3"
+            >
+              <input
+                required
+                type="text"
+                name="FNAME"
+                id="mce-FNAME"
+                placeholder="First name"
+                aria-label="First name"
+                className="w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-white outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-white/40"
+              />
+
               <input
                 required
                 type="email"
-                name="email"
+                name="EMAIL"
+                id="mce-EMAIL"
                 placeholder="you@example.com"
+                aria-label="Email address"
                 className="w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-white outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-white/40"
               />
+
+              {/* Honeypot field to prevent spam */}
+              <div aria-hidden="true" style={{ position: "absolute", left: "-5000px" }}>
+                <input
+                  type="text"
+                  name="b_ce1d7fb1b345f9a78d8548647_6be3589439"
+                  tabIndex={-1}
+                  defaultValue=""
+                />
+              </div>
+
               <button
-                disabled={status === "loading"}
-                className="rounded-xl bg-blue-500 hover:bg-blue-400 disabled:opacity-50 disabled:cursor-not-allowed text-white px-4 py-2 font-semibold transition"
+                type="submit"
+                className="rounded-xl bg-blue-500 hover:bg-blue-400 text-white px-4 py-2 font-semibold transition"
               >
-                {status === "loading" ? "Joining..." : "Join"}
+                Subscribe
               </button>
             </form>
-            {status === "success" && (
-              <p className="mt-2 text-xs text-emerald-400">You&apos;re in! Check your inbox soon.</p>
-            )}
-            {status === "error" && (
-              <p className="mt-2 text-xs text-red-400">{error}</p>
-            )}
           </div>
-        </div>
 
-        {/* Bottom row */}
-        <div className="mt-10 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-white/50">
-          <div>© {new Date().getFullYear()} ForgeRealm Ltd. All rights reserved.</div>
-          <div className="flex items-center gap-4">
-            <a href="#" className="hover:text-white transition">
-              Privacy
-            </a>
-            <a href="#" className="hover:text-white transition">
-              Terms
-            </a>
-            <a href="#" className="hover:text-white transition">
-              SLA
-            </a>
+          {/* Bottom row */}
+          <div className="mt-10 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-white/50">
+            <div>© {new Date().getFullYear()} ForgeRealm Ltd. All rights reserved.</div>
+            <div className="flex items-center gap-4">
+              <a href="#" className="hover:text-white transition">
+                Privacy
+              </a>
+              <a href="#" className="hover:text-white transition">
+                Terms
+              </a>
+              <a href="#" className="hover:text-white transition">
+                SLA
+              </a>
+            </div>
           </div>
+          </div> 
         </div>
-      </div>
     </footer>
   );
 }

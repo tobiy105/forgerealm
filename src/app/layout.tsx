@@ -107,7 +107,7 @@ export default function RootLayout({
       <head>
         <Script src="/theme-init.js" strategy="beforeInteractive" />
         {/* Mailchimp: site connection code (hard-coded as provided) */}
-        <Script id="mcjs" src="https://chimpstatic.com/mcjs-connected/js/users/ce1d7fb1b345f9a78d8548647/f2f78c14b37105a81914697a3.js" strategy="beforeInteractive" />
+        
       </head>
 
       {/* ✅ Hydration mismatch permanently suppressed here */}
