@@ -69,7 +69,7 @@ export default function Services() {
           ].map((service, i) => (
             <article
               key={i}
-              className="rounded-2xl border border-[color:var(--border)] bg-[color:var(--surface)] p-6 backdrop-blur-xl hover:border-blue-400 transition flex flex-col"
+              className="rounded-2xl border border-[color:var(--border)] surface-strong p-6 backdrop-blur-2xl hover:border-blue-400 transition flex flex-col"
             >
               <div className="flex items-center gap-3 mb-2">
                 {service.icon}
@@ -81,7 +81,7 @@ export default function Services() {
         </div>
 
         {/* Follow us capsule */}
-        <div className="max-w-2xl mt-16 rounded-lg border border-[color:var(--border)] bg-[color:var(--surface)] backdrop-blur-xl p-6 hover:border-blue-400 transition">
+        <div className="max-w-2xl mt-16 rounded-lg border border-[color:var(--border)] surface-strong backdrop-blur-2xl p-6 hover:border-blue-400 transition">
           <p className="text-[color:var(--fg-muted)] text-sm mb-4">
             Follow us on Instagram and other socials for the latest news, stall
             locations, and new product launches. More services, including

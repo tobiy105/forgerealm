@@ -34,7 +34,7 @@
   --color-border: var(--border);
 
   /* ✅ Link to Next.js font variables */
-  --font-sans: var(--font-geist-sans);
+  --font-sans: var(--font-display);
   --font-mono: var(--font-geist-mono);
 }
 
@@ -51,6 +51,24 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-sans), ui-sans-serif, system-ui, -apple-system, sans-serif;
+}
+
+/* Utility: display font for brand/headers */
+.font-display {
+  font-family: var(--font-display), var(--font-sans), ui-sans-serif, system-ui, -apple-system, sans-serif;
+}
+
+/* Stronger surface glass effect for select containers */
+.surface-strong {
+  background-color: rgba(255, 255, 255, 0.10) !important; /* default fallback */
+}
+
+[data-theme="dark"] .surface-strong {
+  background-color: rgba(255, 255, 255, 0.12) !important; /* less transparent */
+}
+
+[data-theme="light"] .surface-strong {
+  background-color: rgba(255, 255, 255, 0.92) !important; /* slightly more solid in light */
 }
 
 /* Basic, global light-mode expectation */

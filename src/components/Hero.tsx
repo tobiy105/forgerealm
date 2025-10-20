@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+// Using global Sora via --font-display; no local font loader needed
 import { useEffect, useRef, useState } from "react";
 import { BsRocketTakeoff } from "react-icons/bs";
 import { FiStar } from "react-icons/fi";
@@ -129,7 +130,7 @@ export default function Hero({ onLoadComplete }: HeroProps) {
             A creative hub for sleek, sustainable 3D models.
           </p>
 
-          <p className="mt-6 text-md sm:text-lg lg:text-xl text-gray-300 max-w-lg leading-relaxed text-center lg:text-left mx-auto lg:mx-0">
+          <p className="mt-6 text-md sm:text-md lg:text-lg text-gray-300 max-w-lg leading-relaxed text-center lg:text-left mx-auto lg:mx-0">
             Thoughtfully made pieces that bring your ideas into focus. Sleek collectibles, modern accessories, and bold designs for everyday life, crafted with planet‑friendly materials.
           </p>
 
