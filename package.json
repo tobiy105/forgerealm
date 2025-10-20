@@ -12,7 +12,6 @@
   },
   "dependencies": {
     "@splinetool/react-spline": "^4.1.0",
-    "framer-motion": "^12.23.22",
     "next": "15.5.4",
     "react": "19.1.0",
     "react-dom": "19.1.0",

@@ -2,7 +2,6 @@
 
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
-import { AnimatePresence } from "framer-motion";
 import { BsRocketTakeoff } from "react-icons/bs";
 import { FiStar } from "react-icons/fi";
 import { TbLeaf } from "react-icons/tb";
@@ -77,32 +76,30 @@ export default function Hero({ onLoadComplete }: HeroProps) {
       </div>
 
       {/* Preloader */}
-      <AnimatePresence mode="wait">
-        {!splineLoaded && (
-          <div className="absolute inset-0 bg-[#0b0b0e] flex flex-col items-center justify-center z-50">
-            <div className="relative w-28 h-28 mb-6 flex items-center justify-center">
-              <div className="absolute inset-0 rounded-full border-4 border-blue-500/20" />
-              <div className="absolute inset-0 rounded-full border-t-4 border-blue-400 animate-spin-smooth" />
-              <div className="absolute inset-[8px] rounded-full bg-blue-400/10 animate-pulse-soft" />
-              <div className="relative z-10">
-                <Image
-                  src="/notitlefrwatermark.png"
-                  alt="ForgeRealm Watermark"
-                  width={72}
-                  height={72}
-                  className="opacity-90 animate-fade-glow"
-                />
-              </div>
-            </div>
-            <p className="mt-6 text-sm tracking-widest text-blue-300/80 font-medium animate-fade-glow">
-              Loading ForgeRealm Experience...
-            </p>
-            <div className="mt-4 h-1.5 w-40 bg-gradient-to-r from-blue-500 via-indigo-400 to-blue-500 rounded-full overflow-hidden">
-              <div className="h-full w-1/3 bg-white/50 animate-shimmer" />
+      {!splineLoaded && (
+        <div className="absolute inset-0 bg-[#0b0b0e] flex flex-col items-center justify-center z-50">
+          <div className="relative w-28 h-28 mb-6 flex items-center justify-center">
+            <div className="absolute inset-0 rounded-full border-4 border-blue-500/20" />
+            <div className="absolute inset-0 rounded-full border-t-4 border-blue-400 animate-spin-smooth" />
+            <div className="absolute inset-[8px] rounded-full bg-blue-400/10 animate-pulse-soft" />
+            <div className="relative z-10">
+              <Image
+                src="/notitlefrwatermark.png"
+                alt="ForgeRealm Watermark"
+                width={72}
+                height={72}
+                className="opacity-90 animate-fade-glow"
+              />
             </div>
           </div>
-        )}
-      </AnimatePresence>
+          <p className="mt-6 text-sm tracking-widest text-blue-300/80 font-medium animate-fade-glow">
+            Loading ForgeRealm Experience...
+          </p>
+          <div className="mt-4 h-1.5 w-40 bg-gradient-to-r from-blue-500 via-indigo-400 to-blue-500 rounded-full overflow-hidden">
+            <div className="h-full w-1/3 bg-white/50 animate-shimmer" />
+          </div>
+        </div>
+      )}
 
       {/* Main Hero */}
       <div

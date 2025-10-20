@@ -1,7 +1,6 @@
 "use client";
 
 import Image from "next/image";
-import { AnimatePresence } from "framer-motion";
 import { useState } from "react";
 import { HiChevronLeft, HiChevronRight } from "react-icons/hi";
 
@@ -54,17 +53,15 @@ export default function Work() {
             <div className="grid grid-cols-1 md:grid-cols-2 items-stretch">
               {/* Image Carousel */}
               <div className="relative overflow-hidden h-[50vh] sm:h-[60vh] md:h-[70vh] w-full">
-                <AnimatePresence mode="wait">
-                  <Image
-                    key={index}
-                    src={images[index]}
-                    alt={`Aurora Bloom ${index + 1}`}
-                    fill
-                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 50vw"
-                    className="object-cover absolute top-0 left-0"
-                    priority={index === 0}
-                  />
-                </AnimatePresence>
+                <Image
+                  key={index}
+                  src={images[index]}
+                  alt={`Aurora Bloom ${index + 1}`}
+                  fill
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 50vw"
+                  className="object-cover absolute top-0 left-0"
+                  priority={index === 0}
+                />
 
                 {/* Navigation Buttons (hidden on mobile) */}
                 <button

@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { HiOutlineMenu, HiX, HiOutlineMoon, HiOutlineSun } from "react-icons/hi";
-import { AnimatePresence } from "framer-motion";
+// Removed framer-motion for static rendering
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
@@ -89,56 +89,62 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* --- Mobile Drawer with Framer Motion --- */}
-      <AnimatePresence>
-        {open && (
-          <>
-            {/* Background overlay */}
-            <div
-              className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm"
+      {/* --- Mobile Drawer (CSS transitions) --- */}
+      {/* Overlay */}
+      <div
+        className={`fixed inset-0 z-40 bg-black/60 backdrop-blur-sm transition-opacity duration-300 ease-in-out ${
+          open ? "opacity-100" : "opacity-0 pointer-events-none"
+        }`}
+        onClick={() => setOpen(false)}
+        aria-hidden={!open}
+      />
+
+      {/* Drawer panel */}
+      <aside
+        className={`fixed right-0 top-0 bottom-0 z-50 w-64 bg-gradient-to-b from-blue-600 to-indigo-700 shadow-lg p-6 flex flex-col transform transition-transform duration-300 ease-in-out ${
+          open ? "translate-x-0" : "translate-x-full"
+        }`}
+        aria-hidden={!open}
+        aria-label="Mobile menu"
+      >
+        {/* Close button */}
+        <button
+          onClick={() => setOpen(false)}
+          className="self-end text-white text-2xl mb-6"
+          aria-label="Close menu"
+        >
+          <HiX />
+        </button>
+
+        {/* Navigation links */}
+        <nav className="flex flex-col gap-6 text-sm font-semibold uppercase tracking-wide text-white">
+          {navLinks.map(([label, href]) => (
+            <a
+              key={label}
+              href={href}
+              className="hover:text-blue-200 transition-colors"
               onClick={() => setOpen(false)}
-            />
+            >
+              {label}
+            </a>
+          ))}
+        </nav>
 
-            {/* Drawer menu */}
-            <div className="fixed right-0 top-0 bottom-0 z-50 w-64 bg-gradient-to-b from-blue-600 to-indigo-700 shadow-lg p-6 flex flex-col">
-              {/* Close button */}
-              <button
-                onClick={() => setOpen(false)}
-                className="self-end text-white text-2xl mb-6"
-                aria-label="Close menu"
-              >
-                <HiX />
-              </button>
+        {/* Divider */}
+        <div className="my-6 border-t border-white/20" />
 
-              {/* Navigation links */}
-              <nav className="flex flex-col gap-6 text-sm font-semibold uppercase tracking-wide text-white">
-                {navLinks.map(([label, href]) => (
-                  <a
-                    key={label}
-                    href={href}
-                    className="hover:text-blue-200 transition-colors"
-                    onClick={() => setOpen(false)}
-                  >
-                    {label}
-                  </a>
-                ))}
-              </nav>
-
-              {/* Divider */}
-              <div className="my-6 border-t border-white/20" />
-
-              {/* Theme toggle (mobile) */}
-              <button
-                onClick={() => { toggleTheme(); setOpen(false); }}
-                className="rounded-full bg-white px-5 py-2 text-xs font-bold uppercase tracking-wide text-blue-600 hover:bg-black hover:text-white transition-colors duration-200 text-center"
-                aria-label="Toggle theme"
-              >
-                {theme === "dark" ? "Light Mode" : "Dark Mode"}
-              </button>
-            </div>
-          </>
-        )}
-      </AnimatePresence>
+        {/* Theme toggle (mobile) */}
+        <button
+          onClick={() => {
+            toggleTheme();
+            setOpen(false);
+          }}
+          className="rounded-full bg-white px-5 py-2 text-xs font-bold uppercase tracking-wide text-blue-600 hover:bg-black hover:text-white transition-colors duration-200 text-center"
+          aria-label="Toggle theme"
+        >
+          {theme === "dark" ? "Light Mode" : "Dark Mode"}
+        </button>
+      </aside>
     </header>
   );
 }
