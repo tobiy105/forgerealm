@@ -11,8 +11,14 @@ import { MdBrush } from "react-icons/md";
 import { FiBox, FiHeadphones, FiLayers, FiMapPin, FiShare2, FiUsers } from "react-icons/fi";
 import { TbLeaf } from "react-icons/tb";
 import MaterialsBook from "./MaterialsBook";
+import { useAnimeReveal } from "../hooks/useAnimeReveal";
+import AnimatedHeading from "./anime/AnimatedHeading";
+import ScrambleLabel from "./anime/ScrambleLabel";
 
 export default function Services() {
+  const featureGridRef = useAnimeReveal<HTMLDivElement>({ selector: ".services-feature-card", step: 70 });
+  const serviceGridRef = useAnimeReveal<HTMLDivElement>({ selector: ".services-service-card", step: 120, y: 30 });
+
   return (
     <div className="relative overflow-hidden" style={{ background: 'linear-gradient(180deg, #0a0e18 0%, #0c1020 50%, #0a0e18 100%)' }}>
       {/* Vibrant ambient glows */}
@@ -25,6 +31,7 @@ export default function Services() {
       <section
         id="services"
         data-observe
+        suppressHydrationWarning
         className="reveal relative py-16 sm:py-24"
       >
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative">
@@ -32,14 +39,21 @@ export default function Services() {
           <div className="mb-2">
             <div className="inline-flex items-center gap-3 mb-3">
               <div className="w-8 h-px bg-gradient-to-r from-blue-400 to-cyan-400" />
-              <span className="text-[10px] sm:text-[11px] font-medium uppercase tracking-[0.3em] text-blue-300/60" style={{ fontFamily: "'Jost', sans-serif" }}>What we offer</span>
+              <ScrambleLabel
+                className="text-[10px] sm:text-[11px] font-medium uppercase tracking-[0.3em] text-blue-300/60"
+                style={{ fontFamily: "'Jost', sans-serif" }}
+              >
+                What we offer
+              </ScrambleLabel>
             </div>
-            <h2
+            <AnimatedHeading
+              as="h2"
               className="text-2xl sm:text-3xl lg:text-4xl font-normal text-white"
               style={{ fontFamily: "'Cinzel', serif" }}
+              step={30}
             >
               Our <em className="text-cyan-300" style={{ fontFamily: "'Cormorant Garamond', serif", fontStyle: 'italic', fontWeight: 300 }}>Services</em>
-            </h2>
+            </AnimatedHeading>
           </div>
 
           <p
@@ -52,7 +66,7 @@ export default function Services() {
           </p>
 
           {/* Feature grid */}
-          <div className="mt-8 grid gap-4 lg:grid-cols-6 auto-rows-fr">
+          <div ref={featureGridRef} className="mt-8 grid gap-4 lg:grid-cols-6 auto-rows-fr">
             {[
               { title: "Eco Friendly", detail: "Biodegradable and low-impact materials.", icon: <FaLeaf className="text-emerald-400 text-xl" /> },
               { title: "Material Options", detail: "PLA and PETG choices for each build.", icon: <FiBox className="text-blue-400 text-xl" /> },
@@ -63,7 +77,7 @@ export default function Services() {
             ].map((item, idx) => (
               <div
                 key={item.title}
-                className={`rounded-2xl border border-white/[0.08] bg-white/[0.02] p-4 backdrop-blur-sm hover:border-blue-400/30 hover:bg-white/[0.04] hover:shadow-xl hover:shadow-blue-500/[0.12] transition-all duration-500 hover:-translate-y-0.5 ${
+                className={`services-feature-card opacity-0 rounded-2xl border border-white/[0.08] bg-white/[0.02] p-4 backdrop-blur-sm hover:border-blue-400/30 hover:bg-white/[0.04] hover:shadow-xl hover:shadow-blue-500/[0.12] transition-all duration-500 hover:-translate-y-0.5 ${
                   idx === 0 ? "lg:col-span-4" : idx === 1 ? "lg:col-span-2" : "lg:col-span-3"
                 }`}
               >
@@ -82,7 +96,7 @@ export default function Services() {
           </div>
 
           {/* Service grid */}
-          <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <div ref={serviceGridRef} className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {[
               {
                 icon: <FaShoppingCart className="text-blue-400 text-xl" />,
@@ -102,7 +116,7 @@ export default function Services() {
             ].map((service, i) => (
               <article
                 key={i}
-                className="rounded-2xl border border-white/[0.08] bg-white/[0.02] p-6 backdrop-blur-sm hover:border-blue-400/30 hover:bg-white/[0.04] hover:shadow-xl hover:shadow-blue-500/[0.12] transition-all duration-500 hover:-translate-y-1 flex flex-col"
+                className="services-service-card opacity-0 rounded-2xl border border-white/[0.08] bg-white/[0.02] p-6 backdrop-blur-sm hover:border-blue-400/30 hover:bg-white/[0.04] hover:shadow-xl hover:shadow-blue-500/[0.12] transition-all duration-500 hover:-translate-y-1 flex flex-col"
               >
                 <div className="flex items-center gap-3 mb-2">
                   {service.icon}
@@ -157,6 +171,7 @@ export default function Services() {
       <section
         id="materials"
         data-observe
+        suppressHydrationWarning
         className="reveal relative py-16 sm:py-24"
       >
         {/* Emerald ambient glow */}
@@ -167,14 +182,21 @@ export default function Services() {
           <div className="mb-2">
             <div className="inline-flex items-center gap-3 mb-3">
               <div className="w-8 h-px bg-gradient-to-r from-emerald-400 to-teal-400" />
-              <span className="text-[10px] sm:text-[11px] font-medium uppercase tracking-[0.3em] text-emerald-300/60" style={{ fontFamily: "'Jost', sans-serif" }}>Eco printing</span>
+              <ScrambleLabel
+                className="text-[10px] sm:text-[11px] font-medium uppercase tracking-[0.3em] text-emerald-300/60"
+                style={{ fontFamily: "'Jost', sans-serif" }}
+              >
+                Eco printing
+              </ScrambleLabel>
             </div>
-            <h2
+            <AnimatedHeading
+              as="h2"
               className="text-2xl sm:text-3xl lg:text-4xl font-normal text-white"
               style={{ fontFamily: "'Cinzel', serif" }}
+              step={30}
             >
               Our <em className="text-emerald-300" style={{ fontFamily: "'Cormorant Garamond', serif", fontStyle: 'italic', fontWeight: 300 }}>Materials</em>
-            </h2>
+            </AnimatedHeading>
           </div>
 
           <p

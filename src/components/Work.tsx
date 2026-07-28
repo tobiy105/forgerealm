@@ -2,6 +2,8 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { FiX } from "react-icons/fi";
+import AnimatedHeading from "./anime/AnimatedHeading";
+import ScrambleLabel from "./anime/ScrambleLabel";
 
 const useTheme = () => {
   const [theme, setTheme] = useState<"light" | "dark">("dark");
@@ -334,11 +336,21 @@ export default function Work() {
           <div className="relative">
             <div className="inline-flex items-center gap-3 mb-3">
               <div className="w-8 h-px bg-gradient-to-r from-blue-400 to-purple-400" />
-              <span className="text-[10px] sm:text-[11px] font-medium uppercase tracking-[0.3em] text-blue-300/60" style={{ fontFamily: "'Jost', sans-serif" }}>Curated</span>
+              <ScrambleLabel
+                className="text-[10px] sm:text-[11px] font-medium uppercase tracking-[0.3em] text-blue-300/60"
+                style={{ fontFamily: "'Jost', sans-serif" }}
+              >
+                Curated
+              </ScrambleLabel>
             </div>
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-normal text-white" style={{ fontFamily: "'Cinzel', serif" }}>
+            <AnimatedHeading
+              as="h2"
+              className="text-2xl sm:text-3xl lg:text-4xl font-normal text-white"
+              style={{ fontFamily: "'Cinzel', serif" }}
+              step={30}
+            >
               Featured <em className="text-[#FADE6A]" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 300 }}>Prints</em>
-            </h2>
+            </AnimatedHeading>
           </div>
           <p className="work-text-force mt-2 text-sm text-stone-400" style={{ fontFamily: "'Cormorant Garamond', serif", fontStyle: 'italic' }}>
             Some of our most popular prints

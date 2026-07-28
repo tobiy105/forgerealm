@@ -3,10 +3,15 @@
 import { HiChevronDown } from "react-icons/hi";
 import { FaQuestionCircle } from "react-icons/fa";
 import { useEffect, useRef, useState } from "react";
+import { useAnimeReveal } from "../hooks/useAnimeReveal";
+import AnimatedHeading from "./anime/AnimatedHeading";
+import ScrambleLabel from "./anime/ScrambleLabel";
 
 export default function Faq() {
   const [isVisible, setIsVisible] = useState(false);
   const sectionRef = useRef<HTMLElement | null>(null);
+  const spotlightRef = useAnimeReveal<HTMLDivElement>({ selector: ".faq-spotlight", step: 0, duration: 800, y: 20 });
+  const itemsRef = useAnimeReveal<HTMLDivElement>({ selector: ".faq-item", step: 140, y: 22, duration: 750 });
   const faqs = [
     {
       q: "Where do you sell and ship?",
@@ -54,6 +59,7 @@ export default function Faq() {
       id="faq"
       ref={sectionRef}
       data-observe
+      suppressHydrationWarning
       className={`reveal relative py-16 sm:py-24 overflow-hidden bg-transparent ${isVisible ? "is-visible" : ""}`}
     >
       {/* Ambient glow */}
@@ -65,25 +71,29 @@ export default function Faq() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative">
         <div className="grid gap-8 lg:grid-cols-[1fr_2fr] xl:grid-cols-[400px_1fr]">
           {/* Left spotlight */}
-          <div className="relative order-1 lg:order-1">
-            <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-6 transition-colors duration-300 hover:border-blue-400/40">
+          <div ref={spotlightRef} className="relative order-1 lg:order-1">
+            <div className="faq-spotlight opacity-0 rounded-2xl border border-white/10 bg-white/[0.03] p-6 transition-colors duration-300 hover:border-blue-400/40">
               <div className="flex items-center gap-3">
                 <div className="rounded-full border border-blue-400/30 bg-blue-400/10 p-2">
                   <FaQuestionCircle className="h-6 w-6 text-blue-400" aria-hidden />
                 </div>
                 <div>
-                  <p
+                  <ScrambleLabel
+                    as="p"
                     className="text-xs uppercase tracking-[0.35em] text-blue-400/70"
                     style={{ fontFamily: "'Jost', sans-serif" }}
                   >
                     Help Center
-                  </p>
-                  <h2
+                  </ScrambleLabel>
+                  <AnimatedHeading
+                    as="h2"
                     className="text-3xl font-bold text-white"
                     style={{ fontFamily: "'Cinzel', serif" }}
+                    step={40}
+                    from="center"
                   >
                     FAQs
-                  </h2>
+                  </AnimatedHeading>
                 </div>
               </div>
               <p
@@ -121,11 +131,11 @@ export default function Faq() {
           </div>
 
           {/* FAQ items */}
-          <div className="space-y-4 order-2 lg:order-2">
+          <div ref={itemsRef} className="space-y-4 order-2 lg:order-2">
             {faqs.map((item, idx) => (
               <details
                 key={item.q}
-                className="group rounded-2xl border border-white/10 bg-white/[0.03] transition-colors duration-300 hover:border-blue-400/40"
+                className="faq-item opacity-0 group rounded-2xl border border-white/10 bg-white/[0.03] transition-colors duration-300 hover:border-blue-400/40"
               >
                 <summary className="flex cursor-pointer list-none items-center gap-4 px-6 py-5 text-white">
                   <span className="flex h-10 w-10 items-center justify-center rounded-full border border-blue-400/30 bg-blue-400/10 text-xs font-semibold tracking-[0.25em] text-blue-300">
