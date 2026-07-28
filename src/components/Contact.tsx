@@ -2,10 +2,14 @@
 
 import { useEffect, useRef, useState } from "react";
 import { FaEnvelope, FaMapMarkerAlt, FaClock, FaEnvelopeOpenText, FaPhoneAlt } from "react-icons/fa";
+import { animate } from "animejs";
+import { useAnimeReveal } from "../hooks/useAnimeReveal";
 
 export default function Contact() {
   const [isVisible, setIsVisible] = useState(false);
   const sectionRef = useRef<HTMLElement | null>(null);
+  const infoListRef = useAnimeReveal<HTMLDivElement>({ selector: ".contact-info-card", step: 120, y: 20 });
+  const ctaRef = useAnimeReveal<HTMLDivElement>({ selector: ".contact-cta-block", step: 0, duration: 900, y: 20 });
 
   useEffect(() => {
     if (!sectionRef.current) return;
@@ -31,6 +35,23 @@ export default function Contact() {
     return () => observer.disconnect();
   }, []);
 
+  // Gentle pulse on contact icon tiles — infinite low-key breathing.
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const root = sectionRef.current;
+    if (!root) return;
+    const tiles = root.querySelectorAll(".contact-icon-tile");
+    if (!tiles.length) return;
+    animate(tiles, {
+      scale: [1, 1.06, 1],
+      duration: 3200,
+      loop: true,
+      delay: (_el: Element, i: number) => i * 260,
+      ease: "inOutSine",
+    });
+  }, []);
+
   return (
     <section
       id="contact"
@@ -47,7 +68,7 @@ export default function Contact() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative">
         <div className="flex flex-col lg:flex-row gap-12 lg:gap-20 items-start justify-center">
           {/* Contact Info */}
-          <div className="space-y-10 flex-1 max-w-2xl">
+          <div ref={infoListRef} className="space-y-10 flex-1 max-w-2xl">
             {/* Header */}
             <div className="flex items-center gap-4">
               <h2
@@ -76,9 +97,9 @@ export default function Contact() {
               ].map((item) => (
                 <div
                   key={item.title}
-                  className="group flex items-center gap-6 p-5 rounded-2xl border border-white/10 bg-white/[0.03] transition-all duration-300 hover:border-blue-400/40 hover:-translate-y-0.5"
+                  className="contact-info-card opacity-0 group flex items-center gap-6 p-5 rounded-2xl border border-white/10 bg-white/[0.03] transition-all duration-300 hover:border-blue-400/40 hover:-translate-y-0.5"
                 >
-                  <div className="flex-shrink-0 p-3 rounded-xl bg-blue-400/10 group-hover:bg-blue-400/20 transition-colors duration-300">
+                  <div className="contact-icon-tile flex-shrink-0 p-3 rounded-xl bg-blue-400/10 group-hover:bg-blue-400/20 transition-colors duration-300">
                     {item.icon}
                   </div>
                   <div>
@@ -100,9 +121,9 @@ export default function Contact() {
             </div>
 
             {/* Business hours */}
-            <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-8 transition-colors duration-300 hover:border-blue-400/30 group">
+            <div className="contact-info-card opacity-0 rounded-2xl border border-white/10 bg-white/[0.03] p-8 transition-colors duration-300 hover:border-blue-400/30 group">
               <div className="flex items-center gap-4 text-white font-semibold mb-6">
-                <div className="p-3 rounded-xl bg-blue-400/10 group-hover:bg-blue-400/20 transition-colors duration-300">
+                <div className="contact-icon-tile p-3 rounded-xl bg-blue-400/10 group-hover:bg-blue-400/20 transition-colors duration-300">
                   <FaClock className="text-blue-400" />
                 </div>
                 <span
@@ -141,8 +162,8 @@ export default function Contact() {
           </div>
 
           {/* CTA section */}
-          <div className="flex flex-col items-center justify-center text-center space-y-10 flex-1 max-w-lg">
-            <div className="space-y-8">
+          <div ref={ctaRef} className="flex flex-col items-center justify-center text-center space-y-10 flex-1 max-w-lg">
+            <div className="contact-cta-block opacity-0 space-y-8">
               <h2
                 className="text-4xl sm:text-5xl font-bold max-w-[32rem] leading-tight"
                 style={{ fontFamily: "'Cinzel', serif" }}
