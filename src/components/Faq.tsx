@@ -4,6 +4,8 @@ import { HiChevronDown } from "react-icons/hi";
 import { FaQuestionCircle } from "react-icons/fa";
 import { useEffect, useRef, useState } from "react";
 import { useAnimeReveal } from "../hooks/useAnimeReveal";
+import AnimatedHeading from "./anime/AnimatedHeading";
+import ScrambleLabel from "./anime/ScrambleLabel";
 
 export default function Faq() {
   const [isVisible, setIsVisible] = useState(false);
@@ -75,18 +77,22 @@ export default function Faq() {
                   <FaQuestionCircle className="h-6 w-6 text-blue-400" aria-hidden />
                 </div>
                 <div>
-                  <p
+                  <ScrambleLabel
+                    as="p"
                     className="text-xs uppercase tracking-[0.35em] text-blue-400/70"
                     style={{ fontFamily: "'Jost', sans-serif" }}
                   >
                     Help Center
-                  </p>
-                  <h2
+                  </ScrambleLabel>
+                  <AnimatedHeading
+                    as="h2"
                     className="text-3xl font-bold text-white"
                     style={{ fontFamily: "'Cinzel', serif" }}
+                    step={40}
+                    from="center"
                   >
                     FAQs
-                  </h2>
+                  </AnimatedHeading>
                 </div>
               </div>
               <p

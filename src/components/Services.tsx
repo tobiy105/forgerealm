@@ -12,6 +12,8 @@ import { FiBox, FiHeadphones, FiLayers, FiMapPin, FiShare2, FiUsers } from "reac
 import { TbLeaf } from "react-icons/tb";
 import MaterialsBook from "./MaterialsBook";
 import { useAnimeReveal } from "../hooks/useAnimeReveal";
+import AnimatedHeading from "./anime/AnimatedHeading";
+import ScrambleLabel from "./anime/ScrambleLabel";
 
 export default function Services() {
   const featureGridRef = useAnimeReveal<HTMLDivElement>({ selector: ".services-feature-card", step: 70 });
@@ -36,14 +38,21 @@ export default function Services() {
           <div className="mb-2">
             <div className="inline-flex items-center gap-3 mb-3">
               <div className="w-8 h-px bg-gradient-to-r from-blue-400 to-cyan-400" />
-              <span className="text-[10px] sm:text-[11px] font-medium uppercase tracking-[0.3em] text-blue-300/60" style={{ fontFamily: "'Jost', sans-serif" }}>What we offer</span>
+              <ScrambleLabel
+                className="text-[10px] sm:text-[11px] font-medium uppercase tracking-[0.3em] text-blue-300/60"
+                style={{ fontFamily: "'Jost', sans-serif" }}
+              >
+                What we offer
+              </ScrambleLabel>
             </div>
-            <h2
+            <AnimatedHeading
+              as="h2"
               className="text-2xl sm:text-3xl lg:text-4xl font-normal text-white"
               style={{ fontFamily: "'Cinzel', serif" }}
+              step={30}
             >
               Our <em className="text-cyan-300" style={{ fontFamily: "'Cormorant Garamond', serif", fontStyle: 'italic', fontWeight: 300 }}>Services</em>
-            </h2>
+            </AnimatedHeading>
           </div>
 
           <p
@@ -171,14 +180,21 @@ export default function Services() {
           <div className="mb-2">
             <div className="inline-flex items-center gap-3 mb-3">
               <div className="w-8 h-px bg-gradient-to-r from-emerald-400 to-teal-400" />
-              <span className="text-[10px] sm:text-[11px] font-medium uppercase tracking-[0.3em] text-emerald-300/60" style={{ fontFamily: "'Jost', sans-serif" }}>Eco printing</span>
+              <ScrambleLabel
+                className="text-[10px] sm:text-[11px] font-medium uppercase tracking-[0.3em] text-emerald-300/60"
+                style={{ fontFamily: "'Jost', sans-serif" }}
+              >
+                Eco printing
+              </ScrambleLabel>
             </div>
-            <h2
+            <AnimatedHeading
+              as="h2"
               className="text-2xl sm:text-3xl lg:text-4xl font-normal text-white"
               style={{ fontFamily: "'Cinzel', serif" }}
+              step={30}
             >
               Our <em className="text-emerald-300" style={{ fontFamily: "'Cormorant Garamond', serif", fontStyle: 'italic', fontWeight: 300 }}>Materials</em>
-            </h2>
+            </AnimatedHeading>
           </div>
 
           <p

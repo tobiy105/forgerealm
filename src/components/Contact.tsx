@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { FaEnvelope, FaMapMarkerAlt, FaClock, FaEnvelopeOpenText, FaPhoneAlt } from "react-icons/fa";
 import { animate } from "animejs";
 import { useAnimeReveal } from "../hooks/useAnimeReveal";
+import AnimatedHeading from "./anime/AnimatedHeading";
 
 export default function Contact() {
   const [isVisible, setIsVisible] = useState(false);
@@ -71,12 +72,14 @@ export default function Contact() {
           <div ref={infoListRef} className="space-y-10 flex-1 max-w-2xl">
             {/* Header */}
             <div className="flex items-center gap-4">
-              <h2
+              <AnimatedHeading
+                as="h2"
                 className="text-4xl sm:text-5xl font-bold text-white"
                 style={{ fontFamily: "'Cinzel', serif" }}
+                step={45}
               >
                 Contact
-              </h2>
+              </AnimatedHeading>
               <FaEnvelopeOpenText className="w-8 h-8 sm:w-10 sm:h-10 text-blue-400" aria-hidden />
             </div>
 
@@ -164,16 +167,18 @@ export default function Contact() {
           {/* CTA section */}
           <div ref={ctaRef} className="flex flex-col items-center justify-center text-center space-y-10 flex-1 max-w-lg">
             <div className="contact-cta-block opacity-0 space-y-8">
-              <h2
+              <AnimatedHeading
+                as="h2"
                 className="text-4xl sm:text-5xl font-bold max-w-[32rem] leading-tight"
                 style={{ fontFamily: "'Cinzel', serif" }}
+                step={22}
               >
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-300">
                   Get in touch
                 </span>
                 <br />
                 <span className="text-white">with ForgeRealm</span>
-              </h2>
+              </AnimatedHeading>
               <p
                 className="text-lg max-w-lg leading-relaxed text-stone-400"
                 style={{ fontFamily: "'Inter', sans-serif" }}
