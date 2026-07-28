@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useRef, useCallback } from "react";
 import Lottie from "lottie-react";
+import { animate, createTimeline, stagger, svg } from "animejs";
 
 function useTypewriter(words: string[]) {
   const [text, setText] = useState(words[0]);
@@ -44,33 +45,29 @@ function useTypewriter(words: string[]) {
   return text;
 }
 
-function useCountUp(target: number, duration = 2000) {
-  const [count, setCount] = useState(0);
-  const [started, setStarted] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
-
+// Anime.js-powered count-up with intersection trigger. Odometer feel + eased.
+function useAnimatedCount(target: number, duration = 2000) {
+  const ref = useRef<HTMLSpanElement>(null);
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
-    const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting) { setStarted(true); obs.disconnect(); } }, { threshold: 0.3 });
+    const reduce = typeof matchMedia !== 'undefined' && matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduce) { el.textContent = String(target); return; }
+    const obs = new IntersectionObserver(([e]) => {
+      if (!e.isIntersecting) return;
+      obs.disconnect();
+      const state = { n: 0 };
+      animate(state, {
+        n: target,
+        duration,
+        ease: 'outExpo',
+        onUpdate: () => { if (el) el.textContent = String(Math.round(state.n)); },
+      });
+    }, { threshold: 0.3 });
     obs.observe(el);
     return () => obs.disconnect();
-  }, []);
-
-  useEffect(() => {
-    if (!started) return;
-    let start = 0;
-    const step = (ts: number) => {
-      if (!start) start = ts;
-      const progress = Math.min((ts - start) / duration, 1);
-      const eased = 1 - Math.pow(1 - progress, 3);
-      setCount(Math.round(eased * target));
-      if (progress < 1) requestAnimationFrame(step);
-    };
-    requestAnimationFrame(step);
-  }, [started, target, duration]);
-
-  return { count, ref };
+  }, [target, duration]);
+  return ref;
 }
 
 const WORDS = ['Imagination', 'Precision', 'Passion', 'Purpose', 'Detail', 'Heart', 'Vision', 'Soul'];
@@ -78,8 +75,9 @@ const WORDS = ['Imagination', 'Precision', 'Passion', 'Purpose', 'Detail', 'Hear
 export default function Hero() {
   const [printAnim, setPrintAnim] = useState<any>(null);
   const typed = useTypewriter(WORDS);
-  const printsSold = useCountUp(442, 2200);
-  const designs = useCountUp(50, 1800);
+  const printsRef = useAnimatedCount(442, 2200);
+  const designsRef = useAnimatedCount(50, 1800);
+  const heroRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     // Delay Lottie load to prioritise LCP content
@@ -92,14 +90,97 @@ export default function Hero() {
     return () => clearTimeout(timer);
   }, []);
 
+  // Anime.js choreography — mount sequence, SVG draw, ambient drift, ring spin.
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const root = heroRef.current;
+    if (!root) return;
+
+    const cleanups: Array<() => void> = [];
+
+    // 1. SVG signature flourish beneath h1 — draws in stroke-by-stroke.
+    const sigPaths = root.querySelectorAll(".hero-signature path");
+    if (sigPaths.length) {
+      const drawable = svg.createDrawable(sigPaths);
+      animate(drawable, {
+        draw: ["0 0", "0 1"],
+        duration: 2200,
+        ease: "inOutQuad",
+        delay: stagger(280, { start: 500 }),
+      });
+    }
+
+    // 2. Continuous ring rotations on the desktop visual card.
+    animate(".hero-ring-outer", { rotate: "1turn", duration: 60000, loop: true, ease: "linear" });
+    animate(".hero-ring-inner", { rotate: "-1turn", duration: 80000, loop: true, ease: "linear" });
+
+    // 3. Ambient glow drift — subtle parallax life to the background blobs.
+    animate(".hero-glow-a", { translateX: [-30, 30], translateY: [-20, 20], duration: 18000, loop: true, alternate: true, ease: "inOutSine" });
+    animate(".hero-glow-b", { translateX: [25, -25], translateY: [15, -15], duration: 22000, loop: true, alternate: true, ease: "inOutSine" });
+    animate(".hero-glow-c", { translateX: [-20, 20], translateY: [15, -15], duration: 26000, loop: true, alternate: true, ease: "inOutSine" });
+    animate(".hero-glow-d", { translateX: [20, -20], translateY: [-20, 20], duration: 20000, loop: true, alternate: true, ease: "inOutSine" });
+
+    // 4. Emblem divider — waits for scroll into view, then scans lines outward + pops emblem.
+    const divider = root.querySelector(".hero-emblem-divider");
+    if (divider) {
+      const play = () => {
+        const tl = createTimeline({ defaults: { ease: "outExpo" } });
+        tl.add(".hero-divider-line", { scaleX: [0, 1], duration: 1100 })
+          .add(".hero-divider-emblem", {
+            opacity: [0, 1],
+            scale: [0.4, 1],
+            rotate: ["-120deg", "0deg"],
+            duration: 900,
+            ease: "outBack",
+          }, "-=700");
+      };
+      const dObs = new IntersectionObserver(([e]) => {
+        if (!e.isIntersecting) return;
+        dObs.disconnect();
+        play();
+      }, { threshold: 0.4 });
+      dObs.observe(divider);
+      cleanups.push(() => dObs.disconnect());
+    }
+
+    // 5. Emblem hover — spin the main brand emblem on pointer entry.
+    const emblemMain = root.querySelector<HTMLImageElement>(".hero-emblem-main");
+    if (emblemMain) {
+      const spin = () => animate(emblemMain, { rotate: "+=1turn", duration: 1200, ease: "outExpo" });
+      emblemMain.addEventListener("mouseenter", spin);
+      cleanups.push(() => emblemMain.removeEventListener("mouseenter", spin));
+    }
+
+    // 6. Stats stagger reveal when the row scrolls into view.
+    const statsRow = root.querySelector(".hero-stats-row");
+    if (statsRow) {
+      const sObs = new IntersectionObserver(([e]) => {
+        if (!e.isIntersecting) return;
+        sObs.disconnect();
+        animate(".hero-stat", {
+          opacity: [0, 1],
+          translateY: [18, 0],
+          duration: 700,
+          delay: stagger(140),
+          ease: "outExpo",
+        });
+      }, { threshold: 0.4 });
+      sObs.observe(statsRow);
+      cleanups.push(() => sObs.disconnect());
+    }
+
+    return () => { cleanups.forEach((fn) => fn()); };
+  }, []);
+
   return (
-    <section className="relative min-h-[100vh] flex items-center overflow-hidden" style={{ background: 'linear-gradient(135deg, #080c14 0%, #0c1222 40%, #0e1428 70%, #080c14 100%)' }}>
+    <section ref={heroRef} className="relative min-h-[100vh] flex items-center overflow-hidden" style={{ background: 'linear-gradient(135deg, #080c14 0%, #0c1222 40%, #0e1428 70%, #080c14 100%)' }}>
       {/* Ambient glows - hidden on mobile for performance */}
       <div className="pointer-events-none absolute inset-0 hidden sm:block">
-        <div className="absolute left-[-10%] top-[15%] w-[500px] h-[500px] rounded-full bg-blue-600/[0.1] blur-[200px]" />
-        <div className="absolute right-[-5%] top-[10%] w-[400px] h-[400px] rounded-full bg-purple-500/[0.08] blur-[180px]" />
-        <div className="absolute right-[20%] bottom-[10%] w-[350px] h-[350px] rounded-full bg-cyan-500/[0.07] blur-[160px]" />
-        <div className="absolute left-[30%] bottom-[5%] w-[300px] h-[300px] rounded-full bg-emerald-500/[0.05] blur-[150px]" />
+        <div className="hero-glow-a absolute left-[-10%] top-[15%] w-[500px] h-[500px] rounded-full bg-blue-600/[0.1] blur-[200px]" />
+        <div className="hero-glow-b absolute right-[-5%] top-[10%] w-[400px] h-[400px] rounded-full bg-purple-500/[0.08] blur-[180px]" />
+        <div className="hero-glow-c absolute right-[20%] bottom-[10%] w-[350px] h-[350px] rounded-full bg-cyan-500/[0.07] blur-[160px]" />
+        <div className="hero-glow-d absolute left-[30%] bottom-[5%] w-[300px] h-[300px] rounded-full bg-emerald-500/[0.05] blur-[150px]" />
         {/* Grid pattern */}
         <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: 'linear-gradient(rgba(255,255,255,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.06) 1px, transparent 1px)', backgroundSize: '80px 80px' }} />
       </div>
@@ -115,7 +196,7 @@ export default function Hero() {
 
             {/* Emblem + eyebrow */}
             <div className="mb-6 flex items-center gap-4 justify-center lg:justify-start">
-              <img src="/frlogorv.png" alt="ForgeRealm Emblem" className="h-12 w-12 sm:h-14 sm:w-14 drop-shadow-[0_0_15px_rgba(59,130,246,0.3)] hover:drop-shadow-[0_0_25px_rgba(59,130,246,0.6)] transition-all duration-500" decoding="async" />
+              <img src="/frlogorv.png" alt="ForgeRealm Emblem" className="hero-emblem-main h-12 w-12 sm:h-14 sm:w-14 drop-shadow-[0_0_15px_rgba(59,130,246,0.3)] hover:drop-shadow-[0_0_25px_rgba(59,130,246,0.6)] transition-all duration-500 cursor-pointer" decoding="async" />
               <div>
                 <span className="text-[10px] sm:text-[11px] font-medium uppercase tracking-[0.3em] text-blue-300/70 block" style={{ fontFamily: "'Jost', sans-serif" }}>
                   3D Printed in Leeds
@@ -138,6 +219,31 @@ export default function Hero() {
                 .typewriter-cursor { animation: none !important; opacity: 1 !important; }
               }
             `}</style>
+
+            {/* Signature flourish — anime.js stroke-draws these on mount */}
+            <div className="mt-4 flex justify-center lg:justify-start">
+              <svg
+                className="hero-signature"
+                viewBox="0 0 260 26"
+                width="260"
+                height="26"
+                fill="none"
+                stroke="url(#hSigGrad)"
+                strokeWidth="1.6"
+                strokeLinecap="round"
+                aria-hidden="true"
+              >
+                <defs>
+                  <linearGradient id="hSigGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stopColor="#60a5fa" />
+                    <stop offset="50%" stopColor="#a78bfa" />
+                    <stop offset="100%" stopColor="#22d3ee" />
+                  </linearGradient>
+                </defs>
+                <path d="M4 14 C 40 4, 80 22, 130 12 S 220 4, 256 12" opacity="0.9" />
+                <path d="M24 22 L 236 22" strokeWidth="1" opacity="0.35" />
+              </svg>
+            </div>
 
             <p className="mt-4 sm:mt-6 max-w-lg text-stone-400 leading-relaxed mx-auto lg:mx-0 text-[13px] sm:text-base lg:text-lg [text-wrap:pretty]" style={{ fontFamily: "'Inter', sans-serif", lineHeight: 1.7 }}>
               From articulated dragons to ambient lamps, every piece is designed, printed, and hand-finished in our Leeds workshop. Eco-friendly PLA, no compromise on detail.
@@ -172,16 +278,20 @@ export default function Hero() {
             </div>
 
             {/* Stats row */}
-            <div className="mt-8 sm:mt-10 flex flex-wrap gap-6 sm:gap-8 justify-center lg:justify-start" ref={printsSold.ref}>
-              <div>
-                <p className="text-2xl font-bold text-white tabular-nums" style={{ fontFamily: "'Cinzel', serif" }}>{printsSold.count}+</p>
+            <div className="hero-stats-row mt-8 sm:mt-10 flex flex-wrap gap-6 sm:gap-8 justify-center lg:justify-start">
+              <div className="hero-stat">
+                <p className="text-2xl font-bold text-white tabular-nums" style={{ fontFamily: "'Cinzel', serif" }}>
+                  <span ref={printsRef}>0</span>+
+                </p>
                 <p className="text-[10px] uppercase tracking-[0.2em] text-stone-500 mt-0.5" style={{ fontFamily: "'Jost', sans-serif" }}>Prints Sold</p>
               </div>
-              <div ref={designs.ref}>
-                <p className="text-2xl font-bold text-white tabular-nums" style={{ fontFamily: "'Cinzel', serif" }}>{designs.count}+</p>
+              <div className="hero-stat">
+                <p className="text-2xl font-bold text-white tabular-nums" style={{ fontFamily: "'Cinzel', serif" }}>
+                  <span ref={designsRef}>0</span>+
+                </p>
                 <p className="text-[10px] uppercase tracking-[0.2em] text-stone-500 mt-0.5" style={{ fontFamily: "'Jost', sans-serif" }}>Designs</p>
               </div>
-              <div>
+              <div className="hero-stat">
                 <p className="text-2xl font-bold text-white" style={{ fontFamily: "'Cinzel', serif" }}>100%</p>
                 <p className="text-[10px] uppercase tracking-[0.2em] text-stone-500 mt-0.5" style={{ fontFamily: "'Jost', sans-serif" }}>Eco PLA</p>
               </div>
@@ -191,9 +301,9 @@ export default function Hero() {
           {/* Right - Lottie in glass card (desktop only) */}
           <div className="hidden lg:block relative">
             <div className="relative">
-              {/* Decorative rings */}
-              <div className="absolute -inset-12 rounded-full border border-blue-500/[0.05]" />
-              <div className="absolute -inset-20 rounded-full border border-purple-500/[0.03]" />
+              {/* Decorative rings — anime.js rotates these continuously */}
+              <div className="hero-ring-outer absolute -inset-12 rounded-full border border-blue-500/[0.05]" />
+              <div className="hero-ring-inner absolute -inset-20 rounded-full border border-purple-500/[0.03]" />
 
               {/* Colour glow behind */}
               <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-blue-500/15 via-purple-500/8 to-cyan-500/12 blur-3xl scale-110" />
@@ -227,11 +337,11 @@ export default function Hero() {
           </div>
         </div>
 
-        {/* Emblem divider */}
-        <div className="flex items-center justify-center gap-4 mt-16">
-          <div className="flex-1 h-px bg-gradient-to-r from-transparent via-blue-400/60 to-transparent" />
-          <img src="/frlogorv.png" alt="" aria-hidden="true" loading="lazy" className="h-8 w-8 opacity-80 drop-shadow-[0_0_12px_rgba(59,130,246,0.45)]" />
-          <div className="flex-1 h-px bg-gradient-to-r from-transparent via-blue-400/60 to-transparent" />
+        {/* Emblem divider — lines scan outward, emblem pops in on scroll */}
+        <div className="hero-emblem-divider flex items-center justify-center gap-4 mt-16">
+          <div className="hero-divider-line flex-1 h-px bg-gradient-to-r from-transparent via-blue-400/60 to-transparent" style={{ transform: 'scaleX(0)', transformOrigin: 'right' }} />
+          <img src="/frlogorv.png" alt="" aria-hidden="true" loading="lazy" className="hero-divider-emblem h-8 w-8 opacity-80 drop-shadow-[0_0_12px_rgba(59,130,246,0.45)]" style={{ opacity: 0 }} />
+          <div className="hero-divider-line flex-1 h-px bg-gradient-to-r from-transparent via-blue-400/60 to-transparent" style={{ transform: 'scaleX(0)', transformOrigin: 'left' }} />
         </div>
       </div>
     </section>
