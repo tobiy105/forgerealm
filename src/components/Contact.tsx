@@ -58,6 +58,7 @@ export default function Contact() {
       id="contact"
       ref={sectionRef}
       data-observe
+      suppressHydrationWarning
       className={`reveal relative py-16 sm:py-24 overflow-hidden bg-transparent ${isVisible ? "is-visible" : ""}`}
     >
       {/* Ambient glow */}

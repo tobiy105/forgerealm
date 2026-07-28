@@ -31,6 +31,7 @@ export default function Services() {
       <section
         id="services"
         data-observe
+        suppressHydrationWarning
         className="reveal relative py-16 sm:py-24"
       >
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative">
@@ -170,6 +171,7 @@ export default function Services() {
       <section
         id="materials"
         data-observe
+        suppressHydrationWarning
         className="reveal relative py-16 sm:py-24"
       >
         {/* Emerald ambient glow */}

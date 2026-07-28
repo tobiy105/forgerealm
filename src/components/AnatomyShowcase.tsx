@@ -205,19 +205,19 @@ export default function AnatomyShowcase() {
           </AnimatedHeading>
         </div>
 
-        {/* Desktop diagram — CSS grid keeps labels flanking the image at every width. */}
-        <div ref={rootRef} className="relative hidden md:block mx-auto" style={{ maxWidth: "980px" }}>
-          <div className="grid grid-cols-[minmax(160px,220px)_minmax(320px,1fr)_minmax(160px,220px)] items-center gap-x-10 lg:gap-x-16">
+        {/* Diagram — same structure at every width, only sizing/spacing changes. */}
+        <div ref={rootRef} className="relative mx-auto" style={{ maxWidth: "980px" }}>
+          <div className="grid grid-cols-[minmax(0,80px)_minmax(160px,1fr)_minmax(0,80px)] sm:grid-cols-[minmax(120px,200px)_minmax(220px,1fr)_minmax(120px,200px)] md:grid-cols-[minmax(160px,220px)_minmax(320px,1fr)_minmax(160px,220px)] items-center gap-x-1.5 sm:gap-x-6 md:gap-x-10 lg:gap-x-16">
             {/* Left labels */}
-            <div className="flex flex-col justify-between h-[440px] py-6 items-end">
+            <div className="flex flex-col justify-between h-[180px] sm:h-[360px] md:h-[440px] py-3 sm:py-5 items-end">
               {LEFT.map((a) => (
                 <div
                   key={a.key}
                   ref={setLabelRef(a.key)}
-                  className="anatomy-label opacity-0"
+                  className="anatomy-label opacity-0 max-w-full"
                 >
                   <span
-                    className="anatomy-label-text inline-block px-3 py-1.5 rounded-md border border-blue-400/25 bg-blue-500/[0.08] backdrop-blur-sm text-[10px] sm:text-[11px] uppercase tracking-[0.14em] text-blue-100/85 whitespace-nowrap"
+                    className="anatomy-label-text inline-block px-1.5 py-0.5 sm:px-3 sm:py-1.5 rounded-md border border-blue-400/25 bg-blue-500/[0.08] backdrop-blur-sm text-[8px] sm:text-[10px] md:text-[11px] uppercase tracking-[0.08em] sm:tracking-[0.14em] text-blue-100/85 leading-tight break-words"
                     style={{ fontFamily: '"JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace' }}
                   >
                     {a.label}
@@ -232,22 +232,22 @@ export default function AnatomyShowcase() {
                 ref={imageRef}
                 src="/owl-nbg.webp"
                 alt="A ForgeRealm printed owl figurine"
-                className="anatomy-focal h-[440px] w-auto object-contain opacity-0 drop-shadow-[0_0_40px_rgba(96,165,250,0.15)]"
+                className="anatomy-focal h-[180px] sm:h-[360px] md:h-[440px] w-auto object-contain opacity-0 drop-shadow-[0_0_40px_rgba(96,165,250,0.15)]"
                 loading="lazy"
                 decoding="async"
               />
             </div>
 
             {/* Right labels */}
-            <div className="flex flex-col justify-between h-[440px] py-6 items-start">
+            <div className="flex flex-col justify-between h-[180px] sm:h-[360px] md:h-[440px] py-3 sm:py-5 items-start">
               {RIGHT.map((a) => (
                 <div
                   key={a.key}
                   ref={setLabelRef(a.key)}
-                  className="anatomy-label opacity-0"
+                  className="anatomy-label opacity-0 max-w-full"
                 >
                   <span
-                    className="anatomy-label-text inline-block px-3 py-1.5 rounded-md border border-blue-400/25 bg-blue-500/[0.08] backdrop-blur-sm text-[10px] sm:text-[11px] uppercase tracking-[0.14em] text-blue-100/85 whitespace-nowrap"
+                    className="anatomy-label-text inline-block px-1.5 py-0.5 sm:px-3 sm:py-1.5 rounded-md border border-blue-400/25 bg-blue-500/[0.08] backdrop-blur-sm text-[8px] sm:text-[10px] md:text-[11px] uppercase tracking-[0.08em] sm:tracking-[0.14em] text-blue-100/85 leading-tight break-words"
                     style={{ fontFamily: '"JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace' }}
                   >
                     {a.label}
@@ -308,21 +308,6 @@ export default function AnatomyShowcase() {
           )}
         </div>
 
-        {/* Mobile fallback */}
-        <div className="md:hidden mx-auto max-w-sm">
-          <img src="/owl-nbg.webp" alt="" className="mx-auto h-64 w-auto object-contain" loading="lazy" decoding="async" />
-          <div className="mt-6 grid grid-cols-2 gap-2.5">
-            {ANCHORS.map((a) => (
-              <span
-                key={`${a.key}-m`}
-                className="text-center px-3 py-2 rounded-md border border-blue-400/25 bg-blue-500/[0.08] backdrop-blur-sm text-[10px] uppercase tracking-[0.14em] text-blue-100/85"
-                style={{ fontFamily: '"JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace' }}
-              >
-                {a.label}
-              </span>
-            ))}
-          </div>
-        </div>
       </div>
     </section>
   );

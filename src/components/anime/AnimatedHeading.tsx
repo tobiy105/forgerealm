@@ -2,7 +2,7 @@
 
 import { useLayoutEffect, useRef } from "react";
 import type { CSSProperties, ReactNode } from "react";
-import { animate, stagger, text } from "animejs";
+import { animate, stagger, splitText } from "animejs";
 
 type Props = {
   children: ReactNode;
@@ -55,7 +55,7 @@ export default function AnimatedHeading({
       return;
     }
 
-    const splitter = text.split(el, { chars: true, words: false, lines: false });
+    const splitter = splitText(el, { chars: true, words: false, lines: false });
     const chars = splitter.chars as HTMLElement[];
     if (!chars.length) { el.style.opacity = "1"; return; }
 

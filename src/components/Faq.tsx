@@ -59,6 +59,7 @@ export default function Faq() {
       id="faq"
       ref={sectionRef}
       data-observe
+      suppressHydrationWarning
       className={`reveal relative py-16 sm:py-24 overflow-hidden bg-transparent ${isVisible ? "is-visible" : ""}`}
     >
       {/* Ambient glow */}
