@@ -375,12 +375,12 @@ export default function AnatomyShowcase() {
         >
           <div className="grid grid-cols-[minmax(0,80px)_minmax(180px,1fr)_minmax(0,80px)] sm:grid-cols-[minmax(120px,200px)_minmax(220px,1fr)_minmax(120px,200px)] md:grid-cols-[minmax(160px,220px)_minmax(320px,1fr)_minmax(160px,220px)] xl:grid-cols-[minmax(160px,220px)_minmax(460px,1fr)_minmax(160px,220px)] items-center gap-x-1.5 sm:gap-x-6 md:gap-x-10 lg:gap-x-16">
             {/* Left labels */}
-            <div className="flex flex-col justify-between h-[210px] sm:h-[360px] md:h-[440px] xl:h-[520px] py-3 sm:py-5 items-end">
+            <div className="flex flex-col justify-between h-[420px] sm:h-[440px] md:h-[520px] xl:h-[620px] py-3 sm:py-5 items-end">
               {LEFT.map((a) => (
                 <div
                   key={a.key}
                   ref={setLabelRef(a.key)}
-                  className="anatomy-label max-w-full"
+                  className="anatomy-label max-w-full relative z-10"
                 >
                   <span
                     data-side={a.side}
@@ -396,25 +396,25 @@ export default function AnatomyShowcase() {
               ))}
             </div>
 
-            {/* Focal image */}
+            {/* Focal image — big enough on mobile that labels overlap; grows further at each breakpoint. */}
             <div className="flex justify-center">
               <img
                 ref={imageRef}
                 src="/owlPrint.png"
                 alt="A ForgeRealm printed owl figurine"
-                className="anatomy-focal h-[210px] sm:h-[360px] md:h-[440px] xl:h-[520px] w-auto object-contain drop-shadow-[0_0_40px_rgba(96,165,250,0.15)]"
+                className="anatomy-focal h-[420px] sm:h-[440px] md:h-[520px] xl:h-[620px] max-w-none w-auto object-contain drop-shadow-[0_0_40px_rgba(96,165,250,0.15)]"
                 loading="lazy"
                 decoding="async"
               />
             </div>
 
             {/* Right labels */}
-            <div className="flex flex-col justify-between h-[210px] sm:h-[360px] md:h-[440px] xl:h-[520px] py-3 sm:py-5 items-start">
+            <div className="flex flex-col justify-between h-[420px] sm:h-[440px] md:h-[520px] xl:h-[620px] py-3 sm:py-5 items-start">
               {RIGHT.map((a) => (
                 <div
                   key={a.key}
                   ref={setLabelRef(a.key)}
-                  className="anatomy-label max-w-full"
+                  className="anatomy-label max-w-full relative z-10"
                 >
                   <span
                     data-side={a.side}
