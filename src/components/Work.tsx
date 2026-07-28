@@ -1,29 +1,28 @@
 "use client";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
+import { animate } from "animejs";
+import type { JSAnimation } from "animejs";
 import { FiX } from "react-icons/fi";
 import AnimatedHeading from "./anime/AnimatedHeading";
 import ScrambleLabel from "./anime/ScrambleLabel";
-
-const useTheme = () => {
-  const [theme, setTheme] = useState<"light" | "dark">("dark");
-
-  useEffect(() => {
-    const getTheme = () =>
-      (typeof document !== "undefined" && (document.documentElement.getAttribute("data-theme") as "light" | "dark" | null)) ||
-      "dark";
-
-    setTheme(getTheme());
-
-    if (typeof MutationObserver !== "undefined") {
-      const observer = new MutationObserver(() => setTheme(getTheme()));
-      observer.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
-      return () => observer.disconnect();
-    }
-  }, []);
-
-  return theme;
-};
+import {
+  DUR,
+  EASE,
+  STEP,
+  clearWillChange,
+  interactiveSpring,
+  prefersReducedMotion,
+  setWillChange,
+} from "../hooks/motion";
+import { useAnimeReveal } from "../hooks/useAnimeReveal";
+import { createPausedLoops } from "../hooks/useLoopGroup";
 
 type Product = {
   id: string;
@@ -116,6 +115,23 @@ export default function Work() {
   const touchMovedRef = useRef(false);
   const autoScrollTimerRef = useRef<number | null>(null);
   const autoIndexRef = useRef(0);
+  const overlayRef = useRef<HTMLDivElement | null>(null);
+  const dialogRef = useRef<HTMLDivElement | null>(null);
+  const slideRef = useRef<HTMLDivElement | null>(null);
+  const floatImgRef = useRef<HTMLImageElement | null>(null);
+  const closingRef = useRef(false);
+  const closeAnimRef = useRef<JSAnimation | null>(null);
+
+  // Gallery panels rise in with a center-out stagger when the section scrolls
+  // into view (once). Panels carry `data-ar` + the `.work-panel` class.
+  const revealRef = useAnimeReveal<HTMLElement>({
+    selector: ".work-panel",
+    variant: "fade-up",
+    y: 28,
+    from: "center",
+    grid: [products.length, 1],
+    step: STEP.base,
+  });
 
   const activeProduct = useMemo(() => products[activeIndex], [activeIndex]);
 
@@ -153,7 +169,7 @@ export default function Work() {
         const entry = entries[0];
         setIsCarouselInView(entry.isIntersecting);
       },
-      { threshold: 0.35 }
+      { threshold: 0.35 },
     );
     observer.observe(carousel);
     return () => observer.disconnect();
@@ -180,10 +196,14 @@ export default function Work() {
     const carousel = carouselRef.current;
     if (!carousel) return;
     const recenter = () => {
-      const maxScroll = Math.max(0, carousel.scrollWidth - carousel.clientWidth);
+      const maxScroll = Math.max(
+        0,
+        carousel.scrollWidth - carousel.clientWidth,
+      );
       let target = storedScrollLeftRef.current ?? carousel.scrollLeft;
       if (storedViewportWidthRef.current) {
-        target = (target * carousel.clientWidth) / storedViewportWidthRef.current;
+        target =
+          (target * carousel.clientWidth) / storedViewportWidthRef.current;
       }
       const clamped = Math.min(Math.max(target, 0), maxScroll);
       carousel.scrollTo({ left: clamped, behavior: "auto" });
@@ -208,7 +228,8 @@ export default function Work() {
       requestAnimationFrame(() => {
         ticking = false;
         const width = carousel.clientWidth || 1;
-        const approxPanelWidth = isCoarsePointer && isNarrowScreen ? width * 0.8 : width * 0.2;
+        const approxPanelWidth =
+          isCoarsePointer && isNarrowScreen ? width * 0.8 : width * 0.2;
         const index = Math.round(carousel.scrollLeft / approxPanelWidth);
         const nextIndex = clampIndex(index);
         autoIndexRef.current = nextIndex;
@@ -225,13 +246,15 @@ export default function Work() {
   }, [isExpanded]);
 
   useEffect(() => {
-    if (!(isCoarsePointer && isNarrowScreen) || isExpanded || !isCarouselInView) return;
+    if (!(isCoarsePointer && isNarrowScreen) || isExpanded || !isCarouselInView)
+      return;
     autoIndexRef.current = 0;
     const startTimer = window.setTimeout(() => {
       const carousel = carouselRef.current;
       const panel = panelRefs.current[0];
       if (!carousel || !panel) return;
-      const target = panel.offsetLeft - (carousel.clientWidth - panel.offsetWidth) / 2;
+      const target =
+        panel.offsetLeft - (carousel.clientWidth - panel.offsetWidth) / 2;
       carousel.scrollTo({ left: Math.max(0, target), behavior: "auto" });
     }, 60);
     const step = () => {
@@ -241,7 +264,8 @@ export default function Work() {
       setActiveIndex(nextIndex);
       const panel = panelRefs.current[nextIndex];
       if (!carousel || !panel) return;
-      const target = panel.offsetLeft - (carousel.clientWidth - panel.offsetWidth) / 2;
+      const target =
+        panel.offsetLeft - (carousel.clientWidth - panel.offsetWidth) / 2;
       carousel.scrollTo({ left: Math.max(0, target), behavior: "smooth" });
     };
     autoScrollTimerRef.current = window.setInterval(step, 4200);
@@ -252,13 +276,119 @@ export default function Work() {
         autoScrollTimerRef.current = null;
       }
     };
-  }, [clampIndex, isCarouselInView, isCoarsePointer, isExpanded, isNarrowScreen]);
+  }, [
+    clampIndex,
+    isCarouselInView,
+    isCoarsePointer,
+    isExpanded,
+    isNarrowScreen,
+  ]);
+
+  // Exit animation: fade the whole overlay out with anime.js, then unmount.
+  const closeExpanded = useCallback(() => {
+    if (closingRef.current) return;
+    const overlay = overlayRef.current;
+    if (!overlay || prefersReducedMotion()) {
+      setIsExpanded(false);
+      return;
+    }
+    closingRef.current = true;
+    setWillChange(overlay, "opacity");
+    closeAnimRef.current = animate(overlay, {
+      opacity: 0,
+      duration: 200,
+      ease: EASE.inOut,
+      onComplete: () => {
+        closingRef.current = false;
+        clearWillChange(overlay);
+        setIsExpanded(false);
+      },
+    });
+  }, []);
+
+  useEffect(
+    () => () => {
+      closeAnimRef.current?.cancel();
+      closingRef.current = false;
+    },
+    [],
+  );
+
+  // Overlay entrance: backdrop fades in while the dialog springs up to scale.
+  useLayoutEffect(() => {
+    if (!isExpanded) return;
+    const overlay = overlayRef.current;
+    const dialog = dialogRef.current;
+    if (!overlay || !dialog || prefersReducedMotion()) return;
+    setWillChange(overlay, "opacity");
+    setWillChange(dialog);
+    const fade = animate(overlay, {
+      opacity: [0, 1],
+      duration: DUR.xs,
+      ease: EASE.inOut,
+      onComplete: () => clearWillChange(overlay),
+    });
+    const pop = animate(dialog, {
+      opacity: [0, 1],
+      scale: [0.96, 1],
+      ease: interactiveSpring(),
+      onComplete: () => clearWillChange(dialog),
+    });
+    return () => {
+      fade.cancel();
+      pop.cancel();
+      clearWillChange([overlay, dialog]);
+    };
+  }, [isExpanded]);
+
+  // Product switch: the freshly-keyed content slides in from the travel
+  // direction (the old content swaps out instantly).
+  useLayoutEffect(() => {
+    if (!isExpanded) return;
+    const slide = slideRef.current;
+    if (!slide || prefersReducedMotion()) return;
+    setWillChange(slide);
+    const anim = animate(slide, {
+      opacity: [0, 1],
+      translateX: [direction >= 0 ? 60 : -60, 0],
+      duration: DUR.xs,
+      ease: EASE.out,
+      onComplete: () => clearWillChange(slide),
+    });
+    return () => {
+      anim.cancel();
+      clearWillChange(slide);
+    };
+  }, [isExpanded, activeIndex]);
+
+  // Narrow-screen hero image gently floats — an infinite loop, so it goes
+  // through createPausedLoops (paused offscreen, cancelled on teardown) and
+  // never runs under prefers-reduced-motion.
+  useEffect(() => {
+    if (!isExpanded || !isNarrowScreen) return;
+    const img = floatImgRef.current;
+    if (!img || prefersReducedMotion()) return;
+    setWillChange(img, "transform");
+    const dispose = createPausedLoops(img, [
+      animate(img, {
+        translateY: -10,
+        duration: 1750,
+        ease: EASE.inOut,
+        loop: true,
+        alternate: true,
+      }),
+    ]);
+    return () => {
+      dispose();
+      clearWillChange(img);
+    };
+  }, [isExpanded, isNarrowScreen, activeIndex]);
 
   useEffect(() => {
     const handleKey = (event: KeyboardEvent) => {
       if (!isExpanded) return;
       if (event.key === "Escape") {
-        setIsExpanded(false);
+        closeExpanded();
         return;
       }
       if (event.key === "ArrowRight") {
@@ -272,7 +402,7 @@ export default function Work() {
     };
     window.addEventListener("keydown", handleKey);
     return () => window.removeEventListener("keydown", handleKey);
-  }, [isExpanded]);
+  }, [isExpanded, closeExpanded]);
 
   const getPanelWidth = (index: number) => {
     if (isCoarsePointer && isNarrowScreen) {
@@ -282,12 +412,6 @@ export default function Work() {
       return "100vw";
     }
     return hoveredIndex === index ? "28vw" : "20vw";
-  };
-
-
-  const getImageScale = (index: number) => {
-    if (isCoarsePointer && isNarrowScreen) return "scale(1.05)";
-    return hoveredIndex === index ? "scale(1.06)" : "scale(1)";
   };
 
   const handleOpen = (index: number) => {
@@ -308,9 +432,7 @@ export default function Work() {
     requestAnimationFrame(() => setIsExpanded(true));
   };
 
-  const handleClose = () => {
-    setIsExpanded(false);
-  };
+  const handleClose = closeExpanded;
 
   const handleNext = () => {
     setDirection(1);
@@ -325,7 +447,12 @@ export default function Work() {
   return (
     <section
       id="work"
-      className="relative h-screen w-full overflow-hidden text-white" style={{ background: 'linear-gradient(180deg, #080c14 0%, #0a0e18 50%, #080c14 100%)' }}
+      ref={revealRef}
+      className="relative h-screen w-full overflow-hidden text-white"
+      style={{
+        background:
+          "linear-gradient(180deg, #080c14 0%, #0a0e18 50%, #080c14 100%)",
+      }}
     >
       <div className="pointer-events-none absolute inset-0 -z-10" />
       {/* Yellow gradient borders */}
@@ -337,6 +464,7 @@ export default function Work() {
             <div className="inline-flex items-center gap-3 mb-3">
               <div className="w-8 h-px bg-gradient-to-r from-blue-400 to-purple-400" />
               <ScrambleLabel
+                ar
                 className="text-[10px] sm:text-[11px] font-medium uppercase tracking-[0.3em] text-blue-300/60"
                 style={{ fontFamily: "'Jost', sans-serif" }}
               >
@@ -347,38 +475,60 @@ export default function Work() {
               as="h2"
               className="text-2xl sm:text-3xl lg:text-4xl font-normal text-white"
               style={{ fontFamily: "'Cinzel', serif" }}
-              step={30}
             >
-              Featured <em className="text-[#FADE6A]" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 300 }}>Prints</em>
+              Featured{" "}
+              <em
+                className="text-[#FADE6A]"
+                style={{
+                  fontFamily: "'Cormorant Garamond', serif",
+                  fontWeight: 300,
+                }}
+              >
+                Prints
+              </em>
             </AnimatedHeading>
           </div>
-          <p className="work-text-force mt-2 text-sm text-stone-400" style={{ fontFamily: "'Cormorant Garamond', serif", fontStyle: 'italic' }}>
+          <p
+            className="work-text-force mt-2 text-sm text-stone-400"
+            style={{
+              fontFamily: "'Cormorant Garamond', serif",
+              fontStyle: "italic",
+            }}
+          >
             Some of our most popular prints
           </p>
         </div>
       </div>
-      <div ref={containerRef} className="relative z-10 mx-auto mt-6 h-[70vh] w-full max-w-[90vw] px-0">
+      <div
+        ref={containerRef}
+        className="relative z-10 mx-auto mt-6 h-[70vh] w-full max-w-[90vw] px-0"
+      >
         <div
           ref={carouselRef}
           className={`flex h-full w-full overflow-y-hidden scrollbar-hidden scroll-smooth ${
-            isExpanded ? "overflow-hidden snap-none" : "snap-x snap-mandatory overflow-x-auto"
+            isExpanded
+              ? "overflow-hidden snap-none"
+              : "snap-x snap-mandatory overflow-x-auto"
           } ${isCoarsePointer && isNarrowScreen ? "justify-start px-[8vw]" : "justify-center"}`}
           style={{
             WebkitOverflowScrolling: "touch",
             touchAction: isExpanded ? "none" : "auto",
-            scrollPaddingLeft: isCoarsePointer && isNarrowScreen ? "8vw" : undefined,
-            scrollPaddingRight: isCoarsePointer && isNarrowScreen ? "8vw" : undefined,
+            scrollPaddingLeft:
+              isCoarsePointer && isNarrowScreen ? "8vw" : undefined,
+            scrollPaddingRight:
+              isCoarsePointer && isNarrowScreen ? "8vw" : undefined,
           }}
         >
           {products.map((product, index) => {
             const isActive = isExpanded && activeIndex === index;
             return (
-              <motion.button
+              <button
                 key={product.id}
                 ref={(el) => {
                   panelRefs.current[index] = el;
                 }}
                 type="button"
+                data-ar
                 onMouseEnter={() => {
                   if (!isCoarsePointer && !isExpanded) setHoveredIndex(index);
                 }}
@@ -386,288 +536,372 @@ export default function Work() {
                 onClick={() => {
                   handleOpen(index);
                 }}
-                className={`relative flex h-full shrink-0 ${
-                  isCoarsePointer && isNarrowScreen ? "snap-center snap-always" : "snap-start"
+                className={`work-panel relative flex h-full shrink-0 ${
+                  isCoarsePointer && isNarrowScreen
+                    ? "snap-center snap-always"
+                    : "snap-start"
                 } items-center justify-center overflow-hidden border transition-[width] duration-500 ease-out focus:outline-none`}
                 style={{
                   width: getPanelWidth(index),
                   background: product.background,
-                  borderColor: '#FADE6A40',
+                  borderColor: "#FADE6A40",
                 }}
                 aria-label={`Open ${product.name}`}
               >
-                <span className="absolute inset-0 bg-gradient-to-b from-white/10 via-transparent to-black/30" aria-hidden />
-                <span className="absolute inset-0 opacity-0 transition duration-500 ease-out group-hover:opacity-100" aria-hidden />
-                <span className="work-text-force absolute right-6 top-10 text-6xl font-semibold sm:text-7xl" style={{ fontFamily: "'Cinzel', serif", color: product.textColor, opacity: 0.15 }}>
+                <span
+                  className="absolute inset-0 bg-gradient-to-b from-white/10 via-transparent to-black/30"
+                  aria-hidden
+                />
+                <span
+                  className="absolute inset-0 opacity-0 transition duration-500 ease-out group-hover:opacity-100"
+                  aria-hidden
+                />
+                <span
+                  className="work-text-force absolute right-6 top-10 text-6xl font-semibold sm:text-7xl"
+                  style={{
+                    fontFamily: "'Cinzel', serif",
+                    color: product.textColor,
+                    opacity: 0.15,
+                  }}
+                >
                   {(index + 1).toString().padStart(2, "0")}
                 </span>
-                <span className="work-text-force absolute left-6 top-8 rotate-180 text-[10px] uppercase tracking-[0.45em] [writing-mode:vertical-rl] sm:text-xs z-10" style={{ fontFamily: "'Cinzel', serif", color: product.textColor }}>
+                <span
+                  className="work-text-force absolute left-6 top-8 rotate-180 text-[10px] uppercase tracking-[0.45em] [writing-mode:vertical-rl] sm:text-xs z-10"
+                  style={{
+                    fontFamily: "'Cinzel', serif",
+                    color: product.textColor,
+                  }}
+                >
                   {product.name}
                 </span>
-                <motion.img
+                <img
                   src={product.image}
                   alt={product.name}
                   className={`${
                     isCoarsePointer && isNarrowScreen
                       ? "max-h-[52vh] max-w-[70vw]"
                       : "max-h-[40vh] max-w-[34vw] sm:max-h-[44vh] sm:max-w-[36vw]"
-                  } w-auto object-contain drop-shadow-[0_40px_80px_rgba(0,0,0,0.4)]`}
-                  animate={{
-                    scale: isActive ? 1.18 : hoveredIndex === index && !isCoarsePointer ? 1.08 : 1,
+                  } w-auto object-contain drop-shadow-[0_40px_80px_rgba(0,0,0,0.4)] transition-transform duration-500 ease-out motion-reduce:transition-none`}
+                  style={{
+                    transform: `scale(${
+                      isActive
+                        ? 1.18
+                        : hoveredIndex === index && !isCoarsePointer
+                          ? 1.08
+                          : 1
+                    })`,
                   }}
-                  transition={{ duration: 0.5, ease: "easeOut" }}
                 />
-              </motion.button>
+              </button>
             );
           })}
         </div>
       </div>
 
       <div className="pointer-events-none absolute bottom-6 left-1/2 -translate-x-1/2">
-        <div className="rounded-lg px-3 py-2 text-[10px] uppercase tracking-[0.35em] bg-black/50 text-white/60 backdrop-blur-sm" style={{ fontFamily: "'Jost', sans-serif" }}>
+        <div
+          className="rounded-lg px-3 py-2 text-[10px] uppercase tracking-[0.35em] bg-black/50 text-white/60 backdrop-blur-sm"
+          style={{ fontFamily: "'Jost', sans-serif" }}
+        >
           Swipe to explore
         </div>
       </div>
 
-      <AnimatePresence>
-        {isExpanded && (
-          <motion.div
-            className="fixed inset-0 z-[60] flex h-full w-full items-center justify-center"
-            style={{ background: activeProduct.background }}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={handleClose}
-            onTouchStart={(event) => {
-              touchStartXRef.current = event.touches[0]?.clientX ?? null;
-              touchStartYRef.current = event.touches[0]?.clientY ?? null;
-              touchMovedRef.current = false;
-            }}
-            onTouchMove={(event) => {
-              if (touchStartXRef.current === null || touchStartYRef.current === null) return;
-              const moveX = event.touches[0]?.clientX ?? touchStartXRef.current;
-              const moveY = event.touches[0]?.clientY ?? touchStartYRef.current;
-              const deltaX = Math.abs(moveX - touchStartXRef.current);
-              const deltaY = Math.abs(moveY - touchStartYRef.current);
-              if (deltaX > 10 || deltaY > 10) {
-                touchMovedRef.current = true;
+      {isExpanded && (
+        <div
+          ref={overlayRef}
+          className="fixed inset-0 z-[60] flex h-full w-full items-center justify-center"
+          style={{ background: activeProduct.background }}
+          onClick={handleClose}
+          onTouchStart={(event) => {
+            touchStartXRef.current = event.touches[0]?.clientX ?? null;
+            touchStartYRef.current = event.touches[0]?.clientY ?? null;
+            touchMovedRef.current = false;
+          }}
+          onTouchMove={(event) => {
+            if (
+              touchStartXRef.current === null ||
+              touchStartYRef.current === null
+            )
+              return;
+            const moveX = event.touches[0]?.clientX ?? touchStartXRef.current;
+            const moveY = event.touches[0]?.clientY ?? touchStartYRef.current;
+            const deltaX = Math.abs(moveX - touchStartXRef.current);
+            const deltaY = Math.abs(moveY - touchStartYRef.current);
+            if (deltaX > 10 || deltaY > 10) {
+              touchMovedRef.current = true;
+            }
+          }}
+          onTouchEnd={(event) => {
+            if (touchStartXRef.current === null) return;
+            const endX =
+              event.changedTouches[0]?.clientX ?? touchStartXRef.current;
+            const deltaX = endX - touchStartXRef.current;
+            const wasMoved = touchMovedRef.current;
+            touchStartXRef.current = null;
+            touchStartYRef.current = null;
+            touchMovedRef.current = false;
+            if (Math.abs(deltaX) > 50) {
+              event.stopPropagation();
+              if (deltaX < 0) {
+                setDirection(1);
+                handleNext();
+              } else {
+                setDirection(-1);
+                handlePrev();
               }
-            }}
-            onTouchEnd={(event) => {
-              if (touchStartXRef.current === null) return;
-              const endX = event.changedTouches[0]?.clientX ?? touchStartXRef.current;
-              const deltaX = endX - touchStartXRef.current;
-              const wasMoved = touchMovedRef.current;
-              touchStartXRef.current = null;
-              touchStartYRef.current = null;
-              touchMovedRef.current = false;
-              if (Math.abs(deltaX) > 50) {
-                event.stopPropagation();
-                if (deltaX < 0) {
-                  setDirection(1);
-                  handleNext();
-                } else {
-                  setDirection(-1);
-                  handlePrev();
-                }
-                return;
-              }
-              if (wasMoved) return;
-            }}
+              return;
+            }
+            if (wasMoved) return;
+          }}
+        >
+          <div className="absolute inset-0 bg-black/20" aria-hidden />
+          <div
+            ref={dialogRef}
+            className={`relative flex h-full w-full px-6 sm:px-12 lg:pr-0 ${
+              isNarrowScreen
+                ? "flex-col items-start justify-start overflow-y-auto"
+                : "flex-col items-center justify-center lg:flex-row lg:items-center lg:justify-start lg:gap-0"
+            }`}
+            style={
+              isNarrowScreen ? { WebkitOverflowScrolling: "touch" } : undefined
+            }
+            onClick={(event) => event.stopPropagation()}
           >
-            <motion.div
-              className="absolute inset-0 bg-black/20"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              aria-hidden
-            />
-            <motion.div
-              className={`relative flex h-full w-full px-6 sm:px-12 lg:pr-0 ${
-                isNarrowScreen
-                  ? "flex-col items-start justify-start overflow-y-auto"
-                  : "flex-col items-center justify-center lg:flex-row lg:items-center lg:justify-start lg:gap-0"
-              }`}
-              style={isNarrowScreen ? { WebkitOverflowScrolling: "touch" } : undefined}
-              initial={{ scale: 0.96, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1, transition: { type: "spring", stiffness: 160, damping: 22 } }}
-              exit={{ scale: 0.98, opacity: 0, transition: { duration: 0.2 } }}
-              onClick={(event) => event.stopPropagation()}
+            <div
+              key={activeProduct.id}
+              ref={slideRef}
+              className="relative flex h-full w-full"
             >
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={activeProduct.id}
-                  className="relative flex h-full w-full"
-                  custom={direction}
-                  initial={{ opacity: 0, x: direction >= 0 ? 60 : -60 }}
-                  animate={{ opacity: 1, x: 0, transition: { duration: 0.35, ease: "easeOut" } }}
-                  exit={{ opacity: 0, x: direction >= 0 ? -60 : 60, transition: { duration: 0.25, ease: "easeIn" } }}
-                >
-                  {isNarrowScreen ? (
-                    <div className="relative z-10 w-full max-w-md space-y-6 text-left">
-                      <div className="flex w-full justify-center pt-4">
-                        <motion.img
-                          src={activeProduct.image}
-                          alt={activeProduct.name}
-                          className="h-[45vh] w-[85vw] max-h-[45vh] max-w-[92vw] object-contain drop-shadow-[0_45px_90px_rgba(0,0,0,0.55)]"
-                          animate={{ y: [0, -10, 0] }}
-                          transition={{ duration: 3.5, ease: "easeInOut", repeat: Infinity }}
-                        />
-                      </div>
-                      <p className={`work-text-force text-[10px] uppercase tracking-[0.35em] ${isLight ? "text-slate-700" : "text-white/80"}`}>
-                        Featured print
-                      </p>
-                      <h3 className="work-text-force text-3xl font-bold sm:text-4xl" style={{ fontFamily: "'Cinzel', serif", color: activeProduct.textColor }}>
-                        {activeProduct.name}
-                      </h3>
-                      <p className="work-text-force text-sm sm:text-base" style={{ fontFamily: "'Inter', sans-serif", color: activeProduct.textColor, opacity: 0.9 }}>
-                        {activeProduct.description}
-                      </p>
-                      <p className="work-text-force text-sm sm:text-base" style={{ fontFamily: "'Inter', sans-serif", color: activeProduct.textColor, opacity: 0.7 }}>
-                        {activeProduct.shopDescription}
-                      </p>
-                      <p className="work-text-force text-xs sm:text-sm" style={{ fontFamily: "'Inter', sans-serif", color: activeProduct.textColor, opacity: 0.6 }}>
-                        {activeProduct.detail}
-                      </p>
-                      <div className="flex flex-wrap items-center gap-3">
-                        <button className={`work-text-force inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs uppercase tracking-[0.2em] transition ${isLight ? "border-slate-300 text-slate-700 hover:bg-slate-100" : "border-white/40 text-white hover:bg-white/10"}`}>
-                          View in store
-                        </button>
-                        <button
-                          type="button"
-                          onClick={handleClose}
-                          className={`work-text-force inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs uppercase tracking-[0.2em] transition ${isLight ? "border-slate-300 text-slate-700 hover:bg-slate-100" : "border-white/40 text-white hover:bg-white/10"}`}
-                        >
-                          Close
-                        </button>
-                      </div>
-                    </div>
-                  ) : (
-                    <>
-                      <div className="pointer-events-none absolute left-1/2 top-1/2 z-20 -translate-x-1/2 -translate-y-1/2">
-                        <img
-                          src={activeProduct.image}
-                          alt={activeProduct.name}
-                          className="h-[85vh] w-[80vw] max-h-[85vh] max-w-[90vw] sm:h-[85vh] sm:w-[75vw] sm:max-w-[85vw] object-contain drop-shadow-[0_55px_110px_rgba(0,0,0,0.6)]"
-                        />
-                      </div>
+              {isNarrowScreen ? (
+                <div className="relative z-10 w-full max-w-md space-y-6 text-left">
+                  <div className="flex w-full justify-center pt-4">
+                    <img
+                      ref={floatImgRef}
+                      src={activeProduct.image}
+                      alt={activeProduct.name}
+                      className="h-[45vh] w-[85vw] max-h-[45vh] max-w-[92vw] object-contain drop-shadow-[0_45px_90px_rgba(0,0,0,0.55)]"
+                    />
+                  </div>
+                  <p
+                    className={`work-text-force text-[10px] uppercase tracking-[0.35em] ${isLight ? "text-slate-700" : "text-white/80"}`}
+                  >
+                    Featured print
+                  </p>
+                  <h3
+                    className="work-text-force text-3xl font-bold sm:text-4xl"
+                    style={{
+                      fontFamily: "'Cinzel', serif",
+                      color: activeProduct.textColor,
+                    }}
+                  >
+                    {activeProduct.name}
+                  </h3>
+                  <p
+                    className="work-text-force text-sm sm:text-base"
+                    style={{
+                      fontFamily: "'Inter', sans-serif",
+                      color: activeProduct.textColor,
+                      opacity: 0.9,
+                    }}
+                  >
+                    {activeProduct.description}
+                  </p>
+                  <p
+                    className="work-text-force text-sm sm:text-base"
+                    style={{
+                      fontFamily: "'Inter', sans-serif",
+                      color: activeProduct.textColor,
+                      opacity: 0.7,
+                    }}
+                  >
+                    {activeProduct.shopDescription}
+                  </p>
+                  <p
+                    className="work-text-force text-xs sm:text-sm"
+                    style={{
+                      fontFamily: "'Inter', sans-serif",
+                      color: activeProduct.textColor,
+                      opacity: 0.6,
+                    }}
+                  >
+                    {activeProduct.detail}
+                  </p>
+                  <div className="flex flex-wrap items-center gap-3">
+                    <button
+                      className={`work-text-force inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs uppercase tracking-[0.2em] transition ${isLight ? "border-slate-300 text-slate-700 hover:bg-slate-100" : "border-white/40 text-white hover:bg-white/10"}`}
+                    >
+                      View in store
+                    </button>
+                    <button
+                      type="button"
+                      onClick={handleClose}
+                      className={`work-text-force inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs uppercase tracking-[0.2em] transition ${isLight ? "border-slate-300 text-slate-700 hover:bg-slate-100" : "border-white/40 text-white hover:bg-white/10"}`}
+                    >
+                      Close
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <>
+                  <div className="pointer-events-none absolute left-1/2 top-1/2 z-20 -translate-x-1/2 -translate-y-1/2">
+                    <img
+                      src={activeProduct.image}
+                      alt={activeProduct.name}
+                      className="h-[85vh] w-[80vw] max-h-[85vh] max-w-[90vw] sm:h-[85vh] sm:w-[75vw] sm:max-w-[85vw] object-contain drop-shadow-[0_55px_110px_rgba(0,0,0,0.6)]"
+                    />
+                  </div>
 
-                      <div className="relative z-10 w-full max-w-md space-y-6 text-left lg:w-[45%] lg:ml-[6vw] lg:my-auto">
-                        <p className="work-text-force text-[10px] uppercase tracking-[0.35em]" style={{ fontFamily: "'Jost', sans-serif", color: activeProduct.accentColor }}>
-                          Featured print
-                        </p>
-                        <h3 className="work-text-force text-3xl font-bold sm:text-4xl" style={{ fontFamily: "'Cinzel', serif", color: activeProduct.textColor }}>
-                          {activeProduct.name}
-                        </h3>
-                        <p className="work-text-force text-sm sm:text-base" style={{ fontFamily: "'Inter', sans-serif", color: activeProduct.textColor, opacity: 0.9 }}>
-                          {activeProduct.description}
-                        </p>
-                        <p className="work-text-force text-sm sm:text-base" style={{ fontFamily: "'Inter', sans-serif", color: activeProduct.textColor, opacity: 0.7 }}>
-                          {activeProduct.shopDescription}
-                        </p>
-                        <p className="work-text-force text-xs sm:text-sm" style={{ fontFamily: "'Inter', sans-serif", color: activeProduct.textColor, opacity: 0.6 }}>
-                          {activeProduct.detail}
-                        </p>
-                        <div className="flex flex-wrap items-center gap-3">
-                          <button className={`work-text-force inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs uppercase tracking-[0.2em] transition ${isLight ? "border-slate-300 text-slate-700 hover:bg-slate-100" : "border-white/40 text-white hover:bg-white/10"}`}>
-                            View in store
-                          </button>
-                          <button
-                            type="button"
-                            onClick={handleNext}
-                            className={`work-text-force inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs uppercase tracking-[0.2em] transition ${isLight ? "border-slate-300 text-slate-700 hover:bg-slate-100" : "border-white/40 text-white hover:bg-white/10"}`}
-                          >
-                            Next
-                          </button>
-                          <button
-                            type="button"
-                            onClick={handleClose}
-                            className={`work-text-force inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs uppercase tracking-[0.2em] transition ${isLight ? "border-slate-300 text-slate-700 hover:bg-slate-100" : "border-white/40 text-white hover:bg-white/10"}`}
-                          >
-                            Close
-                          </button>
-                        </div>
-                      </div>
+                  <div className="relative z-10 w-full max-w-md space-y-6 text-left lg:w-[45%] lg:ml-[6vw] lg:my-auto">
+                    <p
+                      className="work-text-force text-[10px] uppercase tracking-[0.35em]"
+                      style={{
+                        fontFamily: "'Jost', sans-serif",
+                        color: activeProduct.accentColor,
+                      }}
+                    >
+                      Featured print
+                    </p>
+                    <h3
+                      className="work-text-force text-3xl font-bold sm:text-4xl"
+                      style={{
+                        fontFamily: "'Cinzel', serif",
+                        color: activeProduct.textColor,
+                      }}
+                    >
+                      {activeProduct.name}
+                    </h3>
+                    <p
+                      className="work-text-force text-sm sm:text-base"
+                      style={{
+                        fontFamily: "'Inter', sans-serif",
+                        color: activeProduct.textColor,
+                        opacity: 0.9,
+                      }}
+                    >
+                      {activeProduct.description}
+                    </p>
+                    <p
+                      className="work-text-force text-sm sm:text-base"
+                      style={{
+                        fontFamily: "'Inter', sans-serif",
+                        color: activeProduct.textColor,
+                        opacity: 0.7,
+                      }}
+                    >
+                      {activeProduct.shopDescription}
+                    </p>
+                    <p
+                      className="work-text-force text-xs sm:text-sm"
+                      style={{
+                        fontFamily: "'Inter', sans-serif",
+                        color: activeProduct.textColor,
+                        opacity: 0.6,
+                      }}
+                    >
+                      {activeProduct.detail}
+                    </p>
+                    <div className="flex flex-wrap items-center gap-3">
+                      <button
+                        className={`work-text-force inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs uppercase tracking-[0.2em] transition ${isLight ? "border-slate-300 text-slate-700 hover:bg-slate-100" : "border-white/40 text-white hover:bg-white/10"}`}
+                      >
+                        View in store
+                      </button>
+                      <button
+                        type="button"
+                        onClick={handleNext}
+                        className={`work-text-force inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs uppercase tracking-[0.2em] transition ${isLight ? "border-slate-300 text-slate-700 hover:bg-slate-100" : "border-white/40 text-white hover:bg-white/10"}`}
+                      >
+                        Next
+                      </button>
+                      <button
+                        type="button"
+                        onClick={handleClose}
+                        className={`work-text-force inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs uppercase tracking-[0.2em] transition ${isLight ? "border-slate-300 text-slate-700 hover:bg-slate-100" : "border-white/40 text-white hover:bg-white/10"}`}
+                      >
+                        Close
+                      </button>
+                    </div>
+                  </div>
 
                   <div className="pointer-events-none absolute inset-y-0 right-0 z-0 hidden lg:block lg:w-1/2">
                     <div className="h-full w-full overflow-hidden border-l border-white/10 bg-white/10">
-                          {activeProduct.id === "aurora-lamp" ? (
-                            <img
-                              src="/ablamp2side.png"
-                              alt="Aurora Bloom Lamp lifestyle"
-                              className="h-full w-full object-cover"
-                            />
-                          ) : activeProduct.id === "nebula-owl" ? (
-                            <img
-                              src="/reg.png"
-                              alt="Leeds Owl lifestyle"
-                              className="h-full w-full object-cover"
-                            />
-                          ) : activeProduct.id === "forest-dragon" ? (
-                            <img
-                              src="/dragonforestbg.jpg"
-                              alt="Forest Dragon lifestyle"
-                              className="h-full w-full object-cover"
-                            />
-                          ) : activeProduct.id === "dice-guardian" ? (
-                            <img
-                              src="/dicedragonbg.jpg"
-                              alt="Dice Guardian lifestyle"
-                              className="h-full w-full object-cover"
-                            />
-                          ) : (
-                            <div className="flex h-full w-full items-center justify-center text-xs uppercase tracking-[0.3em] text-white/70">
-                              Lifestyle image
-                            </div>
-                          )}
+                      {activeProduct.id === "aurora-lamp" ? (
+                        <img
+                          src="/ablamp2side.png"
+                          alt="Aurora Bloom Lamp lifestyle"
+                          className="h-full w-full object-cover"
+                        />
+                      ) : activeProduct.id === "nebula-owl" ? (
+                        <img
+                          src="/reg.png"
+                          alt="Leeds Owl lifestyle"
+                          className="h-full w-full object-cover"
+                        />
+                      ) : activeProduct.id === "forest-dragon" ? (
+                        <img
+                          src="/dragonforestbg.jpg"
+                          alt="Forest Dragon lifestyle"
+                          className="h-full w-full object-cover"
+                        />
+                      ) : activeProduct.id === "dice-guardian" ? (
+                        <img
+                          src="/dicedragonbg.jpg"
+                          alt="Dice Guardian lifestyle"
+                          className="h-full w-full object-cover"
+                        />
+                      ) : (
+                        <div className="flex h-full w-full items-center justify-center text-xs uppercase tracking-[0.3em] text-white/70">
+                          Lifestyle image
                         </div>
-                      </div>
-                    </>
-                  )}
-                </motion.div>
-              </AnimatePresence>
-            </motion.div>
+                      )}
+                    </div>
+                  </div>
+                </>
+              )}
+            </div>
+          </div>
 
-            <button
-              type="button"
-              aria-label="Close"
-              className={`absolute right-6 top-6 z-20 flex h-11 w-11 items-center justify-center rounded-full border shadow-[0_12px_30px_rgba(0,0,0,0.45)] transition pointer-events-auto ${isLight ? "border-slate-300 bg-white/80 text-slate-700 hover:bg-white" : "border-white/60 bg-white/10 text-white hover:bg-white/20"}`}
-              onClick={(event) => {
-                event.stopPropagation();
-                handleClose();
-              }}
-            >
-              <FiX className="h-5 w-5" />
-            </button>
-            {!isNarrowScreen && (
-              <>
-                <button
-                  type="button"
-                  aria-label="Previous product"
-                  className="absolute bottom-8 left-8 z-10 rounded-full border border-white/40 bg-black/40 px-5 py-2 text-[10px] uppercase tracking-[0.4em] text-white shadow-[0_12px_30px_rgba(0,0,0,0.45)] transition hover:bg-black/60"
-                  onClick={(event) => {
-                    event.stopPropagation();
-                    handlePrev();
-                  }}
-                >
-                  Previous
-                </button>
-                <button
-                  type="button"
-                  aria-label="Next product"
-                  className="absolute bottom-8 right-8 z-10 rounded-full border border-white/40 bg-black/40 px-5 py-2 text-[10px] uppercase tracking-[0.4em] text-white shadow-[0_12px_30px_rgba(0,0,0,0.45)] transition hover:bg-black/60"
-                  onClick={(event) => {
-                    event.stopPropagation();
-                    handleNext();
-                  }}
-                >
-                  Next
-                </button>
-              </>
-            )}
-          </motion.div>
-        )}
-      </AnimatePresence>
+          <button
+            type="button"
+            aria-label="Close"
+            className={`absolute right-6 top-6 z-20 flex h-11 w-11 items-center justify-center rounded-full border shadow-[0_12px_30px_rgba(0,0,0,0.45)] transition pointer-events-auto ${isLight ? "border-slate-300 bg-white/80 text-slate-700 hover:bg-white" : "border-white/60 bg-white/10 text-white hover:bg-white/20"}`}
+            onClick={(event) => {
+              event.stopPropagation();
+              handleClose();
+            }}
+          >
+            <FiX className="h-5 w-5" />
+          </button>
+          {!isNarrowScreen && (
+            <>
+              <button
+                type="button"
+                aria-label="Previous product"
+                className="absolute bottom-8 left-8 z-10 rounded-full border border-white/40 bg-black/40 px-5 py-2 text-[10px] uppercase tracking-[0.4em] text-white shadow-[0_12px_30px_rgba(0,0,0,0.45)] transition hover:bg-black/60"
+                onClick={(event) => {
+                  event.stopPropagation();
+                  handlePrev();
+                }}
+              >
+                Previous
+              </button>
+              <button
+                type="button"
+                aria-label="Next product"
+                className="absolute bottom-8 right-8 z-10 rounded-full border border-white/40 bg-black/40 px-5 py-2 text-[10px] uppercase tracking-[0.4em] text-white shadow-[0_12px_30px_rgba(0,0,0,0.45)] transition hover:bg-black/60"
+                onClick={(event) => {
+                  event.stopPropagation();
+                  handleNext();
+                }}
+              >
+                Next
+              </button>
+            </>
+          )}
+        </div>
+      )}
     </section>
   );
 }

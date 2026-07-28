@@ -27,7 +27,12 @@
   /* theme tokens for adaptive UI */
   --fg: var(--foreground);
   --fg-muted: #374151; /* gray-700 for stronger contrast on light */
-  --surface: rgba(255, 255, 255, 0.88); /* translucent white for overlays on blue */
+  --surface: rgba(
+    255,
+    255,
+    255,
+    0.88
+  ); /* translucent white for overlays on blue */
   --border: rgba(0, 0, 0, 0.12);
 }
 
@@ -47,7 +52,7 @@
   --fg: #ededed;
   --fg-muted: #cbd5e1; /* slate-300 for dark */
   --surface: rgba(255, 255, 255, 0.07);
-  --border: rgba(255, 255, 255, 0.10);
+  --border: rgba(255, 255, 255, 0.1);
 }
 
 /* Smooth anchor jumps with sticky-nav clearance, disabled for reduced-motion */
@@ -58,7 +63,9 @@ html {
   scrollbar-width: thin;
 }
 @media (prefers-reduced-motion: reduce) {
-  html { scroll-behavior: auto; }
+  html {
+    scroll-behavior: auto;
+  }
 }
 
 @theme inline {
@@ -86,7 +93,12 @@ html {
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-sans), ui-sans-serif, system-ui, -apple-system, sans-serif;
+  font-family:
+    var(--font-sans),
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
@@ -115,14 +127,19 @@ html {
 
 /* Brand display font for the main hero wordmark */
 .font-brand {
-  font-family: var(--font-display), var(--font-sans), ui-sans-serif, -apple-system, sans-serif !important;
+  font-family:
+    var(--font-display),
+    var(--font-sans),
+    ui-sans-serif,
+    -apple-system,
+    sans-serif !important;
   letter-spacing: 0.02em;
   font-weight: 400;
 }
 
 /* Stronger surface glass effect for select containers */
 .surface-strong {
-  background-color: rgba(255, 255, 255, 0.10) !important; /* default fallback */
+  background-color: rgba(255, 255, 255, 0.1) !important; /* default fallback */
 }
 
 [data-theme="dark"] .surface-strong {
@@ -130,7 +147,12 @@ html {
 }
 
 [data-theme="light"] .surface-strong {
-  background-color: rgba(255, 255, 255, 0.92) !important; /* slightly more solid in light */
+  background-color: rgba(
+    255,
+    255,
+    255,
+    0.92
+  ) !important; /* slightly more solid in light */
 }
 
 /* Basic, global light-mode expectation */
@@ -141,105 +163,216 @@ html {
 
 /* Light mode surfaces: vibrant warm glass panels with rich contrast */
 [data-theme="light"] #theme-scope .theme-surface {
-  background: linear-gradient(135deg, #fef7f0 0%, #fdf4e8 25%, #f8f0e0 50%, #f0e8d0 75%, #e8dcc0 100%);
+  background: linear-gradient(
+    135deg,
+    #fef7f0 0%,
+    #fdf4e8 25%,
+    #f8f0e0 50%,
+    #f0e8d0 75%,
+    #e8dcc0 100%
+  );
   position: relative;
 }
 
 [data-theme="light"] #theme-scope .theme-surface::before {
-  content: '';
+  content: "";
   position: absolute;
   inset: 0;
-  background: 
-    radial-gradient(circle at 20% 30%, rgba(59, 130, 246, 0.10) 0%, transparent 50%),
-    radial-gradient(circle at 80% 70%, rgba(16, 185, 129, 0.08) 0%, transparent 45%),
-    radial-gradient(circle at 60% 20%, rgba(139, 92, 246, 0.06) 0%, transparent 40%),
-    radial-gradient(circle at 40% 80%, rgba(245, 158, 11, 0.04) 0%, transparent 35%);
+  background:
+    radial-gradient(
+      circle at 20% 30%,
+      rgba(59, 130, 246, 0.1) 0%,
+      transparent 50%
+    ),
+    radial-gradient(
+      circle at 80% 70%,
+      rgba(16, 185, 129, 0.08) 0%,
+      transparent 45%
+    ),
+    radial-gradient(
+      circle at 60% 20%,
+      rgba(139, 92, 246, 0.06) 0%,
+      transparent 40%
+    ),
+    radial-gradient(
+      circle at 40% 80%,
+      rgba(245, 158, 11, 0.04) 0%,
+      transparent 35%
+    );
   pointer-events: none;
 }
 
 [data-theme="light"] #theme-scope .theme-surface::after {
-  content: '';
+  content: "";
   position: absolute;
   inset: 0;
-  background-image: 
-    radial-gradient(circle at 25% 25%, rgba(255, 255, 255, 0.15) 1px, transparent 1px),
-    radial-gradient(circle at 75% 75%, rgba(255, 255, 255, 0.10) 1px, transparent 1px);
-  background-size: 60px 60px, 40px 40px;
-  background-position: 0 0, 20px 20px;
+  background-image:
+    radial-gradient(
+      circle at 25% 25%,
+      rgba(255, 255, 255, 0.15) 1px,
+      transparent 1px
+    ),
+    radial-gradient(
+      circle at 75% 75%,
+      rgba(255, 255, 255, 0.1) 1px,
+      transparent 1px
+    );
+  background-size:
+    60px 60px,
+    40px 40px;
+  background-position:
+    0 0,
+    20px 20px;
   opacity: 0.3;
   pointer-events: none;
 }
 
 /* Light theme gradients aligned to vibrant warm glass aesthetic */
 [data-theme="light"] #theme-scope #services {
-  background: linear-gradient(135deg, #fef7f0 0%, #fdf4e8 30%, #f8f0e0 60%, #f0e8d0 90%, #e8dcc0 100%) !important;
+  background: linear-gradient(
+    135deg,
+    #fef7f0 0%,
+    #fdf4e8 30%,
+    #f8f0e0 60%,
+    #f0e8d0 90%,
+    #e8dcc0 100%
+  ) !important;
   position: relative;
 }
 
 [data-theme="light"] #theme-scope #services::before {
-  content: '';
+  content: "";
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle at 25% 40%, rgba(59, 130, 246, 0.12) 0%, transparent 60%),
-              radial-gradient(circle at 75% 60%, rgba(16, 185, 129, 0.08) 0%, transparent 50%);
+  background:
+    radial-gradient(
+      circle at 25% 40%,
+      rgba(59, 130, 246, 0.12) 0%,
+      transparent 60%
+    ),
+    radial-gradient(
+      circle at 75% 60%,
+      rgba(16, 185, 129, 0.08) 0%,
+      transparent 50%
+    );
   pointer-events: none;
 }
 
 [data-theme="light"] #theme-scope #materials {
-  background: linear-gradient(315deg, #fef7f0 0%, #fdf4e8 35%, #f0f4e8 70%, #e0f0d8 100%) !important;
+  background: linear-gradient(
+    315deg,
+    #fef7f0 0%,
+    #fdf4e8 35%,
+    #f0f4e8 70%,
+    #e0f0d8 100%
+  ) !important;
   position: relative;
 }
 
 [data-theme="light"] #theme-scope #materials::before {
-  content: '';
+  content: "";
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle at 30% 50%, rgba(34, 197, 94, 0.10) 0%, transparent 55%),
-              radial-gradient(circle at 70% 30%, rgba(59, 130, 246, 0.06) 0%, transparent 45%);
+  background:
+    radial-gradient(
+      circle at 30% 50%,
+      rgba(34, 197, 94, 0.1) 0%,
+      transparent 55%
+    ),
+    radial-gradient(
+      circle at 70% 30%,
+      rgba(59, 130, 246, 0.06) 0%,
+      transparent 45%
+    );
   pointer-events: none;
 }
 
 /* Work: vibrant warm gradient with rich depth */
 [data-theme="light"] #theme-scope #work {
-  background: linear-gradient(135deg, #fef7f0 0%, #fdf4e8 40%, #f8f0e0 80%, #f0e8d0 100%) !important;
+  background: linear-gradient(
+    135deg,
+    #fef7f0 0%,
+    #fdf4e8 40%,
+    #f8f0e0 80%,
+    #f0e8d0 100%
+  ) !important;
   position: relative;
 }
 
 [data-theme="light"] #theme-scope #work::before {
-  content: '';
+  content: "";
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle at 40% 60%, rgba(251, 146, 60, 0.08) 0%, transparent 50%),
-              radial-gradient(circle at 80% 20%, rgba(139, 92, 246, 0.06) 0%, transparent 45%);
+  background:
+    radial-gradient(
+      circle at 40% 60%,
+      rgba(251, 146, 60, 0.08) 0%,
+      transparent 50%
+    ),
+    radial-gradient(
+      circle at 80% 20%,
+      rgba(139, 92, 246, 0.06) 0%,
+      transparent 45%
+    );
   pointer-events: none;
 }
 
 /* FAQ + Contact: vibrant gold and blue tones with rich contrast */
 [data-theme="light"] #theme-scope #faq {
-  background: linear-gradient(135deg, #fef7f0 0%, #fdf4e8 40%, #f8f0e0 80%, #f0e8d0 100%) !important;
+  background: linear-gradient(
+    135deg,
+    #fef7f0 0%,
+    #fdf4e8 40%,
+    #f8f0e0 80%,
+    #f0e8d0 100%
+  ) !important;
   position: relative;
 }
 
 [data-theme="light"] #theme-scope #faq::before {
-  content: '';
+  content: "";
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle at 20% 50%, rgba(245, 158, 11, 0.10) 0%, transparent 55%),
-              radial-gradient(circle at 80% 40%, rgba(59, 130, 246, 0.08) 0%, transparent 50%);
+  background:
+    radial-gradient(
+      circle at 20% 50%,
+      rgba(245, 158, 11, 0.1) 0%,
+      transparent 55%
+    ),
+    radial-gradient(
+      circle at 80% 40%,
+      rgba(59, 130, 246, 0.08) 0%,
+      transparent 50%
+    );
   pointer-events: none;
 }
 
 [data-theme="light"] #theme-scope #contact {
-  background: linear-gradient(315deg, #fef7f0 0%, #fdf4e8 40%, #f0f4f8 80%, #e0e8f0 100%) !important;
+  background: linear-gradient(
+    315deg,
+    #fef7f0 0%,
+    #fdf4e8 40%,
+    #f0f4f8 80%,
+    #e0e8f0 100%
+  ) !important;
   position: relative;
 }
 
 [data-theme="light"] #theme-scope #contact::before {
-  content: '';
+  content: "";
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle at 25% 35%, rgba(59, 130, 246, 0.12) 0%, transparent 60%),
-              radial-gradient(circle at 75% 65%, rgba(16, 185, 129, 0.08) 0%, transparent 50%);
+  background:
+    radial-gradient(
+      circle at 25% 35%,
+      rgba(59, 130, 246, 0.12) 0%,
+      transparent 60%
+    ),
+    radial-gradient(
+      circle at 75% 65%,
+      rgba(16, 185, 129, 0.08) 0%,
+      transparent 50%
+    );
   pointer-events: none;
 }
 
@@ -300,10 +433,14 @@ html {
 
 /* Light mode card contrast + shadow for all containers */
 [data-theme="light"] #theme-scope .bg-white\/5 {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.88) 0%, rgba(255, 255, 255, 0.82) 100%) !important;
-  box-shadow: 
-    0 20px 40px -20px rgba(0, 0, 0, 0.12), 
-    0 8px 16px -8px rgba(59, 130, 246, 0.10), 
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.88) 0%,
+    rgba(255, 255, 255, 0.82) 100%
+  ) !important;
+  box-shadow:
+    0 20px 40px -20px rgba(0, 0, 0, 0.12),
+    0 8px 16px -8px rgba(59, 130, 246, 0.1),
     inset 0 1px 0 rgba(255, 255, 255, 0.8),
     0 0 0 1px rgba(59, 130, 246, 0.08) !important;
   border: 1px solid rgba(59, 130, 246, 0.15) !important;
@@ -312,10 +449,14 @@ html {
 }
 
 [data-theme="light"] #theme-scope .bg-white\/5:hover {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.90) 100%) !important;
-  box-shadow: 
-    0 32px 64px -24px rgba(0, 0, 0, 0.15), 
-    0 16px 32px -16px rgba(59, 130, 246, 0.15), 
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.95) 0%,
+    rgba(255, 255, 255, 0.9) 100%
+  ) !important;
+  box-shadow:
+    0 32px 64px -24px rgba(0, 0, 0, 0.15),
+    0 16px 32px -16px rgba(59, 130, 246, 0.15),
     inset 0 1px 0 rgba(255, 255, 255, 0.9),
     0 0 0 1px rgba(59, 130, 246, 0.2) !important;
   transform: translateY(-2px) !important;
@@ -331,8 +472,14 @@ html {
 
 /* Light mode: stronger contrast for FAQ sidebar KPI cards */
 [data-theme="light"] #theme-scope #faq .bg-white\/5 {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.8) 100%) !important;
-  box-shadow: 0 24px 50px -35px rgba(0, 0, 0, 0.2), 0 12px 24px -12px rgba(245, 158, 11, 0.12) !important;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.9) 0%,
+    rgba(255, 255, 255, 0.8) 100%
+  ) !important;
+  box-shadow:
+    0 24px 50px -35px rgba(0, 0, 0, 0.2),
+    0 12px 24px -12px rgba(245, 158, 11, 0.12) !important;
 }
 
 [data-theme="light"] #theme-scope #faq .text-white {
@@ -346,19 +493,25 @@ html {
 /* Light mode card treatment */
 [data-theme="light"] .light-panel {
   background: linear-gradient(45deg, #fff -25%, transparent);
-  box-shadow: inset -5px 5px 5px -5px #fff8, inset 5px -5px 5px -5px #fff8,
-    var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000),
-    var(--tw-shadow), 2px -1px 14px -10px #0004;
+  box-shadow:
+    inset -5px 5px 5px -5px #fff8,
+    inset 5px -5px 5px -5px #fff8,
+    var(--tw-ring-offset-shadow, 0 0 #0000),
+    var(--tw-ring-shadow, 0 0 #0000),
+    var(--tw-shadow),
+    2px -1px 14px -10px #0004;
   border-color: rgba(203, 213, 225, 0.8);
 }
 
-code, pre {
+code,
+pre {
   font-family: var(--font-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
 }
 
 /* ── Sexy aurora background ── */
 @keyframes aurora {
-  0%, 100% {
+  0%,
+  100% {
     background-position: 0% 50%;
     filter: hue-rotate(0deg);
   }
@@ -377,11 +530,11 @@ code, pre {
 .aurora-bg {
   background: linear-gradient(
     -45deg,
-    rgba(59,130,246,0.15),
-    rgba(139,92,246,0.12),
-    rgba(6,182,212,0.10),
-    rgba(236,72,153,0.08),
-    rgba(59,130,246,0.15)
+    rgba(59, 130, 246, 0.15),
+    rgba(139, 92, 246, 0.12),
+    rgba(6, 182, 212, 0.1),
+    rgba(236, 72, 153, 0.08),
+    rgba(59, 130, 246, 0.15)
   );
   background-size: 400% 400%;
   animation: aurora 15s ease-in-out infinite;
@@ -389,8 +542,13 @@ code, pre {
 
 /* ── Animated gradient text ── */
 @keyframes gradient-text-flow {
-  0%, 100% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
 }
 
 .text-gradient-animated {
@@ -403,12 +561,10 @@ code, pre {
 
 /* ── Floating drift for particles ── */
 
-
-
-
 /* ── Glow breathe for ambient orbs ── */
 @keyframes glow-breathe {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 0.3;
     transform: scale(1) translate(0, 0);
   }
@@ -428,17 +584,22 @@ code, pre {
 
 /* ── Navbar animated border ── */
 
-
 .navbar-glow {
   position: relative;
 }
 
 .navbar-glow::before {
-  content: '';
+  content: "";
   position: absolute;
   inset: -1px;
   border-radius: 9999px;
-  background: linear-gradient(90deg, rgba(59,130,246,0.4), rgba(139,92,246,0.3), rgba(6,182,212,0.4), rgba(59,130,246,0.4));
+  background: linear-gradient(
+    90deg,
+    rgba(59, 130, 246, 0.4),
+    rgba(139, 92, 246, 0.3),
+    rgba(6, 182, 212, 0.4),
+    rgba(59, 130, 246, 0.4)
+  );
   background-size: 300% 300%;
   opacity: 0;
   transition: opacity 0.3s ease;
@@ -450,11 +611,7 @@ code, pre {
 
 /* ── Smooth scale-in for cards ── */
 
-
-
-
 /* ── Shine sweep on hover ── */
-
 
 .hover-shine {
   position: relative;
@@ -462,13 +619,18 @@ code, pre {
 }
 
 .hover-shine::after {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: -100%;
   width: 50%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.08),
+    transparent
+  );
   transition: none;
   pointer-events: none;
 }
@@ -515,20 +677,18 @@ code, pre {
 
 /* Smooth spinning animation */
 
-
-
 /* Soft pulse animation */
-
-
 
 /* Glowing fade animation */
 
-
-
 /* Shimmer animation */
 @keyframes shimmer {
-  0% { transform: translateX(-100%); }
-  100% { transform: translateX(300%); }
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(300%);
+  }
 }
 .animate-shimmer {
   animation: shimmer 1.8s linear infinite;
@@ -553,27 +713,12 @@ code, pre {
   object-fit: cover;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-.animate-fade-in { animation: fade-in 1s ease-out forwards; }
-.animate-slide-up { animation: slide-up 1s ease-out forwards; }
-
-
-
+.animate-fade-in {
+  animation: fade-in 1s ease-out forwards;
+}
+.animate-slide-up {
+  animation: slide-up 1s ease-out forwards;
+}
 
 /* Hide scrollbars for horizontal carousels */
 .scrollbar-hidden {
@@ -588,7 +733,9 @@ code, pre {
 .reveal {
   opacity: 0;
   transform: translateY(24px);
-  transition: opacity 0.7s ease, transform 0.7s ease;
+  transition:
+    opacity 0.7s ease,
+    transform 0.7s ease;
 }
 .reveal.is-visible {
   opacity: 1;
@@ -621,9 +768,38 @@ code, pre {
 [data-theme="light"] #theme-scope h2,
 [data-theme="light"] #theme-scope h3,
 [data-theme="light"] #theme-scope h4 {
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.05);
+  text-shadow:
+    0 2px 4px rgba(0, 0, 0, 0.1),
+    0 1px 2px rgba(0, 0, 0, 0.05);
 }
 
 [data-theme="light"] #theme-scope .font-display {
-  text-shadow: 0 4px 8px rgba(0, 0, 0, 0.15), 0 2px 4px rgba(0, 0, 0, 0.1);
+  text-shadow:
+    0 4px 8px rgba(0, 0, 0, 0.15),
+    0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* ── Motion core: [data-ar] reveal contract ── */
+/* Entrance targets carry `data-ar` (never Tailwind opacity-0). They are only
+   hidden once the inline <head> script stamps `html.js`, so no-JS users and
+   crawlers see the full page instantly and JS users get no flash.
+   Hydration-failure safety net: if no motion primitive takes control of an
+   element (each primitive sets el.style.animation = 'none' the moment it
+   does), the CSS animation below reveals it after 3s regardless — the page
+   can never stay blank. Loop/scrub targets must never carry data-ar. */
+html.js [data-ar] {
+  opacity: 0;
+  animation: ar-fallback-reveal 600ms ease-out 3s forwards;
+}
+@keyframes ar-fallback-reveal {
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  html.js [data-ar] {
+    opacity: 1;
+    animation: none;
+  }
 }

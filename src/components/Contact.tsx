@@ -1,65 +1,79 @@
-'use client';
+"use client";
 
-import { useEffect, useRef, useState } from "react";
-import { FaEnvelope, FaMapMarkerAlt, FaClock, FaEnvelopeOpenText, FaPhoneAlt } from "react-icons/fa";
-import { animate } from "animejs";
+import { useEffect, useRef } from "react";
+import {
+  FaEnvelope,
+  FaMapMarkerAlt,
+  FaClock,
+  FaEnvelopeOpenText,
+  FaPhoneAlt,
+} from "react-icons/fa";
+import { animate, stagger } from "animejs";
+import type { JSAnimation } from "animejs";
 import { useAnimeReveal } from "../hooks/useAnimeReveal";
+import {
+  DUR,
+  STEP,
+  interactiveSpring,
+  prefersReducedMotion,
+  setWillChange,
+  clearWillChange,
+} from "../hooks/motion";
 import AnimatedHeading from "./anime/AnimatedHeading";
 
 export default function Contact() {
-  const [isVisible, setIsVisible] = useState(false);
   const sectionRef = useRef<HTMLElement | null>(null);
-  const infoListRef = useAnimeReveal<HTMLDivElement>({ selector: ".contact-info-card", step: 120, y: 20 });
-  const ctaRef = useAnimeReveal<HTMLDivElement>({ selector: ".contact-cta-block", step: 0, duration: 900, y: 20 });
+  const infoListRef = useAnimeReveal<HTMLDivElement>({
+    selector: ".contact-info-card",
+    step: STEP.loose,
+    y: 20,
+  });
+  const ctaRef = useAnimeReveal<HTMLDivElement>({
+    selector: ".contact-cta-block",
+    step: 0,
+    duration: DUR.lg,
+    y: 20,
+  });
 
+  // One-shot spring settle on the icon tiles as the section scrolls into view —
+  // replaces the old infinite pulse so nothing keeps animating after entry.
   useEffect(() => {
-    if (!sectionRef.current) return;
-    if (typeof window === "undefined") return;
-    if (!("IntersectionObserver" in window)) {
-      setIsVisible(true);
-      return;
-    }
+    const root = sectionRef.current;
+    if (!root || typeof window === "undefined") return;
+    if (prefersReducedMotion()) return;
+    const tiles = Array.from(
+      root.querySelectorAll<HTMLElement>(".contact-icon-tile"),
+    );
+    if (!tiles.length) return;
 
+    let anim: JSAnimation | null = null;
     const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setIsVisible(true);
-            observer.unobserve(entry.target);
-          }
+      ([entry]) => {
+        if (!entry.isIntersecting) return;
+        observer.disconnect();
+        setWillChange(tiles, "transform");
+        anim = animate(tiles, {
+          scale: [0.5, 1],
+          delay: stagger(STEP.base),
+          ease: interactiveSpring(),
+          onComplete: () => clearWillChange(tiles),
         });
       },
-      { threshold: 0.12, rootMargin: "120px 0px -10% 0px" }
+      { threshold: 0.2, rootMargin: "0px 0px -10% 0px" },
     );
-
-    observer.observe(sectionRef.current);
-    return () => observer.disconnect();
-  }, []);
-
-  // Gentle pulse on contact icon tiles — infinite low-key breathing.
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    const root = sectionRef.current;
-    if (!root) return;
-    const tiles = root.querySelectorAll(".contact-icon-tile");
-    if (!tiles.length) return;
-    animate(tiles, {
-      scale: [1, 1.06, 1],
-      duration: 3200,
-      loop: true,
-      delay: (_el: Element, i: number) => i * 260,
-      ease: "inOutSine",
-    });
+    observer.observe(root);
+    return () => {
+      observer.disconnect();
+      anim?.cancel();
+      clearWillChange(tiles);
+    };
   }, []);
 
   return (
     <section
       id="contact"
       ref={sectionRef}
-      data-observe
-      suppressHydrationWarning
-      className={`reveal relative py-16 sm:py-24 overflow-hidden bg-transparent ${isVisible ? "is-visible" : ""}`}
+      className="relative py-16 sm:py-24 overflow-hidden bg-transparent"
     >
       {/* Ambient glow */}
       <div className="pointer-events-none absolute inset-0">
@@ -77,31 +91,51 @@ export default function Contact() {
                 as="h2"
                 className="text-4xl sm:text-5xl font-bold text-white"
                 style={{ fontFamily: "'Cinzel', serif" }}
-                step={45}
               >
                 Contact
               </AnimatedHeading>
-              <FaEnvelopeOpenText className="w-8 h-8 sm:w-10 sm:h-10 text-blue-400" aria-hidden />
+              <FaEnvelopeOpenText
+                className="w-8 h-8 sm:w-10 sm:h-10 text-blue-400"
+                aria-hidden
+              />
             </div>
 
             <p
               className="text-lg text-stone-400 leading-relaxed"
               style={{ fontFamily: "'Inter', sans-serif" }}
             >
-              Have a design, concept, or a project idea? Let's create something extraordinary together.
+              Have a design, concept, or a project idea? Let's create something
+              extraordinary together.
             </p>
 
             {/* Contact details */}
             <div className="space-y-4">
               {[
-                { title: "Location", detail: "Leeds, United Kingdom", icon: <FaMapMarkerAlt className="text-blue-400" /> },
-                { title: "Email", detail: "info@forgerealm.co.uk", icon: <FaEnvelope className="text-blue-400" /> },
-                { title: "Phone", detail: "+44 (0) 7344 237800", icon: <FaPhoneAlt className="text-blue-400" /> },
-                { title: "Hours", detail: "Mon-Fri 08:00-18:00", icon: <FaClock className="text-blue-400" /> },
+                {
+                  title: "Location",
+                  detail: "Leeds, United Kingdom",
+                  icon: <FaMapMarkerAlt className="text-blue-400" />,
+                },
+                {
+                  title: "Email",
+                  detail: "info@forgerealm.co.uk",
+                  icon: <FaEnvelope className="text-blue-400" />,
+                },
+                {
+                  title: "Phone",
+                  detail: "+44 (0) 7344 237800",
+                  icon: <FaPhoneAlt className="text-blue-400" />,
+                },
+                {
+                  title: "Hours",
+                  detail: "Mon-Fri 08:00-18:00",
+                  icon: <FaClock className="text-blue-400" />,
+                },
               ].map((item) => (
                 <div
                   key={item.title}
-                  className="contact-info-card opacity-0 group flex items-center gap-6 p-5 rounded-2xl border border-white/10 bg-white/[0.03] transition-all duration-300 hover:border-blue-400/40 hover:-translate-y-0.5"
+                  data-ar
+                  className="contact-info-card group flex items-center gap-6 p-5 rounded-2xl border border-white/10 bg-white/[0.03] transition-all duration-300 hover:border-blue-400/40 hover:-translate-y-0.5"
                 >
                   <div className="contact-icon-tile flex-shrink-0 p-3 rounded-xl bg-blue-400/10 group-hover:bg-blue-400/20 transition-colors duration-300">
                     {item.icon}
@@ -125,7 +159,10 @@ export default function Contact() {
             </div>
 
             {/* Business hours */}
-            <div className="contact-info-card opacity-0 rounded-2xl border border-white/10 bg-white/[0.03] p-8 transition-colors duration-300 hover:border-blue-400/30 group">
+            <div
+              data-ar
+              className="contact-info-card rounded-2xl border border-white/10 bg-white/[0.03] p-8 transition-colors duration-300 hover:border-blue-400/30 group"
+            >
               <div className="flex items-center gap-4 text-white font-semibold mb-6">
                 <div className="contact-icon-tile p-3 rounded-xl bg-blue-400/10 group-hover:bg-blue-400/20 transition-colors duration-300">
                   <FaClock className="text-blue-400" />
@@ -166,13 +203,17 @@ export default function Contact() {
           </div>
 
           {/* CTA section */}
-          <div ref={ctaRef} className="flex flex-col items-center justify-center text-center space-y-10 flex-1 max-w-lg">
-            <div className="contact-cta-block opacity-0 space-y-8">
+          <div
+            ref={ctaRef}
+            className="flex flex-col items-center justify-center text-center space-y-10 flex-1 max-w-lg"
+          >
+            <div data-ar className="contact-cta-block space-y-8">
               <AnimatedHeading
                 as="h2"
                 className="text-4xl sm:text-5xl font-bold max-w-[32rem] leading-tight"
                 style={{ fontFamily: "'Cinzel', serif" }}
-                step={22}
+                mode="chars"
+                step={STEP.chars}
               >
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-300">
                   Get in touch
@@ -184,7 +225,8 @@ export default function Contact() {
                 className="text-lg max-w-lg leading-relaxed text-stone-400"
                 style={{ fontFamily: "'Inter', sans-serif" }}
               >
-                Reach out directly for collaborations, custom prints, or wholesale orders. We're here to bring your vision to life.
+                Reach out directly for collaborations, custom prints, or
+                wholesale orders. We're here to bring your vision to life.
               </p>
             </div>
 
@@ -202,7 +244,8 @@ export default function Contact() {
               className="text-sm max-w-sm text-stone-500"
               style={{ fontFamily: "'Inter', sans-serif" }}
             >
-              We usually respond within 24 hours on working days. Let's create something amazing together!
+              We usually respond within 24 hours on working days. Let's create
+              something amazing together!
             </p>
           </div>
         </div>
