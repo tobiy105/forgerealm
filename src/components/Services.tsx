@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import {
   FaShoppingCart,
@@ -8,102 +8,13 @@ import {
   FaLeaf,
 } from "react-icons/fa";
 import { MdBrush } from "react-icons/md";
-import {
-  FiBox,
-  FiHeadphones,
-  FiMapPin,
-  FiShare2,
-  FiUsers,
-} from "react-icons/fi";
-import { useEffect, useRef } from "react";
-import { animate, stagger } from "animejs";
-import type { JSAnimation } from "animejs";
+import { FiBox, FiHeadphones, FiLayers, FiMapPin, FiShare2, FiUsers } from "react-icons/fi";
+import { TbLeaf } from "react-icons/tb";
 import MaterialsBook from "./MaterialsBook";
-import { useAnimeReveal } from "../hooks/useAnimeReveal";
-import {
-  DUR,
-  EASE,
-  STEP,
-  clearWillChange,
-  prefersReducedMotion,
-  revealNow,
-  setWillChange,
-  takeControl,
-} from "../hooks/motion";
-import AnimatedHeading from "./anime/AnimatedHeading";
-import ScrambleLabel from "./anime/ScrambleLabel";
 
 export default function Services() {
-  // Feature cards: grid-aware stagger radiating from the center. The grid is
-  // `lg:grid-cols-6` with col-spans 4+2 / 3+3 / 3+3 — i.e. 2 cards per visual
-  // row over 3 rows, so the stagger grid is [2, 3]. Cards scale 0.95→1 with a
-  // fade and a slight rise — useAnimeReveal variants animate one transform
-  // each, so this combined signature uses a raw animate() per the data-ar
-  // contract (takeControl + inline opacity + will-change hygiene).
-  const featureGridRef = useRef<HTMLDivElement | null>(null);
-  useEffect(() => {
-    const root = featureGridRef.current;
-    if (!root || typeof window === "undefined") return;
-    const cards = Array.from(
-      root.querySelectorAll<HTMLElement>(".services-feature-card"),
-    );
-    if (!cards.length) return;
-
-    // JS owns these elements now — the CSS safety net must never fire.
-    takeControl(cards);
-
-    if (prefersReducedMotion()) {
-      revealNow(cards);
-      return;
-    }
-
-    let anim: JSAnimation | null = null;
-    const play = () => {
-      setWillChange(cards);
-      anim = animate(cards, {
-        opacity: [0, 1],
-        scale: [0.95, 1],
-        translateY: [14, 0],
-        duration: DUR.md,
-        delay: stagger(STEP.base, { grid: [2, 3], from: "center" }),
-        ease: EASE.out,
-        onComplete: () => clearWillChange(cards),
-      });
-    };
-
-    const obs = new IntersectionObserver(
-      ([entry]) => {
-        if (!entry.isIntersecting) return;
-        obs.disconnect();
-        play();
-      },
-      { threshold: 0.2, rootMargin: "0px 0px -10% 0px" },
-    );
-    obs.observe(root);
-
-    return () => {
-      obs.disconnect();
-      anim?.cancel();
-      clearWillChange(cards);
-    };
-  }, []);
-
-  // Service cards: alternating slide-x entrances (odd cards enter from the right).
-  const serviceGridRef = useAnimeReveal<HTMLDivElement>({
-    selector: ".services-service-card",
-    variant: "slide-x",
-    alternate: true,
-    step: STEP.loose,
-  });
-
   return (
-    <div
-      className="relative overflow-hidden"
-      style={{
-        background:
-          "linear-gradient(180deg, #0a0e18 0%, #0c1020 50%, #0a0e18 100%)",
-      }}
-    >
+    <div className="relative overflow-hidden" style={{ background: 'linear-gradient(180deg, #0a0e18 0%, #0c1020 50%, #0a0e18 100%)' }}>
       {/* Vibrant ambient glows */}
       <div className="pointer-events-none absolute inset-0 hidden sm:block">
         <div className="absolute right-[-5%] top-[20%] w-[400px] h-[400px] rounded-full bg-blue-500/[0.1] blur-[180px]" />
@@ -114,7 +25,6 @@ export default function Services() {
       <section
         id="services"
         data-observe
-        suppressHydrationWarning
         className="reveal relative py-16 sm:py-24"
       >
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative">
@@ -122,30 +32,14 @@ export default function Services() {
           <div className="mb-2">
             <div className="inline-flex items-center gap-3 mb-3">
               <div className="w-8 h-px bg-gradient-to-r from-blue-400 to-cyan-400" />
-              <ScrambleLabel
-                className="text-[10px] sm:text-[11px] font-medium uppercase tracking-[0.3em] text-blue-300/60"
-                style={{ fontFamily: "'Jost', sans-serif" }}
-              >
-                What we offer
-              </ScrambleLabel>
+              <span className="text-[10px] sm:text-[11px] font-medium uppercase tracking-[0.3em] text-blue-300/60" style={{ fontFamily: "'Jost', sans-serif" }}>What we offer</span>
             </div>
-            <AnimatedHeading
-              as="h2"
+            <h2
               className="text-2xl sm:text-3xl lg:text-4xl font-normal text-white"
               style={{ fontFamily: "'Cinzel', serif" }}
             >
-              Our{" "}
-              <em
-                className="text-cyan-300"
-                style={{
-                  fontFamily: "'Cormorant Garamond', serif",
-                  fontStyle: "italic",
-                  fontWeight: 300,
-                }}
-              >
-                Services
-              </em>
-            </AnimatedHeading>
+              Our <em className="text-cyan-300" style={{ fontFamily: "'Cormorant Garamond', serif", fontStyle: 'italic', fontWeight: 300 }}>Services</em>
+            </h2>
           </div>
 
           <p
@@ -158,58 +52,24 @@ export default function Services() {
           </p>
 
           {/* Feature grid */}
-          <div
-            ref={featureGridRef}
-            className="mt-8 grid gap-4 lg:grid-cols-6 auto-rows-fr"
-          >
+          <div className="mt-8 grid gap-4 lg:grid-cols-6 auto-rows-fr">
             {[
-              {
-                title: "Eco Friendly",
-                detail: "Biodegradable and low-impact materials.",
-                icon: <FaLeaf className="text-emerald-400 text-xl" />,
-              },
-              {
-                title: "Material Options",
-                detail: "PLA and PETG choices for each build.",
-                icon: <FiBox className="text-blue-400 text-xl" />,
-              },
-              {
-                title: "Local Collection",
-                detail: "Leeds pickup options when available.",
-                icon: <FiMapPin className="text-blue-400 text-xl" />,
-              },
-              {
-                title: "Social Drops",
-                detail: "New releases and stall dates posted weekly.",
-                icon: <FiShare2 className="text-cyan-300 text-xl" />,
-              },
-              {
-                title: "Support First",
-                detail: "Real replies from the makers.",
-                icon: <FiHeadphones className="text-blue-400 text-xl" />,
-              },
-              {
-                title: "Workshops Soon",
-                detail: "Collaborations and events in the pipeline.",
-                icon: <FiUsers className="text-cyan-300 text-xl" />,
-              },
+              { title: "Eco Friendly", detail: "Biodegradable and low-impact materials.", icon: <FaLeaf className="text-emerald-400 text-xl" /> },
+              { title: "Material Options", detail: "PLA and PETG choices for each build.", icon: <FiBox className="text-blue-400 text-xl" /> },
+              { title: "Local Collection", detail: "Leeds pickup options when available.", icon: <FiMapPin className="text-blue-400 text-xl" /> },
+              { title: "Social Drops", detail: "New releases and stall dates posted weekly.", icon: <FiShare2 className="text-cyan-300 text-xl" /> },
+              { title: "Support First", detail: "Real replies from the makers.", icon: <FiHeadphones className="text-blue-400 text-xl" /> },
+              { title: "Workshops Soon", detail: "Collaborations and events in the pipeline.", icon: <FiUsers className="text-cyan-300 text-xl" /> },
             ].map((item, idx) => (
               <div
                 key={item.title}
-                data-ar
-                className={`services-feature-card rounded-2xl border border-white/[0.08] bg-white/[0.02] p-4 backdrop-blur-sm hover:border-blue-400/30 hover:bg-white/[0.04] hover:shadow-xl hover:shadow-blue-500/[0.12] transition-all duration-500 hover:-translate-y-0.5 ${
-                  idx === 0
-                    ? "lg:col-span-4"
-                    : idx === 1
-                      ? "lg:col-span-2"
-                      : "lg:col-span-3"
+                className={`rounded-2xl border border-white/[0.08] bg-white/[0.02] p-4 backdrop-blur-sm hover:border-blue-400/30 hover:bg-white/[0.04] hover:shadow-xl hover:shadow-blue-500/[0.12] transition-all duration-500 hover:-translate-y-0.5 ${
+                  idx === 0 ? "lg:col-span-4" : idx === 1 ? "lg:col-span-2" : "lg:col-span-3"
                 }`}
               >
                 <div className="flex items-center gap-2 text-white font-semibold text-sm">
                   {item.icon}
-                  <span style={{ fontFamily: "'Cinzel', serif" }}>
-                    {item.title}
-                  </span>
+                  <span style={{ fontFamily: "'Cinzel', serif" }}>{item.title}</span>
                 </div>
                 <p
                   className="mt-2 text-xs text-stone-400"
@@ -222,10 +82,7 @@ export default function Services() {
           </div>
 
           {/* Service grid */}
-          <div
-            ref={serviceGridRef}
-            className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3"
-          >
+          <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {[
               {
                 icon: <FaShoppingCart className="text-blue-400 text-xl" />,
@@ -245,8 +102,7 @@ export default function Services() {
             ].map((service, i) => (
               <article
                 key={i}
-                data-ar
-                className="services-service-card rounded-2xl border border-white/[0.08] bg-white/[0.02] p-6 backdrop-blur-sm hover:border-blue-400/30 hover:bg-white/[0.04] hover:shadow-xl hover:shadow-blue-500/[0.12] transition-all duration-500 hover:-translate-y-1 flex flex-col"
+                className="rounded-2xl border border-white/[0.08] bg-white/[0.02] p-6 backdrop-blur-sm hover:border-blue-400/30 hover:bg-white/[0.04] hover:shadow-xl hover:shadow-blue-500/[0.12] transition-all duration-500 hover:-translate-y-1 flex flex-col"
               >
                 <div className="flex items-center gap-3 mb-2">
                   {service.icon}
@@ -273,24 +129,16 @@ export default function Services() {
               className="text-stone-400 text-sm mb-4"
               style={{ fontFamily: "'Inter', sans-serif" }}
             >
-              Follow us on Instagram and other socials for the latest news,
-              stall locations, and new product launches. More services,
-              including workshops and collaborations, coming soon!
+              Follow us on Instagram and other socials for the latest news, stall
+              locations, and new product launches. More services, including
+              workshops and collaborations, coming soon!
             </p>
 
             <div className="flex items-center gap-4 text-stone-400 mt-2">
-              <a
-                href="https://www.instagram.com/forgerealmltd/"
-                aria-label="Instagram"
-                className="hover:text-pink-400 transition-colors duration-300"
-              >
+              <a href="https://www.instagram.com/forgerealmltd/" aria-label="Instagram" className="hover:text-pink-400 transition-colors duration-300">
                 <FaInstagram className="text-lg" />
               </a>
-              <a
-                href="https://www.linkedin.com/company/forgerealm"
-                aria-label="LinkedIn"
-                className="hover:text-blue-400 transition-colors duration-300"
-              >
+              <a href="https://www.linkedin.com/company/forgerealm" aria-label="LinkedIn" className="hover:text-blue-400 transition-colors duration-300">
                 <FaLinkedin className="text-lg" />
               </a>
             </div>
@@ -309,7 +157,6 @@ export default function Services() {
       <section
         id="materials"
         data-observe
-        suppressHydrationWarning
         className="reveal relative py-16 sm:py-24"
       >
         {/* Emerald ambient glow */}
@@ -320,38 +167,21 @@ export default function Services() {
           <div className="mb-2">
             <div className="inline-flex items-center gap-3 mb-3">
               <div className="w-8 h-px bg-gradient-to-r from-emerald-400 to-teal-400" />
-              <ScrambleLabel
-                className="text-[10px] sm:text-[11px] font-medium uppercase tracking-[0.3em] text-emerald-300/60"
-                style={{ fontFamily: "'Jost', sans-serif" }}
-              >
-                Eco printing
-              </ScrambleLabel>
+              <span className="text-[10px] sm:text-[11px] font-medium uppercase tracking-[0.3em] text-emerald-300/60" style={{ fontFamily: "'Jost', sans-serif" }}>Eco printing</span>
             </div>
-            <AnimatedHeading
-              as="h2"
+            <h2
               className="text-2xl sm:text-3xl lg:text-4xl font-normal text-white"
               style={{ fontFamily: "'Cinzel', serif" }}
             >
-              Our{" "}
-              <em
-                className="text-emerald-300"
-                style={{
-                  fontFamily: "'Cormorant Garamond', serif",
-                  fontStyle: "italic",
-                  fontWeight: 300,
-                }}
-              >
-                Materials
-              </em>
-            </AnimatedHeading>
+              Our <em className="text-emerald-300" style={{ fontFamily: "'Cormorant Garamond', serif", fontStyle: 'italic', fontWeight: 300 }}>Materials</em>
+            </h2>
           </div>
 
           <p
             className="mt-3 text-stone-400 max-w-xl"
             style={{ fontFamily: "'Inter', sans-serif" }}
           >
-            We offer the following filaments for 3D printing. Flip through to
-            see what each one is, where we use it, and the science behind the
+            We offer the following filaments for 3D printing. Flip through to see what each one is, where we use it, and the science behind the
             claims.
           </p>
 

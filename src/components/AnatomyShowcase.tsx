@@ -41,22 +41,22 @@ const LEFT: Anchor[] = [
     key: "pla",
     label: "biodegradable PLA",
     side: "left",
-    hotXPct: 30,
-    hotYPct: 22,
+    hotXPct: 36,
+    hotYPct: 25,
   },
   {
     key: "layers",
     label: "0.2 mm layers",
     side: "left",
-    hotXPct: 20,
+    hotXPct: 30,
     hotYPct: 55,
   },
   {
     key: "leeds",
     label: "made in Leeds",
     side: "left",
-    hotXPct: 32,
-    hotYPct: 88,
+    hotXPct: 35,
+    hotYPct: 84,
   },
 ];
 const RIGHT: Anchor[] = [
@@ -64,22 +64,22 @@ const RIGHT: Anchor[] = [
     key: "finish",
     label: "hand-finished",
     side: "right",
-    hotXPct: 70,
-    hotYPct: 22,
+    hotXPct: 64,
+    hotYPct: 25,
   },
   {
     key: "blend",
     label: "gradient blend",
     side: "right",
-    hotXPct: 80,
+    hotXPct: 70,
     hotYPct: 55,
   },
   {
     key: "eco",
     label: "eco packaging",
     side: "right",
-    hotXPct: 68,
-    hotYPct: 82,
+    hotXPct: 65,
+    hotYPct: 80,
   },
 ];
 const ANCHORS: Anchor[] = [...LEFT, ...RIGHT];
@@ -371,11 +371,11 @@ export default function AnatomyShowcase() {
         <div
           ref={setDiagramRef}
           className="relative mx-auto"
-          style={{ maxWidth: "980px" }}
+          style={{ maxWidth: "1100px" }}
         >
-          <div className="grid grid-cols-[minmax(0,80px)_minmax(160px,1fr)_minmax(0,80px)] sm:grid-cols-[minmax(120px,200px)_minmax(220px,1fr)_minmax(120px,200px)] md:grid-cols-[minmax(160px,220px)_minmax(320px,1fr)_minmax(160px,220px)] items-center gap-x-1.5 sm:gap-x-6 md:gap-x-10 lg:gap-x-16">
+          <div className="grid grid-cols-[minmax(0,80px)_minmax(180px,1fr)_minmax(0,80px)] sm:grid-cols-[minmax(120px,200px)_minmax(220px,1fr)_minmax(120px,200px)] md:grid-cols-[minmax(160px,220px)_minmax(320px,1fr)_minmax(160px,220px)] xl:grid-cols-[minmax(160px,220px)_minmax(460px,1fr)_minmax(160px,220px)] items-center gap-x-1.5 sm:gap-x-6 md:gap-x-10 lg:gap-x-16">
             {/* Left labels */}
-            <div className="flex flex-col justify-between h-[180px] sm:h-[360px] md:h-[440px] py-3 sm:py-5 items-end">
+            <div className="flex flex-col justify-between h-[210px] sm:h-[360px] md:h-[440px] xl:h-[520px] py-3 sm:py-5 items-end">
               {LEFT.map((a) => (
                 <div
                   key={a.key}
@@ -402,14 +402,14 @@ export default function AnatomyShowcase() {
                 ref={imageRef}
                 src="/owlPrint.png"
                 alt="A ForgeRealm printed owl figurine"
-                className="anatomy-focal h-[180px] sm:h-[360px] md:h-[440px] w-auto object-contain drop-shadow-[0_0_40px_rgba(96,165,250,0.15)]"
+                className="anatomy-focal h-[210px] sm:h-[360px] md:h-[440px] xl:h-[520px] w-auto object-contain drop-shadow-[0_0_40px_rgba(96,165,250,0.15)]"
                 loading="lazy"
                 decoding="async"
               />
             </div>
 
             {/* Right labels */}
-            <div className="flex flex-col justify-between h-[180px] sm:h-[360px] md:h-[440px] py-3 sm:py-5 items-start">
+            <div className="flex flex-col justify-between h-[210px] sm:h-[360px] md:h-[440px] xl:h-[520px] py-3 sm:py-5 items-start">
               {RIGHT.map((a) => (
                 <div
                   key={a.key}
