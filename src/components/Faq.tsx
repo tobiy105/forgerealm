@@ -58,7 +58,7 @@ export default function Faq() {
     >
       {/* Ambient glow */}
       <div className="pointer-events-none absolute inset-0">
-        <div className="absolute left-0 top-1/3 w-[350px] h-[350px] rounded-full bg-blue-500/[0.04] blur-[180px]" />
+        <div className="absolute left-0 top-1/3 w-[350px] h-[350px] rounded-full bg-blue-500/[0.04] blur-[100px] landing-ambient-glow" />
       </div>
       {/* Top divider */}
       <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-blue-500/20 to-transparent" />

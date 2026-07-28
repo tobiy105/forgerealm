@@ -803,3 +803,40 @@ html.js [data-ar] {
     animation: none;
   }
 }
+
+/* --------------------------------------------------------------------------
+   Landing page paint hygiene
+   -----------------------------
+   Every landing section stacks a couple of huge blurred colour blobs behind
+   real content. Without help, the browser repaints those blur passes on
+   every scroll tick — cheap on Chromium (its blur is GPU-accelerated), very
+   expensive on Safari (software blur, no layer isolation).
+   Rules:
+     - Promote each blurred blob to its own compositor layer.
+     - Contain layout + paint so a repaint inside a glow can't invalidate
+       its neighbours.
+     - Hide backface + zero-out perspective so Safari treats the layer as
+       genuinely 2D and stops running per-frame projection math.
+   -------------------------------------------------------------------------- */
+.hero-glow-a,
+.hero-glow-b,
+.hero-glow-c,
+.hero-glow-d,
+.landing-ambient-glow {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  contain: layout paint size;
+}
+
+/* Safari-only guardrails.
+   `@supports (font: -apple-system-body)` is truthy on Safari (system-font
+   shorthand) and falsy on Chromium/Firefox (invalid font-family token).
+   Kept scoped to `.safari-guard` targets so we don't accidentally strip
+   backdrop-filter from things that actually rely on it (navbars). */
+@supports (font: -apple-system-body) {
+  .safari-drop-backdrop,
+  .safari-drop-backdrop * {
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+  }
+}

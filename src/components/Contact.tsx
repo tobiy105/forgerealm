@@ -40,7 +40,7 @@ export default function Contact() {
     >
       {/* Ambient glow */}
       <div className="pointer-events-none absolute inset-0">
-        <div className="absolute right-1/4 top-1/3 w-[400px] h-[400px] rounded-full bg-cyan-500/[0.04] blur-[200px]" />
+        <div className="absolute right-1/4 top-1/3 w-[400px] h-[400px] rounded-full bg-cyan-500/[0.04] blur-[100px] landing-ambient-glow" />
       </div>
       {/* Top divider */}
       <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-cyan-500/20 to-transparent" />

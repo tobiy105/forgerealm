@@ -371,10 +371,10 @@ export default function Hero() {
     >
       {/* Ambient glows - hidden on mobile for performance */}
       <div className="hero-glows pointer-events-none absolute inset-0 hidden sm:block">
-        <div className="hero-glow-a absolute left-[-10%] top-[15%] w-[500px] h-[500px] rounded-full bg-blue-600/[0.1] blur-[200px]" />
-        <div className="hero-glow-b absolute right-[-5%] top-[10%] w-[400px] h-[400px] rounded-full bg-purple-500/[0.08] blur-[180px]" />
-        <div className="hero-glow-c absolute right-[20%] bottom-[10%] w-[350px] h-[350px] rounded-full bg-cyan-500/[0.07] blur-[160px]" />
-        <div className="hero-glow-d absolute left-[30%] bottom-[5%] w-[300px] h-[300px] rounded-full bg-emerald-500/[0.05] blur-[150px]" />
+        <div className="hero-glow-a absolute left-[-10%] top-[15%] w-[500px] h-[500px] rounded-full bg-blue-600/[0.1] blur-[100px]" />
+        <div className="hero-glow-b absolute right-[-5%] top-[10%] w-[400px] h-[400px] rounded-full bg-purple-500/[0.08] blur-[100px]" />
+        <div className="hero-glow-c absolute right-[20%] bottom-[10%] w-[350px] h-[350px] rounded-full bg-cyan-500/[0.07] blur-[100px]" />
+        <div className="hero-glow-d absolute left-[30%] bottom-[5%] w-[300px] h-[300px] rounded-full bg-emerald-500/[0.05] blur-[100px]" />
         {/* Grid pattern */}
         <div
           className="absolute inset-0 opacity-[0.03]"
