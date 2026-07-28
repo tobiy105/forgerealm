@@ -1,19 +1,24 @@
 ---
-import BaseLayout from '../../layouts/BaseLayout.astro';
-import Dashboard from '../../components/Dashboard';
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import DashboardApp from "../../components/Dashboard";
 ---
 
-<BaseLayout title="Dashboard | ForgeRealm" description="Your ForgeRealm dashboard — featured prints, quick links, and portal access.">
-  <main class="relative isolate min-h-[100svh] bg-[#0a0f1a] text-white overflow-x-hidden pt-16 sm:pt-20">
-    <Dashboard client:load />
+<BaseLayout
+  title="Dashboard | ForgeRealm"
+  description="Your ForgeRealm dashboard — featured prints, quick links, and portal access."
+>
+  <main
+    class="relative isolate min-h-[100svh] bg-[#0a0f1a] text-white overflow-x-hidden pt-16 sm:pt-20"
+  >
+    <DashboardApp client:load />
   </main>
 </BaseLayout>
 
 <script is:inline>
   (() => {
-    const token = localStorage.getItem('forgerealm_admin_token');
+    const token = localStorage.getItem("forgerealm_admin_token");
     if (!token) {
-      window.location.href = '/shop/sign-in';
+      window.location.href = "/shop/sign-in";
     }
   })();
 </script>

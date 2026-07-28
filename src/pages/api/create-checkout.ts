@@ -1,5 +1,5 @@
-import type { APIRoute } from 'astro';
-import Stripe from 'stripe';
+import type { APIRoute } from "astro";
+import Stripe from "stripe";
 
 export const prerender = false;
 
@@ -8,12 +8,17 @@ export const POST: APIRoute = async ({ request }) => {
 
   if (!secretKey) {
     return new Response(
-      JSON.stringify({ error: 'Stripe is not configured. Add STRIPE_SECRET_KEY to your .env file.' }),
-      { status: 500, headers: { 'Content-Type': 'application/json' } }
+      JSON.stringify({
+        error:
+          "Stripe is not configured. Add STRIPE_SECRET_KEY to your .env file.",
+      }),
+      { status: 500, headers: { "Content-Type": "application/json" } },
     );
   }
 
-  const stripe = new Stripe(secretKey, { apiVersion: '2025-04-30.basil' });
+  const stripe = new Stripe(secretKey, {
+    apiVersion: "2025-04-30.basil" as Stripe.LatestApiVersion,
+  });
 
   try {
     const body = await request.json();
@@ -32,20 +37,20 @@ export const POST: APIRoute = async ({ request }) => {
     };
 
     if (!items || items.length === 0) {
-      return new Response(
-        JSON.stringify({ error: 'No items in cart' }),
-        { status: 400, headers: { 'Content-Type': 'application/json' } }
-      );
+      return new Response(JSON.stringify({ error: "No items in cart" }), {
+        status: 400,
+        headers: { "Content-Type": "application/json" },
+      });
     }
 
-    const origin = request.headers.get('origin') || 'http://localhost:4321';
+    const origin = request.headers.get("origin") || "http://localhost:4321";
 
     const sessionParams: Stripe.Checkout.SessionCreateParams = {
-      mode: 'payment',
-      currency: 'gbp',
+      mode: "payment",
+      currency: "gbp",
       line_items: items.map((item) => ({
         price_data: {
-          currency: 'gbp',
+          currency: "gbp",
           product_data: { name: item.name },
           unit_amount: item.price,
         },
@@ -66,12 +71,12 @@ export const POST: APIRoute = async ({ request }) => {
       sessionParams.shipping_options = [
         {
           shipping_rate_data: {
-            type: 'fixed_amount',
-            fixed_amount: { amount: 350, currency: 'gbp' },
-            display_name: 'Standard Shipping',
+            type: "fixed_amount",
+            fixed_amount: { amount: 350, currency: "gbp" },
+            display_name: "Standard Shipping",
             delivery_estimate: {
-              minimum: { unit: 'business_day', value: 3 },
-              maximum: { unit: 'business_day', value: 5 },
+              minimum: { unit: "business_day", value: 3 },
+              maximum: { unit: "business_day", value: 5 },
             },
           },
         },
@@ -80,12 +85,12 @@ export const POST: APIRoute = async ({ request }) => {
       sessionParams.shipping_options = [
         {
           shipping_rate_data: {
-            type: 'fixed_amount',
-            fixed_amount: { amount: 0, currency: 'gbp' },
-            display_name: 'Free Shipping',
+            type: "fixed_amount",
+            fixed_amount: { amount: 0, currency: "gbp" },
+            display_name: "Free Shipping",
             delivery_estimate: {
-              minimum: { unit: 'business_day', value: 3 },
-              maximum: { unit: 'business_day', value: 5 },
+              minimum: { unit: "business_day", value: 3 },
+              maximum: { unit: "business_day", value: 5 },
             },
           },
         },
@@ -97,21 +102,28 @@ export const POST: APIRoute = async ({ request }) => {
       sessionParams.metadata = {
         customer_name: `${customer.firstName} ${customer.lastName}`,
         customer_email: customer.email,
-        customer_phone: customer.phone || '',
-        shipping_address: [customer.address1, customer.address2, customer.city, customer.postcode].filter(Boolean).join(', '),
+        customer_phone: customer.phone || "",
+        shipping_address: [
+          customer.address1,
+          customer.address2,
+          customer.city,
+          customer.postcode,
+        ]
+          .filter(Boolean)
+          .join(", "),
       };
     }
 
     const session = await stripe.checkout.sessions.create(sessionParams);
 
-    return new Response(
-      JSON.stringify({ url: session.url }),
-      { status: 200, headers: { 'Content-Type': 'application/json' } }
-    );
+    return new Response(JSON.stringify({ url: session.url }), {
+      status: 200,
+      headers: { "Content-Type": "application/json" },
+    });
   } catch (err: any) {
     return new Response(
-      JSON.stringify({ error: err.message || 'Checkout failed' }),
-      { status: 500, headers: { 'Content-Type': 'application/json' } }
+      JSON.stringify({ error: err.message || "Checkout failed" }),
+      { status: 500, headers: { "Content-Type": "application/json" } },
     );
   }
 };

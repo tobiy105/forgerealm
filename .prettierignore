@@ -1,0 +1,9 @@
+# Build output
+dist/
+.astro/
+backend/node_modules/
+
+# prettier-plugin-astro cannot parse <script> tags nested inside JSX-style
+# expression containers ({cond && <script …>}), which BaseLayout uses for the
+# conditional Brevo widget snippet.
+src/layouts/BaseLayout.astro

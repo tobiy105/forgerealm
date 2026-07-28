@@ -3,6 +3,12 @@
 import { useEffect, useRef } from "react";
 import type { CSSProperties } from "react";
 import { animate, scrambleText } from "animejs";
+import type { JSAnimation } from "animejs";
+import {
+  clearWillChange,
+  prefersReducedMotion,
+  takeControl,
+} from "../../hooks/motion";
 
 type Props = {
   children: string;
@@ -15,6 +21,12 @@ type Props = {
   chars?: string;
   /** where the reveal grows from */
   from?: "left" | "right" | "center" | "random";
+  /**
+   * Render with `data-ar` so the label stays hidden until it scrambles in
+   * (covered by the CSS safety net). Default false: text is visible from SSR
+   * and scrambles in place.
+   */
+  ar?: boolean;
 };
 
 /**
@@ -31,6 +43,7 @@ export default function ScrambleLabel({
   delay = 0,
   chars = "uppercase",
   from = "left",
+  ar = false,
 }: Props) {
   const ref = useRef<HTMLElement | null>(null);
 
@@ -38,27 +51,48 @@ export default function ScrambleLabel({
     const el = ref.current;
     if (!el) return;
     if (typeof window === "undefined") return;
-    if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
+    const hidden = el.hasAttribute("data-ar");
+    // JS owns this element now — the CSS safety net must never fire.
+    if (hidden) takeControl(el);
+
+    if (prefersReducedMotion()) {
+      if (hidden) el.style.opacity = "1";
+      return;
+    }
+
+    let anim: JSAnimation | null = null;
     const obs = new IntersectionObserver(
       ([entry]) => {
         if (!entry.isIntersecting) return;
         obs.disconnect();
-        animate(el, {
+        if (hidden) el.style.opacity = "1";
+        el.style.willChange = "contents";
+        anim = animate(el, {
           text: scrambleText({ chars, from, duration, delay }),
           duration: duration ?? 1400,
           ease: "linear",
           delay,
+          onComplete: () => clearWillChange(el),
         });
       },
       { threshold: 0.6 },
     );
     obs.observe(el);
-    return () => obs.disconnect();
+    return () => {
+      obs.disconnect();
+      anim?.cancel();
+      clearWillChange(el);
+    };
   }, [chars, from, duration, delay]);
 
   return (
-    <Tag ref={ref as any} className={className} style={style}>
+    <Tag
+      ref={ref as any}
+      data-ar={ar ? "" : undefined}
+      className={className}
+      style={style}
+    >
       {children}
     </Tag>
   );
