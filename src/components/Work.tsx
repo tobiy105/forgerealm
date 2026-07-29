@@ -31,9 +31,9 @@ type Product = {
   detail: string;
   image: string;
   background: string;
-  /** CSS `background` shorthand shown when the panel is expanded (clicked).
-   *  Falls back to `background` if not set. */
-  expandedBackground?: string;
+  /** Image URL shown in the right half of the expanded (clicked) panel
+   *  as a lifestyle / mood backdrop. */
+  lifestyleImage?: string;
   /** Multiplier applied to the thumbnail image size. 1 is default. */
   thumbnailScale?: number;
   textColor: string;
@@ -52,7 +52,7 @@ const products: Product[] = [
       "It's commissions like this that remind us why we do what we do. If there's a piece of your life you'd like us to bring into the real world, we'd be honoured to help.",
     image: "/featured1.jpg",
     background: "#0a0a0a",
-    expandedBackground: "#0a0a0a url(/featured1bg.jpg) center/cover no-repeat",
+    lifestyleImage: "/featured1bg.jpg",
     thumbnailScale: 0.72,
     textColor: "#FADE6A",
     accentColor: "#F59E0B",
@@ -68,7 +68,7 @@ const products: Product[] = [
       "Fan-favourite pieces from your favourite games are one of our happy places — send us the character, the weapon, or the trinket and we'll take it from there.",
     image: "/featured2.jpg",
     background: "#0a0a0a",
-    expandedBackground: "#0a0a0a url(/dicedragonbg.jpg) center/cover no-repeat",
+    lifestyleImage: "/dicedragonbg.jpg",
     textColor: "#FADE6A",
     accentColor: "#F59E0B",
   },
@@ -83,6 +83,7 @@ const products: Product[] = [
       "Printed in translucent PLA so a standard tea light inside casts the Voronoi lattice as a moving pattern on the wall. Quiet ambient lighting with a talking-piece silhouette.",
     image: "/featured3.jpg",
     background: "#0a0a0a",
+    lifestyleImage: "/ablamp2side.png",
     thumbnailScale: 1.25,
     textColor: "#FADE6A",
     accentColor: "#F59E0B",
@@ -382,10 +383,7 @@ export default function Work() {
                 } items-center justify-center overflow-hidden border transition-[width] duration-500 ease-out focus:outline-none`}
                 style={{
                   width: getPanelWidth(index),
-                  background:
-                    isExpanded && activeIndex === index
-                      ? product.expandedBackground || product.background
-                      : product.background,
+                  background: product.background,
                   borderColor: '#FADE6A40',
                 }}
                 aria-label={`Open ${product.name}`}
@@ -585,28 +583,10 @@ export default function Work() {
 
                   <div className="pointer-events-none absolute inset-y-0 right-0 z-0 hidden lg:block lg:w-1/2">
                     <div className="h-full w-full overflow-hidden border-l border-white/10 bg-white/10">
-                          {activeProduct.id === "aurora-lamp" ? (
+                          {activeProduct.lifestyleImage ? (
                             <img
-                              src="/ablamp2side.png"
-                              alt="Aurora Bloom Lamp lifestyle"
-                              className="h-full w-full object-cover"
-                            />
-                          ) : activeProduct.id === "nebula-owl" ? (
-                            <img
-                              src="/reg.png"
-                              alt="Leeds Owl lifestyle"
-                              className="h-full w-full object-cover"
-                            />
-                          ) : activeProduct.id === "forest-dragon" ? (
-                            <img
-                              src="/dragonforestbg.jpg"
-                              alt="Forest Dragon lifestyle"
-                              className="h-full w-full object-cover"
-                            />
-                          ) : activeProduct.id === "dice-guardian" ? (
-                            <img
-                              src="/dicedragonbg.jpg"
-                              alt="Dice Guardian lifestyle"
+                              src={activeProduct.lifestyleImage}
+                              alt={`${activeProduct.name} lifestyle`}
                               className="h-full w-full object-cover"
                             />
                           ) : (
