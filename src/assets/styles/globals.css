@@ -862,11 +862,10 @@ html.js [data-ar] {
   position: relative;
   isolation: isolate;
 }
-/* Blueprint grid — same colour, same size, same origin in every section so
-   consecutive sections read as one continuous surface. `background-attachment:
-   fixed` locks the grid to the viewport, so scrolling never breaks its
-   rhythm at section joins (the reason Materials and Services used to look
-   like separate pages was that each section restarted its own grid). */
+/* Blueprint grid — lighter than a proper background, fades toward every
+   wall of its section so consecutive sections' grids blend into each
+   other instead of butting up as hard bands. Same size + colour + origin
+   everywhere so it reads as one continuous system when the fades meet. */
 .landing-ambience::before {
   content: "";
   position: absolute;
@@ -874,11 +873,22 @@ html.js [data-ar] {
   z-index: -1;
   pointer-events: none;
   background-image:
-    linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+    linear-gradient(rgba(255, 255, 255, 0.022) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.022) 1px, transparent 1px);
   background-size: 64px 64px;
   background-position: 0 0;
-  background-attachment: fixed;
+  /* Radial mask so the grid is strongest at the section's centre and
+     fades out to nothing before it hits any of the four walls. */
+  -webkit-mask-image: radial-gradient(
+    ellipse 75% 70% at center,
+    black 30%,
+    transparent 92%
+  );
+  mask-image: radial-gradient(
+    ellipse 75% 70% at center,
+    black 30%,
+    transparent 92%
+  );
 }
 
 /* Blueprint corner bracket markers. Drop this on any container to frame it
