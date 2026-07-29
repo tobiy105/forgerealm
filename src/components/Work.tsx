@@ -31,6 +31,11 @@ type Product = {
   detail: string;
   image: string;
   background: string;
+  /** CSS `background` shorthand shown when the panel is expanded (clicked).
+   *  Falls back to `background` if not set. */
+  expandedBackground?: string;
+  /** Multiplier applied to the thumbnail image size. 1 is default. */
+  thumbnailScale?: number;
   textColor: string;
   accentColor: string;
 };
@@ -47,6 +52,8 @@ const products: Product[] = [
       "It's commissions like this that remind us why we do what we do. If there's a piece of your life you'd like us to bring into the real world, we'd be honoured to help.",
     image: "/featured1.jpg",
     background: "#0a0a0a",
+    expandedBackground: "#0a0a0a url(/featured1bg.jpg) center/cover no-repeat",
+    thumbnailScale: 0.72,
     textColor: "#FADE6A",
     accentColor: "#F59E0B",
   },
@@ -61,6 +68,7 @@ const products: Product[] = [
       "Fan-favourite pieces from your favourite games are one of our happy places — send us the character, the weapon, or the trinket and we'll take it from there.",
     image: "/featured2.jpg",
     background: "#0a0a0a",
+    expandedBackground: "#0a0a0a url(/dicedragonbg.jpg) center/cover no-repeat",
     textColor: "#FADE6A",
     accentColor: "#F59E0B",
   },
@@ -75,6 +83,7 @@ const products: Product[] = [
       "Printed in translucent PLA so a standard tea light inside casts the Voronoi lattice as a moving pattern on the wall. Quiet ambient lighting with a talking-piece silhouette.",
     image: "/featured3.jpg",
     background: "#0a0a0a",
+    thumbnailScale: 1.25,
     textColor: "#FADE6A",
     accentColor: "#F59E0B",
   },
@@ -272,8 +281,14 @@ export default function Work() {
 
 
   const getImageScale = (index: number) => {
-    if (isCoarsePointer && isNarrowScreen) return "scale(1.05)";
-    return hoveredIndex === index ? "scale(1.06)" : "scale(1)";
+    const product = products[index];
+    // Ignore per-product thumbnail scaling while expanded — the expanded
+    // view should always show the full-size hero image.
+    const isThisExpanded = isExpanded && activeIndex === index;
+    const base = isThisExpanded ? 1 : (product?.thumbnailScale ?? 1);
+    if (isCoarsePointer && isNarrowScreen) return `scale(${base * 1.05})`;
+    const hoverBoost = hoveredIndex === index ? 1.06 : 1;
+    return `scale(${base * hoverBoost})`;
   };
 
   const handleOpen = (index: number) => {
@@ -367,7 +382,10 @@ export default function Work() {
                 } items-center justify-center overflow-hidden border transition-[width] duration-500 ease-out focus:outline-none`}
                 style={{
                   width: getPanelWidth(index),
-                  background: product.background,
+                  background:
+                    isExpanded && activeIndex === index
+                      ? product.expandedBackground || product.background
+                      : product.background,
                   borderColor: '#FADE6A40',
                 }}
                 aria-label={`Open ${product.name}`}
