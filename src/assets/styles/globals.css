@@ -841,6 +841,16 @@ html.js [data-ar] {
   }
 }
 
+/* Hide the Brevo chat widget while the featured-print overlay is open. The
+   Brevo iframe / launcher renders at z-index 2^31 and outranks anything we
+   can put on the overlay, so we blanket-hide anything Brevo-owned via a
+   body class the Work component toggles. */
+body.work-modal-open [id^="brevo-conversations"],
+body.work-modal-open [class*="brevo-conversations"],
+body.work-modal-open iframe[src*="brevo"] {
+  display: none !important;
+}
+
 /* --------------------------------------------------------------------------
    Landing "blueprint" ambience
    ----------------------------

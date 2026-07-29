@@ -3134,7 +3134,9 @@ function ShopContent() {
     }
   }, [cartOpen, checkoutOpen, modalProduct, showOrderSuccess]);
 
-  // Post-checkout URL parameter handling
+  // Post-checkout URL parameter handling + deep-link to a specific product.
+  // `?product=<slug>` opens that product's quick-view modal on mount and
+  // strips the param so a back navigation doesn't reopen it.
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     if (params.get("success") === "true") {
@@ -3145,6 +3147,14 @@ function ShopContent() {
       } catch {}
       window.history.replaceState({}, "", "/shop");
     } else if (params.get("cancelled") === "true") {
+      window.history.replaceState({}, "", "/shop");
+    }
+    const productParam = params.get("product");
+    if (productParam) {
+      const match = products.find(
+        (p) => p.slug === productParam || p.id === productParam,
+      );
+      if (match) setModalProduct(match);
       window.history.replaceState({}, "", "/shop");
     }
   }, []);

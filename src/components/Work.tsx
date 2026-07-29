@@ -39,6 +39,9 @@ type Product = {
   /** Multiplier applied to the hero image inside the expanded (clicked)
    *  overlay. 1 is default. */
   expandedScale?: number;
+  /** Optional shop deep-link. When set, a "View in store" anchor renders
+   *  in the expanded overlay. When absent, the button is not rendered. */
+  shopUrl?: string;
   textColor: string;
   accentColor: string;
 };
@@ -89,6 +92,7 @@ const products: Product[] = [
     background: "#0a0a0a",
     lifestyleImage: "/featured3bg.jpg",
     thumbnailScale: 1.35,
+    shopUrl: "/shop?product=voronoi-elephant-tealight",
     textColor: "#FADE6A",
     accentColor: "#F59E0B",
   },
@@ -270,6 +274,15 @@ export default function Work() {
     };
     window.addEventListener("keydown", handleKey);
     return () => window.removeEventListener("keydown", handleKey);
+  }, [isExpanded]);
+
+  // Toggle a body class while the featured-print overlay is open so global
+  // CSS can hide the Brevo chat widget (whose z-index is 2^31 and outranks
+  // anything we can set on the overlay itself).
+  useEffect(() => {
+    if (typeof document === "undefined") return;
+    document.body.classList.toggle("work-modal-open", isExpanded);
+    return () => document.body.classList.remove("work-modal-open");
   }, [isExpanded]);
 
   const getPanelWidth = (index: number) => {
@@ -527,9 +540,14 @@ export default function Work() {
                         {activeProduct.detail}
                       </p>
                       <div className="flex flex-wrap items-center gap-3">
-                        <button className={`work-text-force inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs uppercase tracking-[0.2em] transition ${isLight ? "border-slate-300 text-slate-700 hover:bg-slate-100" : "border-white/40 text-white hover:bg-white/10"}`}>
-                          View in store
-                        </button>
+                        {activeProduct.shopUrl && (
+                          <a
+                            href={activeProduct.shopUrl}
+                            className={`work-text-force inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs uppercase tracking-[0.2em] transition ${isLight ? "border-slate-300 text-slate-700 hover:bg-slate-100" : "border-white/40 text-white hover:bg-white/10"}`}
+                          >
+                            View in store
+                          </a>
+                        )}
                         <button
                           type="button"
                           onClick={handleClose}
@@ -567,9 +585,14 @@ export default function Work() {
                           {activeProduct.detail}
                         </p>
                         <div className="flex flex-wrap items-center gap-3">
-                          <button className={`work-text-force inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs uppercase tracking-[0.2em] transition ${isLight ? "border-slate-300 text-slate-700 hover:bg-slate-100" : "border-white/40 text-white hover:bg-white/10"}`}>
-                            View in store
-                          </button>
+                          {activeProduct.shopUrl && (
+                            <a
+                              href={activeProduct.shopUrl}
+                              className={`work-text-force inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs uppercase tracking-[0.2em] transition ${isLight ? "border-slate-300 text-slate-700 hover:bg-slate-100" : "border-white/40 text-white hover:bg-white/10"}`}
+                            >
+                              View in store
+                            </a>
+                          )}
                           <button
                             type="button"
                             onClick={handleNext}
