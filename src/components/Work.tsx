@@ -37,57 +37,43 @@ type Product = {
 
 const products: Product[] = [
   {
-    id: "aurora-lamp",
-    name: "Aurora Bloom",
+    id: "loving-memory",
+    name: "In Loving Memory",
     description:
-      "A gradient lamp shade with a soft spiral that diffuses light into a warm glow, bringing ambient color to desks and shelves.",
+      "An exact replica of a customer's late dog, commissioned so they could still see him every day. Shared here with the owner's blessing.",
     shopDescription:
-      "Aurora Bloom is a gradient lamp shade with a soft spiral that diffuses light into a warm glow. Printed in precision PLA with smooth layering, it brings ambient color to desks, shelves, and bedside tables.",
+      "This one wasn't a shop piece — it was a commission we took on when a customer asked us to recreate their beloved dog in 3D. We measured, we sculpted, we sanded, and we hand-finished every last layer to make sure the little details felt right. A small piece of a much-loved friend, forever on the shelf.",
     detail:
-      "The soft spiral diffuser creates beautiful ambient lighting effects, perfect for creating a cozy atmosphere in any space.",
-    image: "/ablamp-nbg.webp",
+      "It's commissions like this that remind us why we do what we do. If there's a piece of your life you'd like us to bring into the real world, we'd be honoured to help.",
+    image: "/featured1.jpg",
     background: "#0a0a0a",
     textColor: "#FADE6A",
     accentColor: "#F59E0B",
   },
   {
-    id: "nebula-owl",
-    name: "Leeds Owl",
+    id: "orins-dagger",
+    name: "Orin's Dagger",
     description:
-      "A compact guardian owl with gradient feathers and crisp silhouette, designed to sit proudly on desks and shelves.",
+      "A custom scale replica of Orin the Red's dagger from Baldur's Gate 3, printed for a customer who wanted a piece of the game on their shelf.",
     shopDescription:
-      "A Leeds-inspired owl with a warm gradient that fades from amber to blush. Crisp feather detail makes it a standout accent for studios and shelves.",
+      "Sculpted from the in-game model and hand-finished in PLA, this dagger tries to hit every curve, twist and jagged edge Larian put on the source. If you're a BG3 fan and want a signature piece from the story, this is the kind of commission we love doing.",
     detail:
-      "The owl is a symbol woven through Leeds, appearing across the city and in the Leeds United crest, making this piece a small tribute to home.",
-    image: "/owl-nbg.webp",
+      "Fan-favourite pieces from your favourite games are one of our happy places — send us the character, the weapon, or the trinket and we'll take it from there.",
+    image: "/featured2.jpg",
     background: "#0a0a0a",
     textColor: "#FADE6A",
     accentColor: "#F59E0B",
   },
   {
-    id: "forest-dragon",
-    name: "Forest Dragon",
+    id: "voronoi-elephant",
+    name: "Voronoi Elephant Tealight",
     description:
-      "An articulated dragon printed in emerald PLA, poised for display or as a dramatic tabletop companion.",
+      "Our best seller since we opened at The Mini Mall, Merrion Centre — a Voronoi-lattice elephant that scatters a warm tea-light glow across the wall behind it.",
     shopDescription:
-      "A detailed, articulated dragon with layered scales and a balanced pose. The green PLA blend shifts under light, making it feel alive on shelves, desks, or diorama bases.",
+      "From this month you can find ForgeRealm at The Mini Mall inside Leeds' Merrion Centre, sharing the shelves with a load of other exciting small-maker goods. The Voronoi Elephant tealight has been the piece walking out fastest — pop in and see it lit up in person before you take one home.",
     detail:
-      "Layered scales and a balanced stance give it a lifelike posture, perfect for collectors who want a mythic centerpiece.",
-    image: "/dragon-nbg.webp",
-    background: "#0a0a0a",
-    textColor: "#FADE6A",
-    accentColor: "#F59E0B",
-  },
-  {
-    id: "dice-guardian",
-    name: "Dice Guardian",
-    description:
-      "A sculpted dice cradle with bold angles and sturdy PETG layers for tabletop nights.",
-    shopDescription:
-      "A compact dragon head designed to cradle a full set of D&D dice. PETG adds toughness, and the sculpted form keeps it sharp and tabletop-ready.",
-    detail:
-      "The open jaw holds a full set of dice while the PETG build keeps it tough enough for regular game nights.",
-    image: "/dice-dragon-nbg.webp",
+      "Printed in translucent PLA so a standard tea light inside casts the Voronoi lattice as a moving pattern on the wall. Quiet ambient lighting with a talking-piece silhouette.",
+    image: "/featured3.jpg",
     background: "#0a0a0a",
     textColor: "#FADE6A",
     accentColor: "#F59E0B",
@@ -279,7 +265,9 @@ export default function Work() {
     if (isExpanded && activeIndex === index) {
       return "100vw";
     }
-    return hoveredIndex === index ? "28vw" : "20vw";
+    // 3 panels resting = 81vw, occupies the same footprint the previous
+    // 4 x 20vw layout did. Hovered panel expands the strip to ~88vw.
+    return hoveredIndex === index ? "34vw" : "27vw";
   };
 
 
