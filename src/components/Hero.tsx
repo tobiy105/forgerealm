@@ -367,8 +367,6 @@ export default function Hero() {
       style={{
         background:
           "linear-gradient(135deg, #080c14 0%, #0c1222 40%, #0e1428 70%, #080c14 100%)",
-        // @ts-expect-error CSS custom property for the .landing-ambience accent
-        "--ambience": "129 140 248", /* indigo-400 */
       }}
     >
 

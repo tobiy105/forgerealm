@@ -38,7 +38,6 @@ export default function Contact() {
       data-observe
       suppressHydrationWarning
       className={`reveal landing-ambience relative py-16 sm:py-24 overflow-hidden bg-transparent ${isVisible ? "is-visible" : ""}`}
-      style={{ ["--ambience" as any]: "34 211 238" /* cyan-400 */ }}
     >
       {/* Top divider */}
       <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-cyan-500/20 to-transparent" />

@@ -321,7 +321,6 @@ export default function AnatomyShowcase() {
       className="safari-drop-backdrop landing-ambience relative py-20 sm:py-28 md:min-h-screen md:flex md:flex-col md:justify-center md:py-16 overflow-hidden"
       style={{
         background: "linear-gradient(180deg, #0a0e18 0%, #0c1020 100%)",
-        ["--ambience" as any]: "34 211 238" /* cyan-400 */,
       }}
     >
 

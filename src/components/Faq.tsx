@@ -56,7 +56,6 @@ export default function Faq() {
       data-observe
       suppressHydrationWarning
       className={`reveal landing-ambience relative py-16 sm:py-24 overflow-hidden bg-transparent ${isVisible ? "is-visible" : ""}`}
-      style={{ ["--ambience" as any]: "96 165 250" /* blue-400 */ }}
     >
       {/* Top divider */}
       <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-blue-500/20 to-transparent" />

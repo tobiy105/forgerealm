@@ -858,11 +858,15 @@ html.js [data-ar] {
    so the pseudo-elements stay contained.
    -------------------------------------------------------------------------- */
 .landing-ambience {
-  --ambience: 96 165 250; /* default blue-400 */
+  --ambience: 96 165 250; /* site accent — blue-400, single value everywhere */
   position: relative;
   isolation: isolate;
 }
-/* Fading blueprint grid — masked to fade toward the edges of the section. */
+/* Blueprint grid — same colour, same size, same origin in every section so
+   consecutive sections read as one continuous surface. `background-attachment:
+   fixed` locks the grid to the viewport, so scrolling never breaks its
+   rhythm at section joins (the reason Materials and Services used to look
+   like separate pages was that each section restarted its own grid). */
 .landing-ambience::before {
   content: "";
   position: absolute;
@@ -870,37 +874,11 @@ html.js [data-ar] {
   z-index: -1;
   pointer-events: none;
   background-image:
-    linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+    linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
   background-size: 64px 64px;
-  background-position: center;
-  -webkit-mask-image: radial-gradient(
-    ellipse at center,
-    black 40%,
-    transparent 82%
-  );
-  mask-image: radial-gradient(ellipse at center, black 40%, transparent 82%);
-}
-/* Edge wash — thin linear gradient from the top/bottom edges in the tint
-   colour. Adds atmospheric depth WITHOUT any circular/elliptical shape,
-   so it can't read as a "blob". Paint-cheap, no filter, no animation. */
-.landing-ambience::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  background:
-    linear-gradient(
-      to bottom,
-      rgb(var(--ambience) / 0.05),
-      transparent 22%
-    ),
-    linear-gradient(
-      to top,
-      rgb(var(--ambience) / 0.05),
-      transparent 22%
-    );
+  background-position: 0 0;
+  background-attachment: fixed;
 }
 
 /* Blueprint corner bracket markers. Drop this on any container to frame it
