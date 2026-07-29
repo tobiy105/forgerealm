@@ -318,15 +318,12 @@ export default function AnatomyShowcase() {
 
   return (
     <section
-      className="safari-drop-backdrop relative py-20 sm:py-28 md:min-h-screen md:flex md:flex-col md:justify-center md:py-16 overflow-hidden"
+      className="safari-drop-backdrop landing-ambience relative py-20 sm:py-28 md:min-h-screen md:flex md:flex-col md:justify-center md:py-16 overflow-hidden"
       style={{
         background: "linear-gradient(180deg, #0a0e18 0%, #0c1020 100%)",
+        ["--ambience" as any]: "34 211 238" /* cyan-400 */,
       }}
     >
-      <div className="pointer-events-none absolute inset-0 hidden sm:block">
-        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[500px] rounded-full bg-blue-500/[0.06] blur-[100px] landing-ambient-glow" />
-        <div className="absolute right-1/4 top-1/3 w-[300px] h-[300px] rounded-full bg-cyan-500/[0.04] blur-[100px] landing-ambient-glow" />
-      </div>
 
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 relative">
         <div className="text-center mb-10 sm:mb-14">

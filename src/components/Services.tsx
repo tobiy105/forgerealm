@@ -15,17 +15,12 @@ import MaterialsBook from "./MaterialsBook";
 export default function Services() {
   return (
     <div className="relative overflow-hidden" style={{ background: 'linear-gradient(180deg, #0a0e18 0%, #0c1020 50%, #0a0e18 100%)' }}>
-      {/* Vibrant ambient glows */}
-      <div className="pointer-events-none absolute inset-0 hidden sm:block">
-        <div className="absolute right-[-5%] top-[20%] w-[400px] h-[400px] rounded-full bg-blue-500/[0.1] blur-[100px] landing-ambient-glow" />
-        <div className="absolute left-[-5%] top-[40%] w-[350px] h-[350px] rounded-full bg-purple-500/[0.07] blur-[100px] landing-ambient-glow" />
-        <div className="absolute left-[20%] bottom-[10%] w-[300px] h-[300px] rounded-full bg-emerald-500/[0.08] blur-[100px] landing-ambient-glow" />
-        <div className="absolute right-[30%] bottom-[20%] w-[250px] h-[250px] rounded-full bg-cyan-500/[0.06] blur-[100px] landing-ambient-glow" />
-      </div>
       <section
         id="services"
         data-observe
-        className="reveal relative py-16 sm:py-24"
+        suppressHydrationWarning
+        className="reveal landing-ambience relative py-16 sm:py-24"
+        style={{ ['--ambience' as any]: '96 165 250' /* blue-400 */ }}
       >
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative">
           {/* Header */}
@@ -157,12 +152,10 @@ export default function Services() {
       <section
         id="materials"
         data-observe
-        className="reveal relative py-16 sm:py-24"
+        suppressHydrationWarning
+        className="reveal landing-ambience relative py-16 sm:py-24"
+        style={{ ['--ambience' as any]: '52 211 153' /* emerald-400 */ }}
       >
-        {/* Emerald ambient glow */}
-        <div className="pointer-events-none absolute inset-0">
-          <div className="absolute left-1/3 top-1/2 w-[400px] h-[300px] rounded-full bg-emerald-500/[0.04] blur-[100px] landing-ambient-glow" />
-        </div>
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative">
           <div className="mb-2">
             <div className="inline-flex items-center gap-3 mb-3">

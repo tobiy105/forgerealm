@@ -54,12 +54,10 @@ export default function Faq() {
       id="faq"
       ref={sectionRef}
       data-observe
-      className={`reveal relative py-16 sm:py-24 overflow-hidden bg-transparent ${isVisible ? "is-visible" : ""}`}
+      suppressHydrationWarning
+      className={`reveal landing-ambience relative py-16 sm:py-24 overflow-hidden bg-transparent ${isVisible ? "is-visible" : ""}`}
+      style={{ ["--ambience" as any]: "96 165 250" /* blue-400 */ }}
     >
-      {/* Ambient glow */}
-      <div className="pointer-events-none absolute inset-0">
-        <div className="absolute left-0 top-1/3 w-[350px] h-[350px] rounded-full bg-blue-500/[0.04] blur-[100px] landing-ambient-glow" />
-      </div>
       {/* Top divider */}
       <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-blue-500/20 to-transparent" />
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative">

@@ -840,3 +840,107 @@ html.js [data-ar] {
     backdrop-filter: none !important;
   }
 }
+
+/* --------------------------------------------------------------------------
+   Landing "blueprint" ambience
+   ----------------------------
+   Replaces the sprawl of blurred colour blobs across the landing with a
+   cohesive engineering-blueprint feel: a fading grid overlay, a soft
+   radial glow tinted per section, and corner bracket markers. Static
+   CSS only — no blur, no compositor animation, no Safari cost.
+   Usage:
+     <section class="landing-ambience" style="--ambience: 96 165 250">
+       ...
+     </section>
+   The `--ambience` custom property is an unadorned "r g b" triplet, so
+   the same class works for blue, cyan, emerald, amber, purple, etc.
+   Sections must be `position: relative` (or `overflow-hidden` at minimum)
+   so the pseudo-elements stay contained.
+   -------------------------------------------------------------------------- */
+.landing-ambience {
+  --ambience: 96 165 250; /* default blue-400 */
+  position: relative;
+  isolation: isolate;
+}
+/* Fading blueprint grid — masked to fade toward the edges of the section. */
+.landing-ambience::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+  background-size: 64px 64px;
+  background-position: center;
+  -webkit-mask-image: radial-gradient(
+    ellipse at center,
+    black 40%,
+    transparent 82%
+  );
+  mask-image: radial-gradient(ellipse at center, black 40%, transparent 82%);
+}
+/* Soft accent glow — plain radial gradient in the section's tint colour.
+   No filter: blur — this is a paint-cheap gradient the GPU handles for free. */
+.landing-ambience::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(
+      ellipse 60% 40% at 25% 20%,
+      rgb(var(--ambience) / 0.1),
+      transparent 65%
+    ),
+    radial-gradient(
+      ellipse 55% 45% at 78% 78%,
+      rgb(var(--ambience) / 0.08),
+      transparent 65%
+    );
+}
+
+/* Blueprint corner bracket markers. Drop this on any container to frame it
+   with four thin "L" brackets in the tint colour. Purely decorative. */
+.landing-corner-frame {
+  position: relative;
+}
+.landing-corner-frame::before,
+.landing-corner-frame::after,
+.landing-corner-frame > .lcf-tl,
+.landing-corner-frame > .lcf-br {
+  content: "";
+  position: absolute;
+  width: 22px;
+  height: 22px;
+  border-color: rgb(var(--ambience, 96 165 250) / 0.45);
+  border-style: solid;
+  border-width: 0;
+  pointer-events: none;
+}
+.landing-corner-frame::before {
+  top: 0;
+  left: 0;
+  border-top-width: 1px;
+  border-left-width: 1px;
+}
+.landing-corner-frame::after {
+  bottom: 0;
+  right: 0;
+  border-bottom-width: 1px;
+  border-right-width: 1px;
+}
+.landing-corner-frame > .lcf-tl {
+  top: 0;
+  right: 0;
+  border-top-width: 1px;
+  border-right-width: 1px;
+}
+.landing-corner-frame > .lcf-br {
+  bottom: 0;
+  left: 0;
+  border-bottom-width: 1px;
+  border-left-width: 1px;
+}

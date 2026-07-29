@@ -363,28 +363,14 @@ export default function Hero() {
   return (
     <section
       ref={heroRef}
-      className="relative min-h-[100vh] flex items-center overflow-hidden"
+      className="landing-ambience relative min-h-[100vh] flex items-center overflow-hidden"
       style={{
         background:
           "linear-gradient(135deg, #080c14 0%, #0c1222 40%, #0e1428 70%, #080c14 100%)",
+        // @ts-expect-error CSS custom property for the .landing-ambience accent
+        "--ambience": "129 140 248", /* indigo-400 */
       }}
     >
-      {/* Ambient glows - hidden on mobile for performance */}
-      <div className="hero-glows pointer-events-none absolute inset-0 hidden sm:block">
-        <div className="hero-glow-a absolute left-[-10%] top-[15%] w-[500px] h-[500px] rounded-full bg-blue-600/[0.1] blur-[100px]" />
-        <div className="hero-glow-b absolute right-[-5%] top-[10%] w-[400px] h-[400px] rounded-full bg-purple-500/[0.08] blur-[100px]" />
-        <div className="hero-glow-c absolute right-[20%] bottom-[10%] w-[350px] h-[350px] rounded-full bg-cyan-500/[0.07] blur-[100px]" />
-        <div className="hero-glow-d absolute left-[30%] bottom-[5%] w-[300px] h-[300px] rounded-full bg-emerald-500/[0.05] blur-[100px]" />
-        {/* Grid pattern */}
-        <div
-          className="absolute inset-0 opacity-[0.03]"
-          style={{
-            backgroundImage:
-              "linear-gradient(rgba(255,255,255,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.06) 1px, transparent 1px)",
-            backgroundSize: "80px 80px",
-          }}
-        />
-      </div>
 
       <div className="relative mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-20 sm:py-28 md:max-w-[min(97vw,2000px)] md:mt-28 md:mb-12 md:py-12 md:rounded-[2rem] md:border md:border-white/10 md:bg-white/[0.03] md:shadow-[0_30px_80px_-12px_rgba(0,0,0,0.75),inset_0_1px_0_rgba(255,255,255,0.05)]">
         <div className="grid lg:grid-cols-[1fr_1.05fr] gap-12 lg:gap-16 items-center">

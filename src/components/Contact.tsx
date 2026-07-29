@@ -36,12 +36,10 @@ export default function Contact() {
       id="contact"
       ref={sectionRef}
       data-observe
-      className={`reveal relative py-16 sm:py-24 overflow-hidden bg-transparent ${isVisible ? "is-visible" : ""}`}
+      suppressHydrationWarning
+      className={`reveal landing-ambience relative py-16 sm:py-24 overflow-hidden bg-transparent ${isVisible ? "is-visible" : ""}`}
+      style={{ ["--ambience" as any]: "34 211 238" /* cyan-400 */ }}
     >
-      {/* Ambient glow */}
-      <div className="pointer-events-none absolute inset-0">
-        <div className="absolute right-1/4 top-1/3 w-[400px] h-[400px] rounded-full bg-cyan-500/[0.04] blur-[100px] landing-ambient-glow" />
-      </div>
       {/* Top divider */}
       <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-cyan-500/20 to-transparent" />
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative">
