@@ -213,7 +213,7 @@ const stalls: Stall[] = [
   {
     label: 'Stall Session 12',
     date: '18 July 2026',
-    title: 'The right room',
+    title: 'Branching out',
     location: 'Albion Place & Afrikan Market, Leeds',
     images: [
       { src: '/blog/session12-albion.jpg', alt: 'Ishmam at the Albion Place stall on 18 July, ForgeRealm display under the green-striped marquee.', portrait: true },
