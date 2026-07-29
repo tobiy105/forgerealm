@@ -213,18 +213,18 @@ const stalls: Stall[] = [
   {
     label: 'Stall Session 12',
     date: '18 July 2026',
-    title: 'Two cities, two flags: Albion and the Afrikan Market',
+    title: 'City centre and the carnival: Albion and the Afrikan Market',
     location: 'Albion Place & Afrikan Market, Leeds',
     images: [
       { src: '/blog/session12-albion.jpg', alt: 'Ishmam at the Albion Place stall on 18 July, ForgeRealm display under the green-striped marquee.', portrait: true },
       { src: '/blog/session12-afrikan.jpg', alt: 'Tobi at the Afrikan Market in Leeds representing ForgeRealm as a Black-owned business.' },
     ],
     paragraphs: [
-      'Split day. Ishmam ran Albion solo, Tobi took the Afrikan Market in Leeds to represent us there as a Black-owned business. Two very different rooms, one weekend.',
+      'Split day, both still in Leeds but on opposite ends of it. Ishmam ran Albion in the city centre solo, Tobi took the Afrikan Market out by Leeds Carnival to represent us there as a Black-owned business.',
       'Albion did the numbers. On the day it was arguably our second-best Albion ever, only sitting behind the sunny March 14 stall we still use as the bar. Steady flow the whole day, silk PLA doing its usual crowd-stopping thing.',
-      'The Afrikan Market was quieter for us commercially. It was not our strongest stall by a wide margin, but we still walked away in profit by the end, which is not a given for a first-time market. More importantly it was the right room to be in, and we would go back.',
+      'The Afrikan Market was quieter for us commercially. It was not our strongest stall by a wide margin, but we still walked away in profit by the end, which is not a given for a first-time market away from the city centre crowd. More importantly it was the right room to be in, and we would go back.',
     ],
-    pull: 'Two very different rooms, one weekend. Albion did the numbers, the Afrikan Market did the point.',
+    pull: 'Two ends of Leeds, one Saturday. Albion did the numbers, the Afrikan Market did the point.',
   },
   {
     kind: 'note',
