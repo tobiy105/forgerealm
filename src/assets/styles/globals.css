@@ -881,8 +881,9 @@ html.js [data-ar] {
   );
   mask-image: radial-gradient(ellipse at center, black 40%, transparent 82%);
 }
-/* Soft accent glow — plain radial gradient in the section's tint colour.
-   No filter: blur — this is a paint-cheap gradient the GPU handles for free. */
+/* Edge wash — thin linear gradient from the top/bottom edges in the tint
+   colour. Adds atmospheric depth WITHOUT any circular/elliptical shape,
+   so it can't read as a "blob". Paint-cheap, no filter, no animation. */
 .landing-ambience::after {
   content: "";
   position: absolute;
@@ -890,15 +891,15 @@ html.js [data-ar] {
   z-index: -1;
   pointer-events: none;
   background:
-    radial-gradient(
-      ellipse 60% 40% at 25% 20%,
-      rgb(var(--ambience) / 0.1),
-      transparent 65%
+    linear-gradient(
+      to bottom,
+      rgb(var(--ambience) / 0.05),
+      transparent 22%
     ),
-    radial-gradient(
-      ellipse 55% 45% at 78% 78%,
-      rgb(var(--ambience) / 0.08),
-      transparent 65%
+    linear-gradient(
+      to top,
+      rgb(var(--ambience) / 0.05),
+      transparent 22%
     );
 }
 
