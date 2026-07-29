@@ -14,18 +14,12 @@ import MaterialsBook from "./MaterialsBook";
 
 export default function Services() {
   return (
-    <div className="relative overflow-hidden" style={{ background: 'linear-gradient(180deg, #0a0e18 0%, #0c1020 50%, #0a0e18 100%)' }}>
-      {/* Vibrant ambient glows */}
-      <div className="pointer-events-none absolute inset-0 hidden sm:block">
-        <div className="absolute right-[-5%] top-[20%] w-[400px] h-[400px] rounded-full bg-blue-500/[0.1] blur-[180px]" />
-        <div className="absolute left-[-5%] top-[40%] w-[350px] h-[350px] rounded-full bg-purple-500/[0.07] blur-[160px]" />
-        <div className="absolute left-[20%] bottom-[10%] w-[300px] h-[300px] rounded-full bg-emerald-500/[0.08] blur-[150px]" />
-        <div className="absolute right-[30%] bottom-[20%] w-[250px] h-[250px] rounded-full bg-cyan-500/[0.06] blur-[140px]" />
-      </div>
+    <div className="relative overflow-hidden bg-[#0a0e18]">
       <section
         id="services"
         data-observe
-        className="reveal relative py-16 sm:py-24"
+        suppressHydrationWarning
+        className="reveal landing-ambience relative py-16 sm:py-24"
       >
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative">
           {/* Header */}
@@ -146,34 +140,24 @@ export default function Services() {
         </div>
       </section>
 
-      {/* Diamond divider */}
-      <div className="flex items-center gap-4 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="flex-1 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
-        <div className="w-[6px] h-[6px] rotate-45 bg-emerald-400/30" />
-        <div className="flex-1 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
-      </div>
-
-      {/* Materials section */}
+      {/* Materials section — no divider; grid + shared accent unify it with Services. */}
       <section
         id="materials"
         data-observe
-        className="reveal relative py-16 sm:py-24"
+        suppressHydrationWarning
+        className="reveal landing-ambience relative py-16 sm:py-24"
       >
-        {/* Emerald ambient glow */}
-        <div className="pointer-events-none absolute inset-0">
-          <div className="absolute left-1/3 top-1/2 w-[400px] h-[300px] rounded-full bg-emerald-500/[0.04] blur-[180px]" />
-        </div>
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative">
           <div className="mb-2">
             <div className="inline-flex items-center gap-3 mb-3">
-              <div className="w-8 h-px bg-gradient-to-r from-emerald-400 to-teal-400" />
-              <span className="text-[10px] sm:text-[11px] font-medium uppercase tracking-[0.3em] text-emerald-300/60" style={{ fontFamily: "'Jost', sans-serif" }}>Eco printing</span>
+              <div className="w-8 h-px bg-gradient-to-r from-blue-400 to-cyan-400" />
+              <span className="text-[10px] sm:text-[11px] font-medium uppercase tracking-[0.3em] text-blue-300/60" style={{ fontFamily: "'Jost', sans-serif" }}>Eco printing</span>
             </div>
             <h2
               className="text-2xl sm:text-3xl lg:text-4xl font-normal text-white"
               style={{ fontFamily: "'Cinzel', serif" }}
             >
-              Our <em className="text-emerald-300" style={{ fontFamily: "'Cormorant Garamond', serif", fontStyle: 'italic', fontWeight: 300 }}>Materials</em>
+              Our <em className="text-cyan-300" style={{ fontFamily: "'Cormorant Garamond', serif", fontStyle: 'italic', fontWeight: 300 }}>Materials</em>
             </h2>
           </div>
 

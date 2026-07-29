@@ -210,6 +210,38 @@ const stalls: Stall[] = [
     ],
     pull: 'Possibly the best the stall has ever looked, and the heatwave waited until the morning after.',
   },
+  {
+    label: 'Stall Session 12',
+    date: '18 July 2026',
+    title: 'City centre and the carnival: Albion and the Afrikan Market',
+    location: 'Albion Place & Afrikan Market, Leeds',
+    images: [
+      { src: '/blog/session12-albion.jpg', alt: 'Ishmam at the Albion Place stall on 18 July, ForgeRealm display under the green-striped marquee.', portrait: true },
+      { src: '/blog/session12-afrikan.jpg', alt: 'Tobi at the Afrikan Market in Leeds representing ForgeRealm as a Black-owned business.' },
+    ],
+    paragraphs: [
+      'Split day, both still in Leeds but on opposite ends of it. Ishmam ran Albion in the city centre solo, Tobi took the Afrikan Market out by Leeds Carnival to represent us there as a Black-owned business.',
+      'Albion did the numbers. On the day it was arguably our second-best Albion ever, only sitting behind the sunny March 14 stall we still use as the bar. Steady flow the whole day, silk PLA doing its usual crowd-stopping thing.',
+      'The Afrikan Market was quieter for us commercially. It was not our strongest stall by a wide margin, but we still walked away in profit by the end, which is not a given for a first-time market away from the city centre crowd. More importantly it was the right room to be in, and we would go back.',
+    ],
+    pull: 'Two ends of Leeds, one Saturday. Albion did the numbers, the Afrikan Market did the point.',
+  },
+  {
+    kind: 'note',
+    label: 'Studio',
+    date: '29 July 2026',
+    title: 'We are now stocked at The Mini Mall, Merrion Centre',
+    images: [
+      { src: '/blog/minimall-opening-1.jpg', alt: 'ForgeRealm shelf inside The Mini Mall at the Merrion Centre in Leeds.' },
+      { src: '/blog/minimall-opening-2.jpg', alt: 'Opening day at The Mini Mall inside the Merrion Centre, Leeds.', portrait: true },
+    ],
+    paragraphs: [
+      'From this month our prints have a proper permanent home in Leeds. ForgeRealm is now stocked at The Mini Mall inside the Merrion Centre, sharing the shelves with a load of other exciting small-maker goods.',
+      'We were honoured to play a big part in the process leading up to the launch, and invited to the opening ceremony too. Being in the room while a new small-business hub in the city got off the ground was a moment.',
+      'So far it has been doing well. The Voronoi Elephant Tealight has been the piece walking out fastest, and we are looking forward to seeing where The Mini Mall goes from here. If you are in the Merrion Centre, pop in and see us on the shelf.',
+    ],
+    pull: 'A proper permanent home in Leeds. Pop into the Merrion Centre and see us on the shelf.',
+  },
 ];
 
 function StallEntry({ stall, index, isLatest }: { stall: Stall; index: number; isLatest?: boolean }) {
@@ -305,7 +337,7 @@ function StallEntry({ stall, index, isLatest }: { stall: Stall; index: number; i
               </blockquote>
             )}
 
-            {!isNote && stall.images && stall.images.length > 0 && (
+            {stall.images && stall.images.length > 0 && (
               <div className={`mt-7 grid gap-3 ${stall.images.length === 1 ? 'grid-cols-1' : stall.images.length === 2 ? 'grid-cols-1 sm:grid-cols-2' : 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3'}`}>
                 {stall.images.map((img, i) => (
                   <figure key={i} className="group relative overflow-hidden rounded-xl border border-white/[0.06] bg-[#0c1220]">

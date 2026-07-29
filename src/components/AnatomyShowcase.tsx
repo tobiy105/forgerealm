@@ -123,22 +123,15 @@ export default function AnatomyShowcase() {
         const hotY =
           imgRect.top - rootRect.top + (a.hotYPct / 100) * imgRect.height;
 
-        // Line origin: inner edge of the label (right side for left labels, left side for right labels).
+        // Straight line: from the inner edge of the label directly to the
+        // hotspot on the owl. Overlap over the image is intentional.
         const originX =
           a.side === "left"
             ? lRect.right - rootRect.left
             : lRect.left - rootRect.left;
         const originY = lRect.top - rootRect.top + lRect.height / 2;
 
-        // One knee bend: horizontal from the label, then diagonal to the hotspot.
-        const kneeX =
-          a.side === "left"
-            ? originX + Math.max(30, (hotX - originX) * 0.35)
-            : originX - Math.max(30, (originX - hotX) * 0.35);
-        const kneeY = originY;
-
-        nextPaths[a.key] =
-          `M ${originX} ${originY} L ${kneeX} ${kneeY} L ${hotX} ${hotY}`;
+        nextPaths[a.key] = `M ${originX} ${originY} L ${hotX} ${hotY}`;
         nextHotspots[a.key] = { x: hotX, y: hotY };
       });
 
@@ -325,15 +318,11 @@ export default function AnatomyShowcase() {
 
   return (
     <section
-      className="relative py-20 sm:py-28 overflow-hidden"
+      className="safari-drop-backdrop landing-ambience relative py-20 sm:py-28 md:min-h-screen md:flex md:flex-col md:justify-center md:py-16 overflow-hidden"
       style={{
         background: "linear-gradient(180deg, #0a0e18 0%, #0c1020 100%)",
       }}
     >
-      <div className="pointer-events-none absolute inset-0 hidden sm:block">
-        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[500px] rounded-full bg-blue-500/[0.06] blur-[180px]" />
-        <div className="absolute right-1/4 top-1/3 w-[300px] h-[300px] rounded-full bg-cyan-500/[0.04] blur-[140px]" />
-      </div>
 
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 relative">
         <div className="text-center mb-10 sm:mb-14">
@@ -375,12 +364,12 @@ export default function AnatomyShowcase() {
         >
           <div className="grid grid-cols-[minmax(0,80px)_minmax(180px,1fr)_minmax(0,80px)] sm:grid-cols-[minmax(120px,200px)_minmax(220px,1fr)_minmax(120px,200px)] md:grid-cols-[minmax(160px,220px)_minmax(320px,1fr)_minmax(160px,220px)] xl:grid-cols-[minmax(160px,220px)_minmax(460px,1fr)_minmax(160px,220px)] items-center gap-x-1.5 sm:gap-x-6 md:gap-x-10 lg:gap-x-16">
             {/* Left labels */}
-            <div className="flex flex-col justify-between h-[210px] sm:h-[360px] md:h-[440px] xl:h-[520px] py-3 sm:py-5 items-end">
+            <div className="flex flex-col justify-between h-[420px] sm:h-[440px] md:h-[min(72vh,720px)] xl:h-[min(78vh,860px)] py-3 sm:py-5 items-end">
               {LEFT.map((a) => (
                 <div
                   key={a.key}
                   ref={setLabelRef(a.key)}
-                  className="anatomy-label max-w-full"
+                  className="anatomy-label max-w-full relative z-10"
                 >
                   <span
                     data-side={a.side}
@@ -396,25 +385,25 @@ export default function AnatomyShowcase() {
               ))}
             </div>
 
-            {/* Focal image */}
+            {/* Focal image — big enough on mobile that labels overlap; grows further at each breakpoint. */}
             <div className="flex justify-center">
               <img
                 ref={imageRef}
                 src="/owlPrint.png"
                 alt="A ForgeRealm printed owl figurine"
-                className="anatomy-focal h-[210px] sm:h-[360px] md:h-[440px] xl:h-[520px] w-auto object-contain drop-shadow-[0_0_40px_rgba(96,165,250,0.15)]"
+                className="anatomy-focal h-[420px] sm:h-[440px] md:h-[min(72vh,720px)] xl:h-[min(78vh,860px)] max-w-none w-auto object-contain drop-shadow-[0_0_40px_rgba(96,165,250,0.15)]"
                 loading="lazy"
                 decoding="async"
               />
             </div>
 
             {/* Right labels */}
-            <div className="flex flex-col justify-between h-[210px] sm:h-[360px] md:h-[440px] xl:h-[520px] py-3 sm:py-5 items-start">
+            <div className="flex flex-col justify-between h-[420px] sm:h-[440px] md:h-[min(72vh,720px)] xl:h-[min(78vh,860px)] py-3 sm:py-5 items-start">
               {RIGHT.map((a) => (
                 <div
                   key={a.key}
                   ref={setLabelRef(a.key)}
-                  className="anatomy-label max-w-full"
+                  className="anatomy-label max-w-full relative z-10"
                 >
                   <span
                     data-side={a.side}

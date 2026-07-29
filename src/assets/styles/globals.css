@@ -803,3 +803,143 @@ html.js [data-ar] {
     animation: none;
   }
 }
+
+/* --------------------------------------------------------------------------
+   Landing page paint hygiene
+   -----------------------------
+   Every landing section stacks a couple of huge blurred colour blobs behind
+   real content. Without help, the browser repaints those blur passes on
+   every scroll tick — cheap on Chromium (its blur is GPU-accelerated), very
+   expensive on Safari (software blur, no layer isolation).
+   Rules:
+     - Promote each blurred blob to its own compositor layer.
+     - Contain layout + paint so a repaint inside a glow can't invalidate
+       its neighbours.
+     - Hide backface + zero-out perspective so Safari treats the layer as
+       genuinely 2D and stops running per-frame projection math.
+   -------------------------------------------------------------------------- */
+.hero-glow-a,
+.hero-glow-b,
+.hero-glow-c,
+.hero-glow-d,
+.landing-ambient-glow {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  contain: layout paint size;
+}
+
+/* Safari-only guardrails.
+   `@supports (font: -apple-system-body)` is truthy on Safari (system-font
+   shorthand) and falsy on Chromium/Firefox (invalid font-family token).
+   Kept scoped to `.safari-guard` targets so we don't accidentally strip
+   backdrop-filter from things that actually rely on it (navbars). */
+@supports (font: -apple-system-body) {
+  .safari-drop-backdrop,
+  .safari-drop-backdrop * {
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+  }
+}
+
+/* Hide the Brevo chat widget while the featured-print overlay is open. The
+   Brevo iframe / launcher renders at z-index 2^31 and outranks anything we
+   can put on the overlay, so we blanket-hide anything Brevo-owned via a
+   body class the Work component toggles. */
+body.work-modal-open [id^="brevo-conversations"],
+body.work-modal-open [class*="brevo-conversations"],
+body.work-modal-open iframe[src*="brevo"] {
+  display: none !important;
+}
+
+/* --------------------------------------------------------------------------
+   Landing "blueprint" ambience
+   ----------------------------
+   Replaces the sprawl of blurred colour blobs across the landing with a
+   cohesive engineering-blueprint feel: a fading grid overlay, a soft
+   radial glow tinted per section, and corner bracket markers. Static
+   CSS only — no blur, no compositor animation, no Safari cost.
+   Usage:
+     <section class="landing-ambience" style="--ambience: 96 165 250">
+       ...
+     </section>
+   The `--ambience` custom property is an unadorned "r g b" triplet, so
+   the same class works for blue, cyan, emerald, amber, purple, etc.
+   Sections must be `position: relative` (or `overflow-hidden` at minimum)
+   so the pseudo-elements stay contained.
+   -------------------------------------------------------------------------- */
+.landing-ambience {
+  --ambience: 96 165 250; /* site accent — blue-400, single value everywhere */
+  position: relative;
+  isolation: isolate;
+}
+/* Blueprint grid — lighter than a proper background, fades toward every
+   wall of its section so consecutive sections' grids blend into each
+   other instead of butting up as hard bands. Same size + colour + origin
+   everywhere so it reads as one continuous system when the fades meet. */
+.landing-ambience::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.022) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.022) 1px, transparent 1px);
+  background-size: 64px 64px;
+  background-position: 0 0;
+  /* Radial mask so the grid is strongest at the section's centre and
+     fades out to nothing before it hits any of the four walls. */
+  -webkit-mask-image: radial-gradient(
+    ellipse 75% 70% at center,
+    black 30%,
+    transparent 92%
+  );
+  mask-image: radial-gradient(
+    ellipse 75% 70% at center,
+    black 30%,
+    transparent 92%
+  );
+}
+
+/* Blueprint corner bracket markers. Drop this on any container to frame it
+   with four thin "L" brackets in the tint colour. Purely decorative. */
+.landing-corner-frame {
+  position: relative;
+}
+.landing-corner-frame::before,
+.landing-corner-frame::after,
+.landing-corner-frame > .lcf-tl,
+.landing-corner-frame > .lcf-br {
+  content: "";
+  position: absolute;
+  width: 22px;
+  height: 22px;
+  border-color: rgb(var(--ambience, 96 165 250) / 0.45);
+  border-style: solid;
+  border-width: 0;
+  pointer-events: none;
+}
+.landing-corner-frame::before {
+  top: 0;
+  left: 0;
+  border-top-width: 1px;
+  border-left-width: 1px;
+}
+.landing-corner-frame::after {
+  bottom: 0;
+  right: 0;
+  border-bottom-width: 1px;
+  border-right-width: 1px;
+}
+.landing-corner-frame > .lcf-tl {
+  top: 0;
+  right: 0;
+  border-top-width: 1px;
+  border-right-width: 1px;
+}
+.landing-corner-frame > .lcf-br {
+  bottom: 0;
+  left: 0;
+  border-bottom-width: 1px;
+  border-left-width: 1px;
+}

@@ -31,64 +31,68 @@ type Product = {
   detail: string;
   image: string;
   background: string;
+  /** Image URL shown in the right half of the expanded (clicked) panel
+   *  as a lifestyle / mood backdrop. */
+  lifestyleImage?: string;
+  /** Multiplier applied to the thumbnail image size. 1 is default. */
+  thumbnailScale?: number;
+  /** Multiplier applied to the hero image inside the expanded (clicked)
+   *  overlay. 1 is default. */
+  expandedScale?: number;
+  /** Optional shop deep-link. When set, a "View in store" anchor renders
+   *  in the expanded overlay. When absent, the button is not rendered. */
+  shopUrl?: string;
   textColor: string;
   accentColor: string;
 };
 
 const products: Product[] = [
   {
-    id: "aurora-lamp",
-    name: "Aurora Bloom",
+    id: "loving-memory",
+    name: "In Loving Memory",
     description:
-      "A gradient lamp shade with a soft spiral that diffuses light into a warm glow, bringing ambient color to desks and shelves.",
+      "An exact replica of a customer's late dog, commissioned so they could still see him every day. Shared here with the owner's blessing.",
     shopDescription:
-      "Aurora Bloom is a gradient lamp shade with a soft spiral that diffuses light into a warm glow. Printed in precision PLA with smooth layering, it brings ambient color to desks, shelves, and bedside tables.",
+      "This one wasn't a shop piece. It was a commission we took on when a customer asked us to recreate their beloved dog in 3D. We measured, we sculpted, we sanded, and we hand-finished every last layer to make sure the little details felt right. A small piece of a much-loved friend, forever on the shelf.",
     detail:
-      "The soft spiral diffuser creates beautiful ambient lighting effects, perfect for creating a cozy atmosphere in any space.",
-    image: "/ablamp-nbg.webp",
+      "It's commissions like this that remind us why we do what we do. If there's a piece of your life you'd like us to bring into the real world, we'd be honoured to help.",
+    image: "/featured1.jpg",
     background: "#0a0a0a",
+    lifestyleImage: "/featured1bg.jpg",
+    thumbnailScale: 0.7,
+    expandedScale: 0.55,
     textColor: "#FADE6A",
     accentColor: "#F59E0B",
   },
   {
-    id: "nebula-owl",
-    name: "Leeds Owl",
+    id: "orins-dagger",
+    name: "Orin's Dagger",
     description:
-      "A compact guardian owl with gradient feathers and crisp silhouette, designed to sit proudly on desks and shelves.",
+      "A custom scale replica of Orin the Red's dagger from Baldur's Gate 3, printed for a customer who wanted a piece of the game on their shelf.",
     shopDescription:
-      "A Leeds-inspired owl with a warm gradient that fades from amber to blush. Crisp feather detail makes it a standout accent for studios and shelves.",
+      "Sculpted from the in-game model and hand-finished in PLA, this dagger tries to hit every curve, twist and jagged edge Larian put on the source. If you're a BG3 fan and want a signature piece from the story, this is the kind of commission we love doing.",
     detail:
-      "The owl is a symbol woven through Leeds, appearing across the city and in the Leeds United crest, making this piece a small tribute to home.",
-    image: "/owl-nbg.webp",
+      "Fan-favourite pieces from your favourite games are one of our happy places. Send us the character, the weapon, or the trinket and we'll take it from there.",
+    image: "/featured2.jpg",
     background: "#0a0a0a",
+    lifestyleImage: "/featured2bg.jpg",
     textColor: "#FADE6A",
     accentColor: "#F59E0B",
   },
   {
-    id: "forest-dragon",
-    name: "Forest Dragon",
+    id: "voronoi-elephant",
+    name: "Voronoi Elephant Tealight",
     description:
-      "An articulated dragon printed in emerald PLA, poised for display or as a dramatic tabletop companion.",
+      "Our best seller since we opened at The Mini Mall, Merrion Centre. A Voronoi-lattice elephant that scatters a warm tea-light glow across the wall behind it.",
     shopDescription:
-      "A detailed, articulated dragon with layered scales and a balanced pose. The green PLA blend shifts under light, making it feel alive on shelves, desks, or diorama bases.",
+      "From this month you can find ForgeRealm at The Mini Mall inside Leeds' Merrion Centre, sharing the shelves with a load of other exciting small-maker goods. The Voronoi Elephant tealight has been the piece walking out fastest, so pop in and see it lit up in person before you take one home.",
     detail:
-      "Layered scales and a balanced stance give it a lifelike posture, perfect for collectors who want a mythic centerpiece.",
-    image: "/dragon-nbg.webp",
+      "Printed in translucent PLA so a standard tea light inside casts the Voronoi lattice as a moving pattern on the wall. Quiet ambient lighting with a talking-piece silhouette.",
+    image: "/featured3.jpg",
     background: "#0a0a0a",
-    textColor: "#FADE6A",
-    accentColor: "#F59E0B",
-  },
-  {
-    id: "dice-guardian",
-    name: "Dice Guardian",
-    description:
-      "A sculpted dice cradle with bold angles and sturdy PETG layers for tabletop nights.",
-    shopDescription:
-      "A compact dragon head designed to cradle a full set of D&D dice. PETG adds toughness, and the sculpted form keeps it sharp and tabletop-ready.",
-    detail:
-      "The open jaw holds a full set of dice while the PETG build keeps it tough enough for regular game nights.",
-    image: "/dice-dragon-nbg.webp",
-    background: "#0a0a0a",
+    lifestyleImage: "/featured3bg.jpg",
+    thumbnailScale: 1.35,
+    shopUrl: "/shop?product=voronoi-elephant-tealight",
     textColor: "#FADE6A",
     accentColor: "#F59E0B",
   },
@@ -272,6 +276,15 @@ export default function Work() {
     return () => window.removeEventListener("keydown", handleKey);
   }, [isExpanded]);
 
+  // Toggle a body class while the featured-print overlay is open so global
+  // CSS can hide the Brevo chat widget (whose z-index is 2^31 and outranks
+  // anything we can set on the overlay itself).
+  useEffect(() => {
+    if (typeof document === "undefined") return;
+    document.body.classList.toggle("work-modal-open", isExpanded);
+    return () => document.body.classList.remove("work-modal-open");
+  }, [isExpanded]);
+
   const getPanelWidth = (index: number) => {
     if (isCoarsePointer && isNarrowScreen) {
       return "72vw";
@@ -279,13 +292,21 @@ export default function Work() {
     if (isExpanded && activeIndex === index) {
       return "100vw";
     }
-    return hoveredIndex === index ? "28vw" : "20vw";
+    // 3 panels resting = 81vw, occupies the same footprint the previous
+    // 4 x 20vw layout did. Hovered panel expands the strip to ~88vw.
+    return hoveredIndex === index ? "34vw" : "27vw";
   };
 
 
   const getImageScale = (index: number) => {
-    if (isCoarsePointer && isNarrowScreen) return "scale(1.05)";
-    return hoveredIndex === index ? "scale(1.06)" : "scale(1)";
+    const product = products[index];
+    // Ignore per-product thumbnail scaling while expanded — the expanded
+    // view should always show the full-size hero image.
+    const isThisExpanded = isExpanded && activeIndex === index;
+    const base = isThisExpanded ? 1 : (product?.thumbnailScale ?? 1);
+    if (isCoarsePointer && isNarrowScreen) return `scale(${base * 1.05})`;
+    const hoverBoost = hoveredIndex === index ? 1.06 : 1;
+    return `scale(${base * hoverBoost})`;
   };
 
   const handleOpen = (index: number) => {
@@ -401,7 +422,7 @@ export default function Work() {
                       : "max-h-[40vh] max-w-[34vw] sm:max-h-[44vh] sm:max-w-[36vw]"
                   } w-auto object-contain drop-shadow-[0_40px_80px_rgba(0,0,0,0.4)]`}
                   animate={{
-                    scale: isActive ? 1.18 : hoveredIndex === index && !isCoarsePointer ? 1.08 : 1,
+                    scale: (product.thumbnailScale ?? 1) * (isActive ? 1.18 : hoveredIndex === index && !isCoarsePointer ? 1.08 : 1),
                   }}
                   transition={{ duration: 0.5, ease: "easeOut" }}
                 />
@@ -498,6 +519,7 @@ export default function Work() {
                           src={activeProduct.image}
                           alt={activeProduct.name}
                           className="h-[45vh] w-[85vw] max-h-[45vh] max-w-[92vw] object-contain drop-shadow-[0_45px_90px_rgba(0,0,0,0.55)]"
+                          style={{ transform: `scale(${activeProduct.expandedScale ?? 1})`, transformOrigin: "center" }}
                           animate={{ y: [0, -10, 0] }}
                           transition={{ duration: 3.5, ease: "easeInOut", repeat: Infinity }}
                         />
@@ -518,9 +540,14 @@ export default function Work() {
                         {activeProduct.detail}
                       </p>
                       <div className="flex flex-wrap items-center gap-3">
-                        <button className={`work-text-force inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs uppercase tracking-[0.2em] transition ${isLight ? "border-slate-300 text-slate-700 hover:bg-slate-100" : "border-white/40 text-white hover:bg-white/10"}`}>
-                          View in store
-                        </button>
+                        {activeProduct.shopUrl && (
+                          <a
+                            href={activeProduct.shopUrl}
+                            className={`work-text-force inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs uppercase tracking-[0.2em] transition ${isLight ? "border-slate-300 text-slate-700 hover:bg-slate-100" : "border-white/40 text-white hover:bg-white/10"}`}
+                          >
+                            View in store
+                          </a>
+                        )}
                         <button
                           type="button"
                           onClick={handleClose}
@@ -537,6 +564,7 @@ export default function Work() {
                           src={activeProduct.image}
                           alt={activeProduct.name}
                           className="h-[85vh] w-[80vw] max-h-[85vh] max-w-[90vw] sm:h-[85vh] sm:w-[75vw] sm:max-w-[85vw] object-contain drop-shadow-[0_55px_110px_rgba(0,0,0,0.6)]"
+                          style={{ transform: `scale(${activeProduct.expandedScale ?? 1})`, transformOrigin: "center" }}
                         />
                       </div>
 
@@ -557,9 +585,14 @@ export default function Work() {
                           {activeProduct.detail}
                         </p>
                         <div className="flex flex-wrap items-center gap-3">
-                          <button className={`work-text-force inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs uppercase tracking-[0.2em] transition ${isLight ? "border-slate-300 text-slate-700 hover:bg-slate-100" : "border-white/40 text-white hover:bg-white/10"}`}>
-                            View in store
-                          </button>
+                          {activeProduct.shopUrl && (
+                            <a
+                              href={activeProduct.shopUrl}
+                              className={`work-text-force inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs uppercase tracking-[0.2em] transition ${isLight ? "border-slate-300 text-slate-700 hover:bg-slate-100" : "border-white/40 text-white hover:bg-white/10"}`}
+                            >
+                              View in store
+                            </a>
+                          )}
                           <button
                             type="button"
                             onClick={handleNext}
@@ -579,28 +612,10 @@ export default function Work() {
 
                   <div className="pointer-events-none absolute inset-y-0 right-0 z-0 hidden lg:block lg:w-1/2">
                     <div className="h-full w-full overflow-hidden border-l border-white/10 bg-white/10">
-                          {activeProduct.id === "aurora-lamp" ? (
+                          {activeProduct.lifestyleImage ? (
                             <img
-                              src="/ablamp2side.png"
-                              alt="Aurora Bloom Lamp lifestyle"
-                              className="h-full w-full object-cover"
-                            />
-                          ) : activeProduct.id === "nebula-owl" ? (
-                            <img
-                              src="/reg.png"
-                              alt="Leeds Owl lifestyle"
-                              className="h-full w-full object-cover"
-                            />
-                          ) : activeProduct.id === "forest-dragon" ? (
-                            <img
-                              src="/dragonforestbg.jpg"
-                              alt="Forest Dragon lifestyle"
-                              className="h-full w-full object-cover"
-                            />
-                          ) : activeProduct.id === "dice-guardian" ? (
-                            <img
-                              src="/dicedragonbg.jpg"
-                              alt="Dice Guardian lifestyle"
+                              src={activeProduct.lifestyleImage}
+                              alt={`${activeProduct.name} lifestyle`}
                               className="h-full w-full object-cover"
                             />
                           ) : (
