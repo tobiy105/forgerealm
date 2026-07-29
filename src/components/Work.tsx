@@ -36,6 +36,9 @@ type Product = {
   lifestyleImage?: string;
   /** Multiplier applied to the thumbnail image size. 1 is default. */
   thumbnailScale?: number;
+  /** Multiplier applied to the hero image inside the expanded (clicked)
+   *  overlay. 1 is default. */
+  expandedScale?: number;
   textColor: string;
   accentColor: string;
 };
@@ -53,7 +56,8 @@ const products: Product[] = [
     image: "/featured1.jpg",
     background: "#0a0a0a",
     lifestyleImage: "/featured1bg.jpg",
-    thumbnailScale: 0.72,
+    thumbnailScale: 0.5,
+    expandedScale: 0.55,
     textColor: "#FADE6A",
     accentColor: "#F59E0B",
   },
@@ -84,7 +88,7 @@ const products: Product[] = [
     image: "/featured3.jpg",
     background: "#0a0a0a",
     lifestyleImage: "/ablamp2side.png",
-    thumbnailScale: 1.25,
+    thumbnailScale: 1.85,
     textColor: "#FADE6A",
     accentColor: "#F59E0B",
   },
@@ -502,6 +506,7 @@ export default function Work() {
                           src={activeProduct.image}
                           alt={activeProduct.name}
                           className="h-[45vh] w-[85vw] max-h-[45vh] max-w-[92vw] object-contain drop-shadow-[0_45px_90px_rgba(0,0,0,0.55)]"
+                          style={{ transform: `scale(${activeProduct.expandedScale ?? 1})`, transformOrigin: "center" }}
                           animate={{ y: [0, -10, 0] }}
                           transition={{ duration: 3.5, ease: "easeInOut", repeat: Infinity }}
                         />
@@ -541,6 +546,7 @@ export default function Work() {
                           src={activeProduct.image}
                           alt={activeProduct.name}
                           className="h-[85vh] w-[80vw] max-h-[85vh] max-w-[90vw] sm:h-[85vh] sm:w-[75vw] sm:max-w-[85vw] object-contain drop-shadow-[0_55px_110px_rgba(0,0,0,0.6)]"
+                          style={{ transform: `scale(${activeProduct.expandedScale ?? 1})`, transformOrigin: "center" }}
                         />
                       </div>
 
