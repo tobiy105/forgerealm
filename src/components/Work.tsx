@@ -50,7 +50,7 @@ const products: Product[] = [
     description:
       "An exact replica of a customer's late dog, commissioned so they could still see him every day. Shared here with the owner's blessing.",
     shopDescription:
-      "This one wasn't a shop piece — it was a commission we took on when a customer asked us to recreate their beloved dog in 3D. We measured, we sculpted, we sanded, and we hand-finished every last layer to make sure the little details felt right. A small piece of a much-loved friend, forever on the shelf.",
+      "This one wasn't a shop piece. It was a commission we took on when a customer asked us to recreate their beloved dog in 3D. We measured, we sculpted, we sanded, and we hand-finished every last layer to make sure the little details felt right. A small piece of a much-loved friend, forever on the shelf.",
     detail:
       "It's commissions like this that remind us why we do what we do. If there's a piece of your life you'd like us to bring into the real world, we'd be honoured to help.",
     image: "/featured1.jpg",
@@ -69,7 +69,7 @@ const products: Product[] = [
     shopDescription:
       "Sculpted from the in-game model and hand-finished in PLA, this dagger tries to hit every curve, twist and jagged edge Larian put on the source. If you're a BG3 fan and want a signature piece from the story, this is the kind of commission we love doing.",
     detail:
-      "Fan-favourite pieces from your favourite games are one of our happy places — send us the character, the weapon, or the trinket and we'll take it from there.",
+      "Fan-favourite pieces from your favourite games are one of our happy places. Send us the character, the weapon, or the trinket and we'll take it from there.",
     image: "/featured2.jpg",
     background: "#0a0a0a",
     lifestyleImage: "/featured2bg.jpg",
@@ -80,9 +80,9 @@ const products: Product[] = [
     id: "voronoi-elephant",
     name: "Voronoi Elephant Tealight",
     description:
-      "Our best seller since we opened at The Mini Mall, Merrion Centre — a Voronoi-lattice elephant that scatters a warm tea-light glow across the wall behind it.",
+      "Our best seller since we opened at The Mini Mall, Merrion Centre. A Voronoi-lattice elephant that scatters a warm tea-light glow across the wall behind it.",
     shopDescription:
-      "From this month you can find ForgeRealm at The Mini Mall inside Leeds' Merrion Centre, sharing the shelves with a load of other exciting small-maker goods. The Voronoi Elephant tealight has been the piece walking out fastest — pop in and see it lit up in person before you take one home.",
+      "From this month you can find ForgeRealm at The Mini Mall inside Leeds' Merrion Centre, sharing the shelves with a load of other exciting small-maker goods. The Voronoi Elephant tealight has been the piece walking out fastest, so pop in and see it lit up in person before you take one home.",
     detail:
       "Printed in translucent PLA so a standard tea light inside casts the Voronoi lattice as a moving pattern on the wall. Quiet ambient lighting with a talking-piece silhouette.",
     image: "/featured3.jpg",
@@ -409,7 +409,7 @@ export default function Work() {
                       : "max-h-[40vh] max-w-[34vw] sm:max-h-[44vh] sm:max-w-[36vw]"
                   } w-auto object-contain drop-shadow-[0_40px_80px_rgba(0,0,0,0.4)]`}
                   animate={{
-                    scale: isActive ? 1.18 : hoveredIndex === index && !isCoarsePointer ? 1.08 : 1,
+                    scale: (product.thumbnailScale ?? 1) * (isActive ? 1.18 : hoveredIndex === index && !isCoarsePointer ? 1.08 : 1),
                   }}
                   transition={{ duration: 0.5, ease: "easeOut" }}
                 />
