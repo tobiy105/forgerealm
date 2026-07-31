@@ -7,3 +7,8 @@ backend/node_modules/
 # expression containers ({cond && <script …>}), which BaseLayout uses for the
 # conditional Brevo widget snippet.
 src/layouts/BaseLayout.astro
+
+# README.md is rewritten daily by scripts/update-readme-pulse.js. That output
+# doesn't match Prettier's markdown rules, so CI fails on every pulse commit.
+# Prettier-linting an auto-generated file isn't worth the maintenance.
+README.md
