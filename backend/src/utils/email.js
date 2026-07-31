@@ -1,15 +1,21 @@
-const { ApiError } = require('./errors');
+const { ApiError } = require("./errors");
 
 /**
  * Send an email via the Brevo (Sendinblue) transactional API.
  */
-const sendBrevoEmail = async ({ to, toName, subject, htmlContent, attachment }) => {
+const sendBrevoEmail = async ({
+  to,
+  toName,
+  subject,
+  htmlContent,
+  attachment,
+}) => {
   const apiKey = process.env.BREVO_API_KEY;
-  const senderEmail = process.env.BREVO_SENDER_EMAIL || 'info@forgerealm.co.uk';
-  const senderName = process.env.BREVO_SENDER_NAME || 'ForgeRealm';
+  const senderEmail = process.env.BREVO_SENDER_EMAIL || "info@forgerealm.co.uk";
+  const senderName = process.env.BREVO_SENDER_NAME || "ForgeRealm";
 
   if (!apiKey) {
-    throw new ApiError(500, 'BREVO_API_KEY is not configured');
+    throw new ApiError(500, "BREVO_API_KEY is not configured");
   }
 
   const payload = {
@@ -21,22 +27,30 @@ const sendBrevoEmail = async ({ to, toName, subject, htmlContent, attachment }) 
 
   // attachment: { buffer: Buffer, filename: string }
   if (attachment?.buffer) {
-    payload.attachment = [{ content: attachment.buffer.toString('base64'), name: attachment.filename }];
+    payload.attachment = [
+      {
+        content: attachment.buffer.toString("base64"),
+        name: attachment.filename,
+      },
+    ];
   }
 
-  const response = await fetch('https://api.brevo.com/v3/smtp/email', {
-    method: 'POST',
+  const response = await fetch("https://api.brevo.com/v3/smtp/email", {
+    method: "POST",
     headers: {
-      'Content-Type': 'application/json',
-      'api-key': apiKey,
+      "Content-Type": "application/json",
+      "api-key": apiKey,
     },
     body: JSON.stringify(payload),
   });
 
   if (!response.ok) {
     const body = await response.json().catch(() => ({}));
-    console.error('Brevo email failed:', { status: response.status, message: body.message });
-    throw new ApiError(502, body.message || 'Failed to send email');
+    console.error("Brevo email failed:", {
+      status: response.status,
+      message: body.message,
+    });
+    throw new ApiError(502, body.message || "Failed to send email");
   }
 };
 
@@ -57,9 +71,9 @@ const sendOrderConfirmation = async ({ order }) => {
         <td style="padding:10px 0;border-bottom:1px solid rgba(148,163,184,0.15);color:#e2e8f0;font-size:14px;text-align:right;font-weight:600;">
           &pound;${((item.price * item.qty) / 100).toFixed(2)}
         </td>
-      </tr>`
+      </tr>`,
     )
-    .join('');
+    .join("");
 
   const htmlContent = `
     <div style="margin:0;padding:0;background:#0b1220;font-family:'Trebuchet MS',Arial,sans-serif;color:#e2e8f0;">
@@ -77,7 +91,7 @@ const sendOrderConfirmation = async ({ order }) => {
                         </div>
                       </td>
                       <td style="text-align:right;font-size:11px;color:#94a3b8;text-transform:uppercase;letter-spacing:0.2em;">
-                        #${String(order.id).padStart(5, '0')}
+                        #${String(order.id).padStart(5, "0")}
                       </td>
                     </tr>
                   </table>
@@ -89,7 +103,7 @@ const sendOrderConfirmation = async ({ order }) => {
                     Thanks for your order!
                   </h1>
                   <p style="margin:12px 0 0;font-size:15px;color:#cbd5f5;">
-                    Hey ${order.customer_name.split(' ')[0] || 'Maker'}, your ForgeRealm prints are being prepared. We'll have them ready within 3-5 business days.
+                    Hey ${order.customer_name.split(" ")[0] || "Maker"}, your ForgeRealm prints are being prepared. We'll have them ready within 3-5 business days.
                   </p>
                 </td>
               </tr>
@@ -107,7 +121,7 @@ const sendOrderConfirmation = async ({ order }) => {
                           ${itemsHtml}
                           <tr>
                             <td colspan="2" style="padding:10px 0 4px;font-size:13px;color:#94a3b8;">Shipping</td>
-                            <td style="padding:10px 0 4px;text-align:right;font-size:13px;color:${order.shipping_pence === 0 ? '#6ee7b7' : '#e2e8f0'};">${order.shipping_pence === 0 ? 'Free' : '&pound;' + (order.shipping_pence / 100).toFixed(2)}</td>
+                            <td style="padding:10px 0 4px;text-align:right;font-size:13px;color:${order.shipping_pence === 0 ? "#6ee7b7" : "#e2e8f0"};">${order.shipping_pence === 0 ? "Free" : "&pound;" + (order.shipping_pence / 100).toFixed(2)}</td>
                           </tr>
                           <tr>
                             <td colspan="2" style="padding:12px 0 0;border-top:1px solid rgba(148,163,184,0.2);font-size:16px;font-weight:700;color:#f8fafc;">Total</td>
@@ -119,7 +133,9 @@ const sendOrderConfirmation = async ({ order }) => {
                   </table>
                 </td>
               </tr>
-              ${order.shipping_address ? `
+              ${
+                order.shipping_address
+                  ? `
               <tr>
                 <td style="padding:0 28px 24px;">
                   <div style="padding:16px 18px;border-radius:18px;background:rgba(15,23,42,0.7);border:1px solid rgba(148,163,184,0.15);font-size:13px;color:#cbd5f5;">
@@ -128,7 +144,9 @@ const sendOrderConfirmation = async ({ order }) => {
                     <p style="margin:4px 0 0;">${order.shipping_address}</p>
                   </div>
                 </td>
-              </tr>` : ''}
+              </tr>`
+                  : ""
+              }
               <tr>
                 <td style="padding:0 28px 24px;">
                   <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
@@ -164,7 +182,7 @@ const sendOrderConfirmation = async ({ order }) => {
   await sendBrevoEmail({
     to: order.customer_email,
     toName: order.customer_name,
-    subject: `Order #${String(order.id).padStart(5, '0')} confirmed - ForgeRealm`,
+    subject: `Order #${String(order.id).padStart(5, "0")} confirmed - ForgeRealm`,
     htmlContent,
   });
 };

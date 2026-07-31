@@ -1,9 +1,9 @@
-const fs = require('fs');
-const path = require('path');
-const multer = require('multer');
-const { ApiError } = require('../utils/errors');
+const fs = require("fs");
+const path = require("path");
+const multer = require("multer");
+const { ApiError } = require("../utils/errors");
 
-const tempDir = path.join(__dirname, '../../uploads/products/temp');
+const tempDir = path.join(__dirname, "../../uploads/products/temp");
 
 const storage = multer.diskStorage({
   destination: async (req, file, cb) => {
@@ -15,15 +15,15 @@ const storage = multer.diskStorage({
     }
   },
   filename: (req, file, cb) => {
-    const safeName = file.originalname.replace(/\s+/g, '-').toLowerCase();
+    const safeName = file.originalname.replace(/\s+/g, "-").toLowerCase();
     cb(null, `${Date.now()}-${safeName}`);
-  }
+  },
 });
 
 const fileFilter = (req, file, cb) => {
-  const allowed = ['image/jpeg', 'image/png', 'image/webp'];
+  const allowed = ["image/jpeg", "image/png", "image/webp"];
   if (!allowed.includes(file.mimetype)) {
-    return cb(new ApiError(400, 'Only JPG, PNG, and WEBP files are allowed'));
+    return cb(new ApiError(400, "Only JPG, PNG, and WEBP files are allowed"));
   }
   cb(null, true);
 };
@@ -31,7 +31,7 @@ const fileFilter = (req, file, cb) => {
 const upload = multer({
   storage,
   fileFilter,
-  limits: { fileSize: 5 * 1024 * 1024 }
+  limits: { fileSize: 5 * 1024 * 1024 },
 });
 
 module.exports = upload;

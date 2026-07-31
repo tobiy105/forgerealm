@@ -1,42 +1,47 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
 
 const envBase =
-  typeof import.meta !== 'undefined' && import.meta.env && typeof import.meta.env.PUBLIC_API_URL === 'string'
-    ? import.meta.env.PUBLIC_API_URL.trim().replace(/\/$/, '')
-    : '';
+  typeof import.meta !== "undefined" &&
+  import.meta.env &&
+  typeof import.meta.env.PUBLIC_API_URL === "string"
+    ? import.meta.env.PUBLIC_API_URL.trim().replace(/\/$/, "")
+    : "";
 
 const envLocal =
-  typeof import.meta !== 'undefined' && import.meta.env && typeof import.meta.env.PUBLIC_API_URL_LOCAL === 'string'
-    ? import.meta.env.PUBLIC_API_URL_LOCAL.trim().replace(/\/$/, '')
-    : '';
+  typeof import.meta !== "undefined" &&
+  import.meta.env &&
+  typeof import.meta.env.PUBLIC_API_URL_LOCAL === "string"
+    ? import.meta.env.PUBLIC_API_URL_LOCAL.trim().replace(/\/$/, "")
+    : "";
 
 const API_BASE =
-  (typeof window !== 'undefined' && window.location.origin.startsWith('http://localhost')
-    ? envLocal || ''
-    : envBase || '');
+  typeof window !== "undefined" &&
+  window.location.origin.startsWith("http://localhost")
+    ? envLocal || ""
+    : envBase || "";
 
 const ShopHeroCTA = () => {
   const [hasSession, setHasSession] = useState(false);
 
   useEffect(() => {
-    if (typeof window === 'undefined') return;
+    if (typeof window === "undefined") return;
     const update = () => {
-      const token = localStorage.getItem('forgerealm_admin_token');
+      const token = localStorage.getItem("forgerealm_admin_token");
       if (!token) {
         setHasSession(false);
         return;
       }
       fetch(`${API_BASE}/api/auth/me`, {
-        credentials: 'include',
-        headers: { Authorization: `Bearer ${token}` }
+        credentials: "include",
+        headers: { Authorization: `Bearer ${token}` },
       })
         .then((res) => setHasSession(res.ok))
         .catch(() => setHasSession(false));
     };
     update();
-    window.addEventListener('forgerealm-admin-token-changed', update);
+    window.addEventListener("forgerealm-admin-token-changed", update);
     return () => {
-      window.removeEventListener('forgerealm-admin-token-changed', update);
+      window.removeEventListener("forgerealm-admin-token-changed", update);
     };
   }, []);
 
@@ -53,8 +58,8 @@ const ShopHeroCTA = () => {
     <button
       type="button"
       onClick={() => {
-        if (typeof window !== 'undefined') {
-          window.location.href = '/shop/sign-in';
+        if (typeof window !== "undefined") {
+          window.location.href = "/shop/sign-in";
         }
       }}
       className="inline-flex w-fit items-center gap-2 rounded-full bg-white text-blue-700 px-5 py-3 text-sm font-semibold uppercase tracking-wide hover:bg-blue-100 transition-colors shadow-md shadow-blue-500/20 whitespace-nowrap"

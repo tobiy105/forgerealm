@@ -1,21 +1,29 @@
 ---
-import BaseLayout from '../../layouts/BaseLayout.astro';
-import ShopNavbar from '../../components/ShopNavbar';
-import AdminUsersList from '../../components/AdminUsersList';
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import ShopNavbar from "../../components/ShopNavbar";
+import AdminUsersList from "../../components/AdminUsersList";
 ---
 
-<BaseLayout title="ForgeRealm Users" description="Admin view of all ForgeRealm users">
+<BaseLayout
+  title="ForgeRealm Users"
+  description="Admin view of all ForgeRealm users"
+>
   <ShopNavbar client:load />
   <main class="min-h-[100dvh] bg-slate-950 text-white">
-    <div class="h-24 md:h-28" />
+    <div class="h-24 md:h-28"></div>
     <section class="mx-auto w-full max-w-6xl px-6 sm:px-10 pb-16">
       <div class="mb-8 flex items-center justify-between gap-4">
         <div>
           <p class="text-xs uppercase tracking-[0.25em] text-blue-200">Admin</p>
           <h1 class="text-3xl font-semibold">Users</h1>
-          <p class="text-sm text-slate-300 mt-2">View all players in the realm (admin only).</p>
+          <p class="text-sm text-slate-300 mt-2">
+            View all players in the realm (admin only).
+          </p>
         </div>
-        <a href="/shop/sign-in" class="hidden sm:inline-flex text-sm uppercase tracking-wide text-blue-300 hover:text-white transition">
+        <a
+          href="/shop/sign-in"
+          class="hidden sm:inline-flex text-sm uppercase tracking-wide text-blue-300 hover:text-white transition"
+        >
           &larr; Back to sign in
         </a>
       </div>

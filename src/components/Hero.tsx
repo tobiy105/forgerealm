@@ -369,7 +369,6 @@ export default function Hero() {
           "linear-gradient(135deg, #080c14 0%, #0c1222 40%, #0e1428 70%, #080c14 100%)",
       }}
     >
-
       <div className="relative mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-20 sm:py-28 md:max-w-[min(97vw,2000px)] md:mt-28 md:mb-12 md:py-12 md:rounded-[2rem] md:border md:border-white/10 md:bg-white/[0.03] md:shadow-[0_30px_80px_-12px_rgba(0,0,0,0.75),inset_0_1px_0_rgba(255,255,255,0.05)]">
         <div className="grid lg:grid-cols-[1fr_1.05fr] gap-12 lg:gap-16 items-center">
           {/* Left - Content */}

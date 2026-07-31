@@ -1,13 +1,16 @@
 ---
-import BaseLayout from '../../layouts/BaseLayout.astro';
-import KioskMode from '../../components/KioskMode';
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import KioskMode from "../../components/KioskMode";
 ---
 
-<BaseLayout title="Kiosk Mode | ForgeRealm" description="ForgeRealm product display for market stalls.">
+<BaseLayout
+  title="Kiosk Mode | ForgeRealm"
+  description="ForgeRealm product display for market stalls."
+>
   <KioskMode client:load />
 </BaseLayout>
 
 <script is:inline>
-  document.documentElement.setAttribute('data-theme', 'dark');
-  document.documentElement.classList.add('dark');
+  document.documentElement.setAttribute("data-theme", "dark");
+  document.documentElement.classList.add("dark");
 </script>

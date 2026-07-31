@@ -4,7 +4,6 @@ const fs = require("fs");
 const path = require("path");
 /* eslint-enable @typescript-eslint/no-require-imports */
 
-
 const inputDir = "./public";
 const formats = [".jpg", ".jpeg", ".png", ".gif"];
 
@@ -22,9 +21,9 @@ function walk(dir) {
     const fullPath = path.join(dir, file);
     const stat = fs.statSync(fullPath);
     if (stat.isDirectory()) walk(fullPath);
-    else if (formats.includes(path.extname(file).toLowerCase())) optimizeImage(fullPath);
+    else if (formats.includes(path.extname(file).toLowerCase()))
+      optimizeImage(fullPath);
   }
 }
 
 walk(inputDir);
-

@@ -1,34 +1,44 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
-import { FiArrowLeft, FiMail, FiImage, FiBox, FiMessageCircle, FiChevronRight } from 'react-icons/fi';
+import { useState, useEffect, useRef, useCallback } from "react";
+import {
+  FiArrowLeft,
+  FiMail,
+  FiImage,
+  FiBox,
+  FiMessageCircle,
+  FiChevronRight,
+} from "react-icons/fi";
 
-const EMAIL = 'info@forgerealm.co.uk';
+const EMAIL = "info@forgerealm.co.uk";
 
 const GUIDE_STEPS = [
   {
     icon: FiMessageCircle,
-    title: 'Describe your idea',
-    description: 'What do you want printed? Be as detailed as you like: character, animal, functional item, home decor, or something entirely new.',
+    title: "Describe your idea",
+    description:
+      "What do you want printed? Be as detailed as you like: character, animal, functional item, home decor, or something entirely new.",
     example: 'e.g. "An articulated phoenix with spread wings, about 15cm tall"',
   },
   {
     icon: FiBox,
-    title: 'Size & dimensions',
-    description: 'Give us a rough size. Use centimetres, or compare it to something: palm-sized, desk-sized, shelf piece, etc.',
+    title: "Size & dimensions",
+    description:
+      "Give us a rough size. Use centimetres, or compare it to something: palm-sized, desk-sized, shelf piece, etc.",
     example: 'e.g. "About the size of a coffee mug" or "20cm x 10cm"',
   },
   {
     icon: FiImage,
-    title: 'Reference image (optional)',
-    description: 'Attach a photo, sketch, or link to something similar. This helps us nail the design. Screenshots, Pinterest links, anything works.',
-    example: 'Attach to your email or paste a link',
+    title: "Reference image (optional)",
+    description:
+      "Attach a photo, sketch, or link to something similar. This helps us nail the design. Screenshots, Pinterest links, anything works.",
+    example: "Attach to your email or paste a link",
   },
 ];
 
 const EXTRAS = [
-  'Preferred colour or finish',
-  'Quantity needed',
-  'Any deadline or occasion',
-  'Budget range (helps us suggest options)',
+  "Preferred colour or finish",
+  "Quantity needed",
+  "Any deadline or occasion",
+  "Budget range (helps us suggest options)",
 ];
 
 /* ── Particle Canvas ── */
@@ -39,11 +49,18 @@ function ParticleBackground() {
   const init = useCallback(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
     let animId: number;
-    let particles: { x: number; y: number; vx: number; vy: number; r: number; o: number }[] = [];
+    let particles: {
+      x: number;
+      y: number;
+      vx: number;
+      vy: number;
+      r: number;
+      o: number;
+    }[] = [];
 
     const resize = () => {
       canvas.width = canvas.offsetWidth * window.devicePixelRatio;
@@ -52,7 +69,10 @@ function ParticleBackground() {
     };
 
     const createParticles = () => {
-      const count = Math.min(80, Math.floor((canvas.offsetWidth * canvas.offsetHeight) / 12000));
+      const count = Math.min(
+        80,
+        Math.floor((canvas.offsetWidth * canvas.offsetHeight) / 12000),
+      );
       particles = Array.from({ length: count }, () => ({
         x: Math.random() * canvas.offsetWidth,
         y: Math.random() * canvas.offsetHeight,
@@ -106,12 +126,15 @@ function ParticleBackground() {
     createParticles();
     draw();
 
-    const onResize = () => { resize(); createParticles(); };
-    window.addEventListener('resize', onResize);
+    const onResize = () => {
+      resize();
+      createParticles();
+    };
+    window.addEventListener("resize", onResize);
 
     return () => {
       cancelAnimationFrame(animId);
-      window.removeEventListener('resize', onResize);
+      window.removeEventListener("resize", onResize);
     };
   }, []);
 
@@ -133,9 +156,9 @@ function ParticleBackground() {
 export default function CustomOrder() {
   const [copied, setCopied] = useState(false);
 
-  const subject = encodeURIComponent('Custom Order Request');
+  const subject = encodeURIComponent("Custom Order Request");
   const body = encodeURIComponent(
-`Hi ForgeRealm,
+    `Hi ForgeRealm,
 
 I'd like to request a custom 3D print.
 
@@ -154,7 +177,7 @@ QUANTITY:
 ADDITIONAL NOTES:
 [Anything else: deadline, budget, etc.]
 
-Thanks!`
+Thanks!`,
   );
 
   const mailtoLink = `mailto:${EMAIL}?subject=${subject}&body=${body}`;
@@ -180,12 +203,15 @@ Thanks!`
       <div className="relative mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
         {/* Main container */}
         <div className="rounded-2xl border border-white/[0.08] bg-[#0a0f1a]/80 backdrop-blur-2xl shadow-2xl shadow-black/30 p-6 sm:p-10 space-y-10">
-
           {/* Breadcrumb */}
           <nav className="flex items-center gap-2 text-xs text-slate-500">
-            <a href="/" className="hover:text-white transition">Home</a>
+            <a href="/" className="hover:text-white transition">
+              Home
+            </a>
             <span>/</span>
-            <a href="/shop" className="hover:text-white transition">Shop</a>
+            <a href="/shop" className="hover:text-white transition">
+              Shop
+            </a>
             <span>/</span>
             <span className="text-slate-300">Custom Order</span>
           </nav>
@@ -203,7 +229,9 @@ Thanks!`
               Custom Order
             </h1>
             <p className="text-sm sm:text-base text-slate-400 leading-relaxed max-w-xl">
-              Got something specific in mind? We love a challenge. Tell us your idea and we'll quote you a price, timeline, and bring it to life in eco-friendly PLA.
+              Got something specific in mind? We love a challenge. Tell us your
+              idea and we'll quote you a price, timeline, and bring it to life
+              in eco-friendly PLA.
             </p>
           </div>
 
@@ -225,11 +253,19 @@ Thanks!`
                     </div>
                     <div className="space-y-1.5">
                       <div className="flex items-center gap-2">
-                        <span className="text-[10px] font-bold text-blue-400/60">{String(i + 1).padStart(2, '0')}</span>
-                        <h3 className="text-sm font-semibold text-white">{step.title}</h3>
+                        <span className="text-[10px] font-bold text-blue-400/60">
+                          {String(i + 1).padStart(2, "0")}
+                        </span>
+                        <h3 className="text-sm font-semibold text-white">
+                          {step.title}
+                        </h3>
                       </div>
-                      <p className="text-[13px] leading-relaxed text-slate-400">{step.description}</p>
-                      <p className="text-[11px] text-slate-500 italic">{step.example}</p>
+                      <p className="text-[13px] leading-relaxed text-slate-400">
+                        {step.description}
+                      </p>
+                      <p className="text-[11px] text-slate-500 italic">
+                        {step.example}
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -244,7 +280,10 @@ Thanks!`
             </h3>
             <div className="grid gap-2 sm:grid-cols-2">
               {EXTRAS.map((item) => (
-                <div key={item} className="flex items-center gap-2.5 text-[13px] text-slate-400">
+                <div
+                  key={item}
+                  className="flex items-center gap-2.5 text-[13px] text-slate-400"
+                >
                   <FiChevronRight className="text-blue-400/50 text-xs shrink-0" />
                   {item}
                 </div>
@@ -255,9 +294,13 @@ Thanks!`
           {/* CTA - mailto */}
           <section className="rounded-xl border border-white/[0.06] bg-gradient-to-br from-white/[0.04] to-white/[0.01] p-5 sm:p-8 space-y-5">
             <div className="space-y-2">
-              <h2 className="text-xl font-bold text-white sm:text-2xl">Ready? Send us an email</h2>
+              <h2 className="text-xl font-bold text-white sm:text-2xl">
+                Ready? Send us an email
+              </h2>
               <p className="text-sm text-slate-400 leading-relaxed">
-                No forms, no sign-ups. Just hit the button below and it'll open your email with a template ready to fill in. Attach any reference images directly to the email.
+                No forms, no sign-ups. Just hit the button below and it'll open
+                your email with a template ready to fill in. Attach any
+                reference images directly to the email.
               </p>
             </div>
 
@@ -270,16 +313,14 @@ Thanks!`
             </a>
 
             <div className="flex flex-wrap items-center gap-3 pt-4 border-t border-white/[0.06]">
-              <p className="text-xs text-slate-500">
-                Or email us directly at
-              </p>
+              <p className="text-xs text-slate-500">Or email us directly at</p>
               <button
                 onClick={handleCopy}
                 className="inline-flex items-center gap-1.5 rounded-lg border border-white/[0.08] bg-white/[0.03] px-3 py-1.5 text-xs font-medium text-slate-300 transition hover:bg-white/[0.06] hover:text-white"
               >
                 {EMAIL}
                 <span className="text-[10px] text-slate-500">
-                  {copied ? 'copied!' : 'click to copy'}
+                  {copied ? "copied!" : "click to copy"}
                 </span>
               </button>
             </div>
@@ -292,20 +333,34 @@ Thanks!`
             </h3>
             <div className="space-y-3 text-[13px] text-slate-400 leading-relaxed">
               <div className="flex gap-3">
-                <span className="shrink-0 text-blue-400/60 font-bold text-[10px] mt-0.5">01</span>
-                <p>We'll review your request and get back to you within 24-48 hours with a quote and estimated timeline.</p>
+                <span className="shrink-0 text-blue-400/60 font-bold text-[10px] mt-0.5">
+                  01
+                </span>
+                <p>
+                  We'll review your request and get back to you within 24-48
+                  hours with a quote and estimated timeline.
+                </p>
               </div>
               <div className="flex gap-3">
-                <span className="shrink-0 text-blue-400/60 font-bold text-[10px] mt-0.5">02</span>
-                <p>Once you approve, we'll start printing. Most custom orders take 3-7 days depending on complexity.</p>
+                <span className="shrink-0 text-blue-400/60 font-bold text-[10px] mt-0.5">
+                  02
+                </span>
+                <p>
+                  Once you approve, we'll start printing. Most custom orders
+                  take 3-7 days depending on complexity.
+                </p>
               </div>
               <div className="flex gap-3">
-                <span className="shrink-0 text-blue-400/60 font-bold text-[10px] mt-0.5">03</span>
-                <p>We'll send you a photo of the finished piece before shipping. Payment is handled securely via our shop.</p>
+                <span className="shrink-0 text-blue-400/60 font-bold text-[10px] mt-0.5">
+                  03
+                </span>
+                <p>
+                  We'll send you a photo of the finished piece before shipping.
+                  Payment is handled securely via our shop.
+                </p>
               </div>
             </div>
           </section>
-
         </div>
       </div>
     </div>
