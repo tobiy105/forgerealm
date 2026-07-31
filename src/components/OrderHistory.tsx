@@ -1,18 +1,31 @@
-import { useEffect, useState } from 'react';
-import { FiPackage, FiTruck, FiCheck, FiX, FiChevronDown, FiChevronUp, FiArrowLeft } from 'react-icons/fi';
+import { useEffect, useState } from "react";
+import {
+  FiPackage,
+  FiTruck,
+  FiCheck,
+  FiX,
+  FiChevronDown,
+  FiChevronUp,
+  FiArrowLeft,
+} from "react-icons/fi";
 
 const envBase =
-  typeof import.meta !== 'undefined' && import.meta.env && typeof import.meta.env.PUBLIC_API_URL === 'string'
-    ? import.meta.env.PUBLIC_API_URL.trim().replace(/\/$/, '')
-    : '';
+  typeof import.meta !== "undefined" &&
+  import.meta.env &&
+  typeof import.meta.env.PUBLIC_API_URL === "string"
+    ? import.meta.env.PUBLIC_API_URL.trim().replace(/\/$/, "")
+    : "";
 const envLocal =
-  typeof import.meta !== 'undefined' && import.meta.env && typeof import.meta.env.PUBLIC_API_URL_LOCAL === 'string'
-    ? import.meta.env.PUBLIC_API_URL_LOCAL.trim().replace(/\/$/, '')
-    : '';
+  typeof import.meta !== "undefined" &&
+  import.meta.env &&
+  typeof import.meta.env.PUBLIC_API_URL_LOCAL === "string"
+    ? import.meta.env.PUBLIC_API_URL_LOCAL.trim().replace(/\/$/, "")
+    : "";
 const API_BASE =
-  typeof window !== 'undefined' && window.location.origin.startsWith('http://localhost')
-    ? envLocal || ''
-    : envBase || '';
+  typeof window !== "undefined" &&
+  window.location.origin.startsWith("http://localhost")
+    ? envLocal || ""
+    : envBase || "";
 
 interface OrderItem {
   id?: string;
@@ -35,24 +48,65 @@ interface Order {
   updated_at: string | null;
 }
 
-const STATUS_CONFIG: Record<string, { color: string; bg: string; icon: typeof FiPackage }> = {
-  pending: { color: 'text-amber-300', bg: 'bg-amber-500/15 border-amber-500/20', icon: FiPackage },
-  completed: { color: 'text-emerald-300', bg: 'bg-emerald-500/15 border-emerald-500/20', icon: FiCheck },
-  paid: { color: 'text-blue-300', bg: 'bg-blue-500/15 border-blue-500/20', icon: FiPackage },
-  shipped: { color: 'text-cyan-300', bg: 'bg-cyan-500/15 border-cyan-500/20', icon: FiTruck },
-  delivered: { color: 'text-emerald-300', bg: 'bg-emerald-500/15 border-emerald-500/20', icon: FiCheck },
-  expired: { color: 'text-stone-400', bg: 'bg-stone-500/15 border-stone-500/20', icon: FiX },
-  failed: { color: 'text-red-300', bg: 'bg-red-500/15 border-red-500/20', icon: FiX },
-  cancelled: { color: 'text-slate-400', bg: 'bg-slate-500/15 border-slate-500/20', icon: FiX },
-  refunded: { color: 'text-orange-300', bg: 'bg-orange-500/15 border-orange-500/20', icon: FiX },
+const STATUS_CONFIG: Record<
+  string,
+  { color: string; bg: string; icon: typeof FiPackage }
+> = {
+  pending: {
+    color: "text-amber-300",
+    bg: "bg-amber-500/15 border-amber-500/20",
+    icon: FiPackage,
+  },
+  completed: {
+    color: "text-emerald-300",
+    bg: "bg-emerald-500/15 border-emerald-500/20",
+    icon: FiCheck,
+  },
+  paid: {
+    color: "text-blue-300",
+    bg: "bg-blue-500/15 border-blue-500/20",
+    icon: FiPackage,
+  },
+  shipped: {
+    color: "text-cyan-300",
+    bg: "bg-cyan-500/15 border-cyan-500/20",
+    icon: FiTruck,
+  },
+  delivered: {
+    color: "text-emerald-300",
+    bg: "bg-emerald-500/15 border-emerald-500/20",
+    icon: FiCheck,
+  },
+  expired: {
+    color: "text-stone-400",
+    bg: "bg-stone-500/15 border-stone-500/20",
+    icon: FiX,
+  },
+  failed: {
+    color: "text-red-300",
+    bg: "bg-red-500/15 border-red-500/20",
+    icon: FiX,
+  },
+  cancelled: {
+    color: "text-slate-400",
+    bg: "bg-slate-500/15 border-slate-500/20",
+    icon: FiX,
+  },
+  refunded: {
+    color: "text-orange-300",
+    bg: "bg-orange-500/15 border-orange-500/20",
+    icon: FiX,
+  },
 };
 
 function OrderCard({ order }: { order: Order }) {
   const [expanded, setExpanded] = useState(false);
   const config = STATUS_CONFIG[order.status] || STATUS_CONFIG.pending;
   const StatusIcon = config.icon;
-  const date = new Date(order.created_at).toLocaleDateString('en-GB', {
-    day: 'numeric', month: 'short', year: 'numeric',
+  const date = new Date(order.created_at).toLocaleDateString("en-GB", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
   });
 
   return (
@@ -61,36 +115,57 @@ function OrderCard({ order }: { order: Order }) {
         onClick={() => setExpanded(!expanded)}
         className="w-full flex items-center gap-4 p-4 sm:p-5 text-left hover:bg-white/[0.02] transition"
       >
-        <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border ${config.bg}`}>
+        <div
+          className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border ${config.bg}`}
+        >
           <StatusIcon className={`text-lg ${config.color}`} />
         </div>
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 flex-wrap">
-            <span className="text-sm font-semibold text-white">Order #{String(order.id).padStart(5, '0')}</span>
-            <span className={`rounded-full border px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider ${config.bg} ${config.color}`}>
+            <span className="text-sm font-semibold text-white">
+              Order #{String(order.id).padStart(5, "0")}
+            </span>
+            <span
+              className={`rounded-full border px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider ${config.bg} ${config.color}`}
+            >
               {order.status}
             </span>
           </div>
           <p className="text-xs text-slate-500 mt-0.5">
-            {date} &middot; {order.items.length} item{order.items.length !== 1 ? 's' : ''} &middot; &pound;{Number(order.total_amount).toFixed(2)}
+            {date} &middot; {order.items.length} item
+            {order.items.length !== 1 ? "s" : ""} &middot; &pound;
+            {Number(order.total_amount).toFixed(2)}
           </p>
         </div>
-        {expanded ? <FiChevronUp className="text-slate-500 shrink-0" /> : <FiChevronDown className="text-slate-500 shrink-0" />}
+        {expanded ? (
+          <FiChevronUp className="text-slate-500 shrink-0" />
+        ) : (
+          <FiChevronDown className="text-slate-500 shrink-0" />
+        )}
       </button>
 
       {expanded && (
         <div className="border-t border-white/[0.06] px-4 pb-5 pt-4 sm:px-5 space-y-4">
           {/* Items */}
           <div>
-            <h4 className="text-[11px] font-semibold uppercase tracking-[0.2em] text-slate-400 mb-3">Items</h4>
+            <h4 className="text-[11px] font-semibold uppercase tracking-[0.2em] text-slate-400 mb-3">
+              Items
+            </h4>
             <div className="space-y-2">
               {order.items.map((item, i) => (
-                <div key={i} className="flex items-center justify-between rounded-lg border border-white/[0.04] bg-white/[0.02] px-3 py-2">
+                <div
+                  key={i}
+                  className="flex items-center justify-between rounded-lg border border-white/[0.04] bg-white/[0.02] px-3 py-2"
+                >
                   <div>
-                    <p className="text-xs font-medium text-white">{item.name}</p>
+                    <p className="text-xs font-medium text-white">
+                      {item.name}
+                    </p>
                     <p className="text-[11px] text-slate-500">x{item.qty}</p>
                   </div>
-                  <span className="text-xs font-semibold text-white">&pound;{((item.price * item.qty) / 100).toFixed(2)}</span>
+                  <span className="text-xs font-semibold text-white">
+                    &pound;{((item.price * item.qty) / 100).toFixed(2)}
+                  </span>
                 </div>
               ))}
             </div>
@@ -99,7 +174,9 @@ function OrderCard({ order }: { order: Order }) {
           {/* Summary */}
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-3 space-y-2">
-              <h4 className="text-[11px] font-semibold uppercase tracking-[0.2em] text-slate-400">Payment</h4>
+              <h4 className="text-[11px] font-semibold uppercase tracking-[0.2em] text-slate-400">
+                Payment
+              </h4>
               <div className="flex justify-between text-sm font-bold text-white pt-2 border-t border-white/[0.06]">
                 <span>Total</span>
                 <span>&pound;{Number(order.total_amount).toFixed(2)}</span>
@@ -113,11 +190,17 @@ function OrderCard({ order }: { order: Order }) {
             </div>
 
             <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-3 space-y-2">
-              <h4 className="text-[11px] font-semibold uppercase tracking-[0.2em] text-slate-400">Details</h4>
+              <h4 className="text-[11px] font-semibold uppercase tracking-[0.2em] text-slate-400">
+                Details
+              </h4>
               {order.shipping_address ? (
-                <p className="text-xs text-slate-300 leading-relaxed">{order.shipping_address}</p>
+                <p className="text-xs text-slate-300 leading-relaxed">
+                  {order.shipping_address}
+                </p>
               ) : (
-                <p className="text-xs text-slate-500 italic">No address on file</p>
+                <p className="text-xs text-slate-500 italic">
+                  No address on file
+                </p>
               )}
               {order.notes && (
                 <p className="text-xs text-slate-400 mt-1">{order.notes}</p>
@@ -148,28 +231,34 @@ function OrderSkeleton() {
 export default function OrderHistory() {
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
 
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const token = localStorage.getItem('forgerealm_admin_token');
-        if (!token) { window.location.href = '/shop/sign-in'; return; }
+        const token = localStorage.getItem("forgerealm_admin_token");
+        if (!token) {
+          window.location.href = "/shop/sign-in";
+          return;
+        }
 
         const res = await fetch(`${API_BASE}/api/orders`, {
-          credentials: 'include',
+          credentials: "include",
           headers: { Authorization: `Bearer ${token}` },
         });
 
         if (!res.ok) {
-          if (res.status === 401) { window.location.href = '/shop/sign-in'; return; }
-          throw new Error('Failed to fetch orders');
+          if (res.status === 401) {
+            window.location.href = "/shop/sign-in";
+            return;
+          }
+          throw new Error("Failed to fetch orders");
         }
 
         const data = await res.json();
         setOrders(data.orders || []);
       } catch (err: any) {
-        setError(err.message || 'Something went wrong');
+        setError(err.message || "Something went wrong");
       } finally {
         setLoading(false);
       }
@@ -181,9 +270,13 @@ export default function OrderHistory() {
     <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 pb-16 space-y-6">
       {/* Breadcrumb */}
       <nav className="flex items-center gap-2 text-xs text-slate-500">
-        <a href="/" className="hover:text-white transition">Home</a>
+        <a href="/" className="hover:text-white transition">
+          Home
+        </a>
         <span>/</span>
-        <a href="/shop/dashboard" className="hover:text-white transition">Dashboard</a>
+        <a href="/shop/dashboard" className="hover:text-white transition">
+          Dashboard
+        </a>
         <span>/</span>
         <span className="text-slate-300">Orders</span>
       </nav>
@@ -191,9 +284,13 @@ export default function OrderHistory() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-extrabold text-white sm:text-3xl">Order History</h1>
+          <h1 className="text-2xl font-extrabold text-white sm:text-3xl">
+            Order History
+          </h1>
           <p className="mt-1 text-sm text-slate-400">
-            {orders.length > 0 ? `${orders.length} order${orders.length !== 1 ? 's' : ''}` : 'Track your ForgeRealm orders'}
+            {orders.length > 0
+              ? `${orders.length} order${orders.length !== 1 ? "s" : ""}`
+              : "Track your ForgeRealm orders"}
           </p>
         </div>
         <a
@@ -208,12 +305,17 @@ export default function OrderHistory() {
       {/* Content */}
       {loading ? (
         <div className="space-y-3">
-          {[...Array(3)].map((_, i) => <OrderSkeleton key={i} />)}
+          {[...Array(3)].map((_, i) => (
+            <OrderSkeleton key={i} />
+          ))}
         </div>
       ) : error ? (
         <div className="rounded-2xl border border-red-500/20 bg-red-500/5 p-8 text-center">
           <p className="text-sm text-red-300">{error}</p>
-          <button onClick={() => window.location.reload()} className="mt-4 rounded-lg bg-white/5 px-4 py-2 text-xs font-medium text-white transition hover:bg-white/10">
+          <button
+            onClick={() => window.location.reload()}
+            className="mt-4 rounded-lg bg-white/5 px-4 py-2 text-xs font-medium text-white transition hover:bg-white/10"
+          >
             Try Again
           </button>
         </div>
@@ -222,8 +324,12 @@ export default function OrderHistory() {
           <div className="rounded-full bg-white/5 p-6">
             <FiPackage className="h-12 w-12 text-slate-600" />
           </div>
-          <p className="mt-5 text-lg font-semibold text-slate-300">No orders yet</p>
-          <p className="mt-1 text-sm text-slate-500">Visit the shop to place your first order</p>
+          <p className="mt-5 text-lg font-semibold text-slate-300">
+            No orders yet
+          </p>
+          <p className="mt-1 text-sm text-slate-500">
+            Visit the shop to place your first order
+          </p>
           <a
             href="/shop"
             className="mt-6 rounded-full bg-gradient-to-r from-blue-500 to-cyan-400 px-6 py-2.5 text-sm font-semibold text-white shadow-lg shadow-blue-500/20 transition hover:shadow-blue-500/30"
@@ -233,7 +339,9 @@ export default function OrderHistory() {
         </div>
       ) : (
         <div className="space-y-3">
-          {orders.map((order) => <OrderCard key={order.id} order={order} />)}
+          {orders.map((order) => (
+            <OrderCard key={order.id} order={order} />
+          ))}
         </div>
       )}
     </div>

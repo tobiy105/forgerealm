@@ -3,26 +3,6 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { FiX } from "react-icons/fi";
 
-const useTheme = () => {
-  const [theme, setTheme] = useState<"light" | "dark">("dark");
-
-  useEffect(() => {
-    const getTheme = () =>
-      (typeof document !== "undefined" && (document.documentElement.getAttribute("data-theme") as "light" | "dark" | null)) ||
-      "dark";
-
-    setTheme(getTheme());
-
-    if (typeof MutationObserver !== "undefined") {
-      const observer = new MutationObserver(() => setTheme(getTheme()));
-      observer.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
-      return () => observer.disconnect();
-    }
-  }, []);
-
-  return theme;
-};
-
 type Product = {
   id: string;
   name: string;
@@ -155,7 +135,7 @@ export default function Work() {
         const entry = entries[0];
         setIsCarouselInView(entry.isIntersecting);
       },
-      { threshold: 0.35 }
+      { threshold: 0.35 },
     );
     observer.observe(carousel);
     return () => observer.disconnect();
@@ -182,10 +162,14 @@ export default function Work() {
     const carousel = carouselRef.current;
     if (!carousel) return;
     const recenter = () => {
-      const maxScroll = Math.max(0, carousel.scrollWidth - carousel.clientWidth);
+      const maxScroll = Math.max(
+        0,
+        carousel.scrollWidth - carousel.clientWidth,
+      );
       let target = storedScrollLeftRef.current ?? carousel.scrollLeft;
       if (storedViewportWidthRef.current) {
-        target = (target * carousel.clientWidth) / storedViewportWidthRef.current;
+        target =
+          (target * carousel.clientWidth) / storedViewportWidthRef.current;
       }
       const clamped = Math.min(Math.max(target, 0), maxScroll);
       carousel.scrollTo({ left: clamped, behavior: "auto" });
@@ -210,7 +194,8 @@ export default function Work() {
       requestAnimationFrame(() => {
         ticking = false;
         const width = carousel.clientWidth || 1;
-        const approxPanelWidth = isCoarsePointer && isNarrowScreen ? width * 0.8 : width * 0.2;
+        const approxPanelWidth =
+          isCoarsePointer && isNarrowScreen ? width * 0.8 : width * 0.2;
         const index = Math.round(carousel.scrollLeft / approxPanelWidth);
         const nextIndex = clampIndex(index);
         autoIndexRef.current = nextIndex;
@@ -227,13 +212,15 @@ export default function Work() {
   }, [isExpanded]);
 
   useEffect(() => {
-    if (!(isCoarsePointer && isNarrowScreen) || isExpanded || !isCarouselInView) return;
+    if (!(isCoarsePointer && isNarrowScreen) || isExpanded || !isCarouselInView)
+      return;
     autoIndexRef.current = 0;
     const startTimer = window.setTimeout(() => {
       const carousel = carouselRef.current;
       const panel = panelRefs.current[0];
       if (!carousel || !panel) return;
-      const target = panel.offsetLeft - (carousel.clientWidth - panel.offsetWidth) / 2;
+      const target =
+        panel.offsetLeft - (carousel.clientWidth - panel.offsetWidth) / 2;
       carousel.scrollTo({ left: Math.max(0, target), behavior: "auto" });
     }, 60);
     const step = () => {
@@ -243,7 +230,8 @@ export default function Work() {
       setActiveIndex(nextIndex);
       const panel = panelRefs.current[nextIndex];
       if (!carousel || !panel) return;
-      const target = panel.offsetLeft - (carousel.clientWidth - panel.offsetWidth) / 2;
+      const target =
+        panel.offsetLeft - (carousel.clientWidth - panel.offsetWidth) / 2;
       carousel.scrollTo({ left: Math.max(0, target), behavior: "smooth" });
     };
     autoScrollTimerRef.current = window.setInterval(step, 4200);
@@ -254,7 +242,13 @@ export default function Work() {
         autoScrollTimerRef.current = null;
       }
     };
-  }, [clampIndex, isCarouselInView, isCoarsePointer, isExpanded, isNarrowScreen]);
+  }, [
+    clampIndex,
+    isCarouselInView,
+    isCoarsePointer,
+    isExpanded,
+    isNarrowScreen,
+  ]);
 
   useEffect(() => {
     const handleKey = (event: KeyboardEvent) => {
@@ -297,18 +291,6 @@ export default function Work() {
     return hoveredIndex === index ? "34vw" : "27vw";
   };
 
-
-  const getImageScale = (index: number) => {
-    const product = products[index];
-    // Ignore per-product thumbnail scaling while expanded — the expanded
-    // view should always show the full-size hero image.
-    const isThisExpanded = isExpanded && activeIndex === index;
-    const base = isThisExpanded ? 1 : (product?.thumbnailScale ?? 1);
-    if (isCoarsePointer && isNarrowScreen) return `scale(${base * 1.05})`;
-    const hoverBoost = hoveredIndex === index ? 1.06 : 1;
-    return `scale(${base * hoverBoost})`;
-  };
-
   const handleOpen = (index: number) => {
     if (isExpanded && activeIndex === index) return;
     const carousel = carouselRef.current;
@@ -344,7 +326,11 @@ export default function Work() {
   return (
     <section
       id="work"
-      className="relative h-screen w-full overflow-hidden text-white" style={{ background: 'linear-gradient(180deg, #080c14 0%, #0a0e18 50%, #080c14 100%)' }}
+      className="relative h-screen w-full overflow-hidden text-white"
+      style={{
+        background:
+          "linear-gradient(180deg, #080c14 0%, #0a0e18 50%, #080c14 100%)",
+      }}
     >
       <div className="pointer-events-none absolute inset-0 -z-10" />
       {/* Yellow gradient borders */}
@@ -355,28 +341,58 @@ export default function Work() {
           <div className="relative">
             <div className="inline-flex items-center gap-3 mb-3">
               <div className="w-8 h-px bg-gradient-to-r from-blue-400 to-purple-400" />
-              <span className="text-[10px] sm:text-[11px] font-medium uppercase tracking-[0.3em] text-blue-300/60" style={{ fontFamily: "'Jost', sans-serif" }}>Curated</span>
+              <span
+                className="text-[10px] sm:text-[11px] font-medium uppercase tracking-[0.3em] text-blue-300/60"
+                style={{ fontFamily: "'Jost', sans-serif" }}
+              >
+                Curated
+              </span>
             </div>
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-normal text-white" style={{ fontFamily: "'Cinzel', serif" }}>
-              Featured <em className="text-[#FADE6A]" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 300 }}>Prints</em>
+            <h2
+              className="text-2xl sm:text-3xl lg:text-4xl font-normal text-white"
+              style={{ fontFamily: "'Cinzel', serif" }}
+            >
+              Featured{" "}
+              <em
+                className="text-[#FADE6A]"
+                style={{
+                  fontFamily: "'Cormorant Garamond', serif",
+                  fontWeight: 300,
+                }}
+              >
+                Prints
+              </em>
             </h2>
           </div>
-          <p className="work-text-force mt-2 text-sm text-stone-400" style={{ fontFamily: "'Cormorant Garamond', serif", fontStyle: 'italic' }}>
+          <p
+            className="work-text-force mt-2 text-sm text-stone-400"
+            style={{
+              fontFamily: "'Cormorant Garamond', serif",
+              fontStyle: "italic",
+            }}
+          >
             Some of our most popular prints
           </p>
         </div>
       </div>
-      <div ref={containerRef} className="relative z-10 mx-auto mt-6 h-[70vh] w-full max-w-[90vw] px-0">
+      <div
+        ref={containerRef}
+        className="relative z-10 mx-auto mt-6 h-[70vh] w-full max-w-[90vw] px-0"
+      >
         <div
           ref={carouselRef}
           className={`flex h-full w-full overflow-y-hidden scrollbar-hidden scroll-smooth ${
-            isExpanded ? "overflow-hidden snap-none" : "snap-x snap-mandatory overflow-x-auto"
+            isExpanded
+              ? "overflow-hidden snap-none"
+              : "snap-x snap-mandatory overflow-x-auto"
           } ${isCoarsePointer && isNarrowScreen ? "justify-start px-[8vw]" : "justify-center"}`}
           style={{
             WebkitOverflowScrolling: "touch",
             touchAction: isExpanded ? "none" : "auto",
-            scrollPaddingLeft: isCoarsePointer && isNarrowScreen ? "8vw" : undefined,
-            scrollPaddingRight: isCoarsePointer && isNarrowScreen ? "8vw" : undefined,
+            scrollPaddingLeft:
+              isCoarsePointer && isNarrowScreen ? "8vw" : undefined,
+            scrollPaddingRight:
+              isCoarsePointer && isNarrowScreen ? "8vw" : undefined,
           }}
         >
           {products.map((product, index) => {
@@ -396,21 +412,42 @@ export default function Work() {
                   handleOpen(index);
                 }}
                 className={`relative flex h-full shrink-0 ${
-                  isCoarsePointer && isNarrowScreen ? "snap-center snap-always" : "snap-start"
+                  isCoarsePointer && isNarrowScreen
+                    ? "snap-center snap-always"
+                    : "snap-start"
                 } items-center justify-center overflow-hidden border transition-[width] duration-500 ease-out focus:outline-none`}
                 style={{
                   width: getPanelWidth(index),
                   background: product.background,
-                  borderColor: '#FADE6A40',
+                  borderColor: "#FADE6A40",
                 }}
                 aria-label={`Open ${product.name}`}
               >
-                <span className="absolute inset-0 bg-gradient-to-b from-white/10 via-transparent to-black/30" aria-hidden />
-                <span className="absolute inset-0 opacity-0 transition duration-500 ease-out group-hover:opacity-100" aria-hidden />
-                <span className="work-text-force absolute right-6 top-10 text-6xl font-semibold sm:text-7xl" style={{ fontFamily: "'Cinzel', serif", color: product.textColor, opacity: 0.15 }}>
+                <span
+                  className="absolute inset-0 bg-gradient-to-b from-white/10 via-transparent to-black/30"
+                  aria-hidden
+                />
+                <span
+                  className="absolute inset-0 opacity-0 transition duration-500 ease-out group-hover:opacity-100"
+                  aria-hidden
+                />
+                <span
+                  className="work-text-force absolute right-6 top-10 text-6xl font-semibold sm:text-7xl"
+                  style={{
+                    fontFamily: "'Cinzel', serif",
+                    color: product.textColor,
+                    opacity: 0.15,
+                  }}
+                >
                   {(index + 1).toString().padStart(2, "0")}
                 </span>
-                <span className="work-text-force absolute left-6 top-8 rotate-180 text-[10px] uppercase tracking-[0.45em] [writing-mode:vertical-rl] sm:text-xs z-10" style={{ fontFamily: "'Cinzel', serif", color: product.textColor }}>
+                <span
+                  className="work-text-force absolute left-6 top-8 rotate-180 text-[10px] uppercase tracking-[0.45em] [writing-mode:vertical-rl] sm:text-xs z-10"
+                  style={{
+                    fontFamily: "'Cinzel', serif",
+                    color: product.textColor,
+                  }}
+                >
                   {product.name}
                 </span>
                 <motion.img
@@ -422,7 +459,13 @@ export default function Work() {
                       : "max-h-[40vh] max-w-[34vw] sm:max-h-[44vh] sm:max-w-[36vw]"
                   } w-auto object-contain drop-shadow-[0_40px_80px_rgba(0,0,0,0.4)]`}
                   animate={{
-                    scale: (product.thumbnailScale ?? 1) * (isActive ? 1.18 : hoveredIndex === index && !isCoarsePointer ? 1.08 : 1),
+                    scale:
+                      (product.thumbnailScale ?? 1) *
+                      (isActive
+                        ? 1.18
+                        : hoveredIndex === index && !isCoarsePointer
+                          ? 1.08
+                          : 1),
                   }}
                   transition={{ duration: 0.5, ease: "easeOut" }}
                 />
@@ -433,7 +476,10 @@ export default function Work() {
       </div>
 
       <div className="pointer-events-none absolute bottom-6 left-1/2 -translate-x-1/2">
-        <div className="rounded-lg px-3 py-2 text-[10px] uppercase tracking-[0.35em] bg-black/50 text-white/60 backdrop-blur-sm" style={{ fontFamily: "'Jost', sans-serif" }}>
+        <div
+          className="rounded-lg px-3 py-2 text-[10px] uppercase tracking-[0.35em] bg-black/50 text-white/60 backdrop-blur-sm"
+          style={{ fontFamily: "'Jost', sans-serif" }}
+        >
           Swipe to explore
         </div>
       </div>
@@ -453,7 +499,11 @@ export default function Work() {
               touchMovedRef.current = false;
             }}
             onTouchMove={(event) => {
-              if (touchStartXRef.current === null || touchStartYRef.current === null) return;
+              if (
+                touchStartXRef.current === null ||
+                touchStartYRef.current === null
+              )
+                return;
               const moveX = event.touches[0]?.clientX ?? touchStartXRef.current;
               const moveY = event.touches[0]?.clientY ?? touchStartYRef.current;
               const deltaX = Math.abs(moveX - touchStartXRef.current);
@@ -464,7 +514,8 @@ export default function Work() {
             }}
             onTouchEnd={(event) => {
               if (touchStartXRef.current === null) return;
-              const endX = event.changedTouches[0]?.clientX ?? touchStartXRef.current;
+              const endX =
+                event.changedTouches[0]?.clientX ?? touchStartXRef.current;
               const deltaX = endX - touchStartXRef.current;
               const wasMoved = touchMovedRef.current;
               touchStartXRef.current = null;
@@ -497,9 +548,17 @@ export default function Work() {
                   ? "flex-col items-start justify-start overflow-y-auto"
                   : "flex-col items-center justify-center lg:flex-row lg:items-center lg:justify-start lg:gap-0"
               }`}
-              style={isNarrowScreen ? { WebkitOverflowScrolling: "touch" } : undefined}
+              style={
+                isNarrowScreen
+                  ? { WebkitOverflowScrolling: "touch" }
+                  : undefined
+              }
               initial={{ scale: 0.96, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1, transition: { type: "spring", stiffness: 160, damping: 22 } }}
+              animate={{
+                scale: 1,
+                opacity: 1,
+                transition: { type: "spring", stiffness: 160, damping: 22 },
+              }}
               exit={{ scale: 0.98, opacity: 0, transition: { duration: 0.2 } }}
               onClick={(event) => event.stopPropagation()}
             >
@@ -509,8 +568,16 @@ export default function Work() {
                   className="relative flex h-full w-full"
                   custom={direction}
                   initial={{ opacity: 0, x: direction >= 0 ? 60 : -60 }}
-                  animate={{ opacity: 1, x: 0, transition: { duration: 0.35, ease: "easeOut" } }}
-                  exit={{ opacity: 0, x: direction >= 0 ? -60 : 60, transition: { duration: 0.25, ease: "easeIn" } }}
+                  animate={{
+                    opacity: 1,
+                    x: 0,
+                    transition: { duration: 0.35, ease: "easeOut" },
+                  }}
+                  exit={{
+                    opacity: 0,
+                    x: direction >= 0 ? -60 : 60,
+                    transition: { duration: 0.25, ease: "easeIn" },
+                  }}
                 >
                   {isNarrowScreen ? (
                     <div className="relative z-10 w-full max-w-md space-y-6 text-left">
@@ -519,24 +586,60 @@ export default function Work() {
                           src={activeProduct.image}
                           alt={activeProduct.name}
                           className="h-[45vh] w-[85vw] max-h-[45vh] max-w-[92vw] object-contain drop-shadow-[0_45px_90px_rgba(0,0,0,0.55)]"
-                          style={{ transform: `scale(${activeProduct.expandedScale ?? 1})`, transformOrigin: "center" }}
+                          style={{
+                            transform: `scale(${activeProduct.expandedScale ?? 1})`,
+                            transformOrigin: "center",
+                          }}
                           animate={{ y: [0, -10, 0] }}
-                          transition={{ duration: 3.5, ease: "easeInOut", repeat: Infinity }}
+                          transition={{
+                            duration: 3.5,
+                            ease: "easeInOut",
+                            repeat: Infinity,
+                          }}
                         />
                       </div>
-                      <p className={`work-text-force text-[10px] uppercase tracking-[0.35em] ${isLight ? "text-slate-700" : "text-white/80"}`}>
+                      <p
+                        className={`work-text-force text-[10px] uppercase tracking-[0.35em] ${isLight ? "text-slate-700" : "text-white/80"}`}
+                      >
                         Featured print
                       </p>
-                      <h3 className="work-text-force text-3xl font-bold sm:text-4xl" style={{ fontFamily: "'Cinzel', serif", color: activeProduct.textColor }}>
+                      <h3
+                        className="work-text-force text-3xl font-bold sm:text-4xl"
+                        style={{
+                          fontFamily: "'Cinzel', serif",
+                          color: activeProduct.textColor,
+                        }}
+                      >
                         {activeProduct.name}
                       </h3>
-                      <p className="work-text-force text-sm sm:text-base" style={{ fontFamily: "'Inter', sans-serif", color: activeProduct.textColor, opacity: 0.9 }}>
+                      <p
+                        className="work-text-force text-sm sm:text-base"
+                        style={{
+                          fontFamily: "'Inter', sans-serif",
+                          color: activeProduct.textColor,
+                          opacity: 0.9,
+                        }}
+                      >
                         {activeProduct.description}
                       </p>
-                      <p className="work-text-force text-sm sm:text-base" style={{ fontFamily: "'Inter', sans-serif", color: activeProduct.textColor, opacity: 0.7 }}>
+                      <p
+                        className="work-text-force text-sm sm:text-base"
+                        style={{
+                          fontFamily: "'Inter', sans-serif",
+                          color: activeProduct.textColor,
+                          opacity: 0.7,
+                        }}
+                      >
                         {activeProduct.shopDescription}
                       </p>
-                      <p className="work-text-force text-xs sm:text-sm" style={{ fontFamily: "'Inter', sans-serif", color: activeProduct.textColor, opacity: 0.6 }}>
+                      <p
+                        className="work-text-force text-xs sm:text-sm"
+                        style={{
+                          fontFamily: "'Inter', sans-serif",
+                          color: activeProduct.textColor,
+                          opacity: 0.6,
+                        }}
+                      >
                         {activeProduct.detail}
                       </p>
                       <div className="flex flex-wrap items-center gap-3">
@@ -564,24 +667,60 @@ export default function Work() {
                           src={activeProduct.image}
                           alt={activeProduct.name}
                           className="h-[85vh] w-[80vw] max-h-[85vh] max-w-[90vw] sm:h-[85vh] sm:w-[75vw] sm:max-w-[85vw] object-contain drop-shadow-[0_55px_110px_rgba(0,0,0,0.6)]"
-                          style={{ transform: `scale(${activeProduct.expandedScale ?? 1})`, transformOrigin: "center" }}
+                          style={{
+                            transform: `scale(${activeProduct.expandedScale ?? 1})`,
+                            transformOrigin: "center",
+                          }}
                         />
                       </div>
 
                       <div className="relative z-10 w-full max-w-md space-y-6 text-left lg:w-[45%] lg:ml-[6vw] lg:my-auto">
-                        <p className="work-text-force text-[10px] uppercase tracking-[0.35em]" style={{ fontFamily: "'Jost', sans-serif", color: activeProduct.accentColor }}>
+                        <p
+                          className="work-text-force text-[10px] uppercase tracking-[0.35em]"
+                          style={{
+                            fontFamily: "'Jost', sans-serif",
+                            color: activeProduct.accentColor,
+                          }}
+                        >
                           Featured print
                         </p>
-                        <h3 className="work-text-force text-3xl font-bold sm:text-4xl" style={{ fontFamily: "'Cinzel', serif", color: activeProduct.textColor }}>
+                        <h3
+                          className="work-text-force text-3xl font-bold sm:text-4xl"
+                          style={{
+                            fontFamily: "'Cinzel', serif",
+                            color: activeProduct.textColor,
+                          }}
+                        >
                           {activeProduct.name}
                         </h3>
-                        <p className="work-text-force text-sm sm:text-base" style={{ fontFamily: "'Inter', sans-serif", color: activeProduct.textColor, opacity: 0.9 }}>
+                        <p
+                          className="work-text-force text-sm sm:text-base"
+                          style={{
+                            fontFamily: "'Inter', sans-serif",
+                            color: activeProduct.textColor,
+                            opacity: 0.9,
+                          }}
+                        >
                           {activeProduct.description}
                         </p>
-                        <p className="work-text-force text-sm sm:text-base" style={{ fontFamily: "'Inter', sans-serif", color: activeProduct.textColor, opacity: 0.7 }}>
+                        <p
+                          className="work-text-force text-sm sm:text-base"
+                          style={{
+                            fontFamily: "'Inter', sans-serif",
+                            color: activeProduct.textColor,
+                            opacity: 0.7,
+                          }}
+                        >
                           {activeProduct.shopDescription}
                         </p>
-                        <p className="work-text-force text-xs sm:text-sm" style={{ fontFamily: "'Inter', sans-serif", color: activeProduct.textColor, opacity: 0.6 }}>
+                        <p
+                          className="work-text-force text-xs sm:text-sm"
+                          style={{
+                            fontFamily: "'Inter', sans-serif",
+                            color: activeProduct.textColor,
+                            opacity: 0.6,
+                          }}
+                        >
                           {activeProduct.detail}
                         </p>
                         <div className="flex flex-wrap items-center gap-3">
@@ -610,8 +749,8 @@ export default function Work() {
                         </div>
                       </div>
 
-                  <div className="pointer-events-none absolute inset-y-0 right-0 z-0 hidden lg:block lg:w-1/2">
-                    <div className="h-full w-full overflow-hidden border-l border-white/10 bg-white/10">
+                      <div className="pointer-events-none absolute inset-y-0 right-0 z-0 hidden lg:block lg:w-1/2">
+                        <div className="h-full w-full overflow-hidden border-l border-white/10 bg-white/10">
                           {activeProduct.lifestyleImage ? (
                             <img
                               src={activeProduct.lifestyleImage}

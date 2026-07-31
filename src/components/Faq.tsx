@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { HiChevronDown } from "react-icons/hi";
 import { FaQuestionCircle } from "react-icons/fa";
@@ -10,18 +10,15 @@ export default function Faq() {
   const faqs = [
     {
       q: "Where do you sell and ship?",
-      a:
-        "We're based in Leeds and you'll often find us at local stalls. We ship 3D prints anywhere in the UK. Order online or visit us in person for friendly, expert advice.",
+      a: "We're based in Leeds and you'll often find us at local stalls. We ship 3D prints anywhere in the UK. Order online or visit us in person for friendly, expert advice.",
     },
     {
       q: "Are your materials eco-friendly?",
-      a:
-        "We care about the impact of every part we sell. Our PLA is biodegradable, and we offer PETG with recyclable properties. We're always working to make 3D printing more sustainable.",
+      a: "We care about the impact of every part we sell. Our PLA is biodegradable, and we offer PETG with recyclable properties. We're always working to make 3D printing more sustainable.",
     },
     {
       q: "Can I order custom prints?",
-      a:
-        "Absolutely! Contact us with your ideas or designs. We're happy to help and love bringing your projects to life. Expect quality prints and friendly service.",
+      a: "Absolutely! Contact us with your ideas or designs. We're happy to help and love bringing your projects to life. Expect quality prints and friendly service.",
     },
   ];
 
@@ -42,7 +39,7 @@ export default function Faq() {
           }
         });
       },
-      { threshold: 0.12, rootMargin: "120px 0px -10% 0px" }
+      { threshold: 0.12, rootMargin: "120px 0px -10% 0px" },
     );
 
     observer.observe(sectionRef.current);
@@ -66,7 +63,10 @@ export default function Faq() {
             <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-6 transition-colors duration-300 hover:border-blue-400/40">
               <div className="flex items-center gap-3">
                 <div className="rounded-full border border-blue-400/30 bg-blue-400/10 p-2">
-                  <FaQuestionCircle className="h-6 w-6 text-blue-400" aria-hidden />
+                  <FaQuestionCircle
+                    className="h-6 w-6 text-blue-400"
+                    aria-hidden
+                  />
                 </div>
                 <div>
                   <p
@@ -87,7 +87,8 @@ export default function Faq() {
                 className="mt-4 text-sm text-stone-400"
                 style={{ fontFamily: "'Inter', sans-serif" }}
               >
-                Quick answers to shipping, materials, and custom prints. Tap any question to expand.
+                Quick answers to shipping, materials, and custom prints. Tap any
+                question to expand.
               </p>
               <div className="mt-6 grid gap-3 text-xs text-stone-400">
                 {[

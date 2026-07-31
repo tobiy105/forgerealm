@@ -1,11 +1,18 @@
-'use client';
+"use client";
 
-import { useEffect, useMemo, useRef, useState, type ComponentType, type ReactNode } from 'react';
-import { AnimatePresence, motion } from 'framer-motion';
+import {
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type ComponentType,
+  type ReactNode,
+} from "react";
+import { AnimatePresence, motion } from "framer-motion";
 
 /* ───────── Data ───────── */
 
-type BookKey = 'pla' | 'petg';
+type BookKey = "pla" | "petg";
 
 type BookMeta = {
   key: BookKey;
@@ -23,41 +30,43 @@ type BookMeta = {
 
 const BOOKS: Record<BookKey, BookMeta> = {
   pla: {
-    key: 'pla',
-    title: 'PLA',
-    subtitle: 'Polylactic Acid',
-    chip: 'Eco-friendly',
-    swatchFrom: '#a7e0a3',
-    swatchTo: '#4f9b56',
-    accent: '#34d399', // emerald
-    ribbonColor: 'rgba(16,185,129,0.7)',
+    key: "pla",
+    title: "PLA",
+    subtitle: "Polylactic Acid",
+    chip: "Eco-friendly",
+    swatchFrom: "#a7e0a3",
+    swatchTo: "#4f9b56",
+    accent: "#34d399", // emerald
+    ribbonColor: "rgba(16,185,129,0.7)",
     // forest / moss tinted depths so PLA reads as the "earth" book
-    coverGradient: 'linear-gradient(135deg, #0a2418 0%, #143828 45%, #061810 100%)',
-    innerFrame: 'rgba(52,211,153,0.32)',
-    spineAccent: 'rgba(52,211,153,0.5)',
+    coverGradient:
+      "linear-gradient(135deg, #0a2418 0%, #143828 45%, #061810 100%)",
+    innerFrame: "rgba(52,211,153,0.32)",
+    spineAccent: "rgba(52,211,153,0.5)",
   },
   petg: {
-    key: 'petg',
-    title: 'PETG',
-    subtitle: 'Polyethylene Terephthalate Glycol',
-    chip: 'Recyclable',
-    swatchFrom: '#a4c8ff',
-    swatchTo: '#3b82f6',
-    accent: '#60a5fa', // blue
-    ribbonColor: 'rgba(59,130,246,0.7)',
+    key: "petg",
+    title: "PETG",
+    subtitle: "Polyethylene Terephthalate Glycol",
+    chip: "Recyclable",
+    swatchFrom: "#a4c8ff",
+    swatchTo: "#3b82f6",
+    accent: "#60a5fa", // blue
+    ribbonColor: "rgba(59,130,246,0.7)",
     // deeper sapphire / indigo so PETG reads as the "water" book
-    coverGradient: 'linear-gradient(135deg, #0a1842 0%, #14306a 45%, #04101f 100%)',
-    innerFrame: 'rgba(96,165,250,0.32)',
-    spineAccent: 'rgba(96,165,250,0.55)',
+    coverGradient:
+      "linear-gradient(135deg, #0a1842 0%, #14306a 45%, #04101f 100%)",
+    innerFrame: "rgba(96,165,250,0.32)",
+    spineAccent: "rgba(96,165,250,0.55)",
   },
 };
 
 const TYPE_COLORS: Record<string, string> = {
-  Eco: '#27ae60',
-  Biodegradable: '#16a085',
-  Aesthetic: '#3498db',
-  Recyclable: '#2980b9',
-  Tough: '#e67e22',
+  Eco: "#27ae60",
+  Biodegradable: "#16a085",
+  Aesthetic: "#3498db",
+  Recyclable: "#2980b9",
+  Tough: "#e67e22",
 };
 
 /* ───────── Inline CSS (matches the sample's class names) ───────── */
@@ -198,10 +207,10 @@ const BOOK_CSS = `
 /* One-time CSS injection so React doesn't re-parse the string every render */
 let cssInjected = false;
 function injectCSS() {
-  if (cssInjected || typeof document === 'undefined') return;
+  if (cssInjected || typeof document === "undefined") return;
   cssInjected = true;
-  const style = document.createElement('style');
-  style.setAttribute('data-forgerealm-book', '');
+  const style = document.createElement("style");
+  style.setAttribute("data-forgerealm-book", "");
   style.textContent = BOOK_CSS;
   document.head.appendChild(style);
 }
@@ -212,46 +221,78 @@ function CoverContent({ meta }: { meta: BookMeta }) {
   return (
     <>
       <div className="cover-frame-outer" />
-      <div className="cover-frame-inner" style={{ borderColor: meta.innerFrame }} />
+      <div
+        className="cover-frame-inner"
+        style={{ borderColor: meta.innerFrame }}
+      />
 
       {/* Radial glow tinted with the material accent */}
       <div
         style={{
-          position: 'absolute',
+          position: "absolute",
           inset: 0,
           background: `radial-gradient(circle at 50% 38%, ${meta.accent}26, transparent 55%)`,
-          pointerEvents: 'none',
+          pointerEvents: "none",
         }}
       />
 
       {/* Top flourish */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 6 }}>
-        <span style={{ height: 1, width: 32, background: 'rgba(250,222,106,0.4)' }} />
-        <span style={{ color: 'rgba(250,222,106,0.7)', fontSize: 10, letterSpacing: '0.4em', fontFamily: "'Jost', sans-serif" }}>✦</span>
-        <span style={{ height: 1, width: 32, background: 'rgba(250,222,106,0.4)' }} />
+      <div
+        style={{ display: "flex", alignItems: "center", gap: 10, marginTop: 6 }}
+      >
+        <span
+          style={{ height: 1, width: 32, background: "rgba(250,222,106,0.4)" }}
+        />
+        <span
+          style={{
+            color: "rgba(250,222,106,0.7)",
+            fontSize: 10,
+            letterSpacing: "0.4em",
+            fontFamily: "'Jost', sans-serif",
+          }}
+        >
+          ✦
+        </span>
+        <span
+          style={{ height: 1, width: 32, background: "rgba(250,222,106,0.4)" }}
+        />
       </div>
 
       {/* Sigil */}
       <div
         style={{
-          position: 'relative',
+          position: "relative",
           marginTop: 18,
           width: 96,
           height: 96,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
         }}
       >
-        <span style={{ position: 'absolute', inset: 0, borderRadius: '50%', border: '1px solid rgba(250,222,106,0.35)' }} />
-        <span style={{ position: 'absolute', inset: 8, borderRadius: '50%', border: `1px solid ${meta.accent}40` }} />
+        <span
+          style={{
+            position: "absolute",
+            inset: 0,
+            borderRadius: "50%",
+            border: "1px solid rgba(250,222,106,0.35)",
+          }}
+        />
+        <span
+          style={{
+            position: "absolute",
+            inset: 8,
+            borderRadius: "50%",
+            border: `1px solid ${meta.accent}40`,
+          }}
+        />
         <img
           src="/headfrlogorv.png"
           alt="ForgeRealm"
           style={{
             width: 64,
             height: 64,
-            borderRadius: '50%',
+            borderRadius: "50%",
             boxShadow: `0 0 24px rgba(250,222,106,0.35), 0 0 48px ${meta.accent}30`,
           }}
         />
@@ -262,9 +303,9 @@ function CoverContent({ meta }: { meta: BookMeta }) {
         style={{
           marginTop: 20,
           fontSize: 11,
-          textTransform: 'uppercase',
-          letterSpacing: '0.5em',
-          color: 'rgba(103,232,249,0.7)',
+          textTransform: "uppercase",
+          letterSpacing: "0.5em",
+          color: "rgba(103,232,249,0.7)",
           fontFamily: "'Jost', sans-serif",
         }}
       >
@@ -275,11 +316,11 @@ function CoverContent({ meta }: { meta: BookMeta }) {
       <h1
         style={{
           marginTop: 12,
-          fontSize: 'clamp(2rem, 5.4vw, 3rem)',
+          fontSize: "clamp(2rem, 5.4vw, 3rem)",
           lineHeight: 1.0,
-          color: 'white',
+          color: "white",
           fontFamily: "'Cinzel', serif",
-          letterSpacing: '0.05em',
+          letterSpacing: "0.05em",
         }}
       >
         {meta.title}
@@ -290,9 +331,9 @@ function CoverContent({ meta }: { meta: BookMeta }) {
         style={{
           marginTop: 6,
           fontSize: 11,
-          textTransform: 'uppercase',
-          letterSpacing: '0.3em',
-          color: 'rgba(203,213,225,0.7)',
+          textTransform: "uppercase",
+          letterSpacing: "0.3em",
+          color: "rgba(203,213,225,0.7)",
           fontFamily: "'Jost', sans-serif",
         }}
       >
@@ -300,33 +341,54 @@ function CoverContent({ meta }: { meta: BookMeta }) {
       </p>
 
       {/* Volume marker */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginTop: 16 }}>
-        <span style={{ height: 1, width: 32, background: 'linear-gradient(90deg, transparent, rgba(250,222,106,0.5), transparent)' }} />
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: 12,
+          marginTop: 16,
+        }}
+      >
+        <span
+          style={{
+            height: 1,
+            width: 32,
+            background:
+              "linear-gradient(90deg, transparent, rgba(250,222,106,0.5), transparent)",
+          }}
+        />
         <span
           style={{
             fontSize: 10,
-            textTransform: 'uppercase',
-            letterSpacing: '0.5em',
-            color: 'rgba(250,222,106,0.85)',
+            textTransform: "uppercase",
+            letterSpacing: "0.5em",
+            color: "rgba(250,222,106,0.85)",
             fontFamily: "'Jost', sans-serif",
           }}
         >
           The Codex
         </span>
-        <span style={{ height: 1, width: 32, background: 'linear-gradient(90deg, transparent, rgba(250,222,106,0.5), transparent)' }} />
+        <span
+          style={{
+            height: 1,
+            width: 32,
+            background:
+              "linear-gradient(90deg, transparent, rgba(250,222,106,0.5), transparent)",
+          }}
+        />
       </div>
 
       {/* Chip */}
       <span
         style={{
           marginTop: 14,
-          display: 'inline-block',
-          padding: '4px 12px',
+          display: "inline-block",
+          padding: "4px 12px",
           borderRadius: 999,
           fontSize: 11,
           fontWeight: 600,
-          textTransform: 'uppercase',
-          letterSpacing: '0.18em',
+          textTransform: "uppercase",
+          letterSpacing: "0.18em",
           background: `${meta.accent}1A`,
           border: `1px solid ${meta.accent}66`,
           color: meta.accent,
@@ -339,20 +401,22 @@ function CoverContent({ meta }: { meta: BookMeta }) {
       {/* Footer */}
       <div
         style={{
-          position: 'absolute',
+          position: "absolute",
           bottom: 18,
-          display: 'flex',
-          alignItems: 'center',
+          display: "flex",
+          alignItems: "center",
           gap: 10,
           fontSize: 9,
-          textTransform: 'uppercase',
-          letterSpacing: '0.4em',
-          color: 'rgba(148,163,184,0.75)',
+          textTransform: "uppercase",
+          letterSpacing: "0.4em",
+          color: "rgba(148,163,184,0.75)",
           fontFamily: "'Jost', sans-serif",
         }}
       >
         <span>Forged in Leeds</span>
-        <span style={{ height: 1, width: 22, background: 'rgba(148,163,184,0.5)' }} />
+        <span
+          style={{ height: 1, width: 22, background: "rgba(148,163,184,0.5)" }}
+        />
         <span>MMXXVI</span>
       </div>
     </>
@@ -361,7 +425,13 @@ function CoverContent({ meta }: { meta: BookMeta }) {
 
 /* ───────── The book selector (two cover cards) ───────── */
 
-function BookSelector({ onSelect, isMobile }: { onSelect: (k: BookKey) => void; isMobile: boolean }) {
+function BookSelector({
+  onSelect,
+  isMobile,
+}: {
+  onSelect: (k: BookKey) => void;
+  isMobile: boolean;
+}) {
   const cardW = isMobile ? 280 : 340;
   const cardH = isMobile ? 400 : 480;
   // Track which cover is being chosen so we can animate the others out + lift the chosen one
@@ -376,7 +446,7 @@ function BookSelector({ onSelect, isMobile }: { onSelect: (k: BookKey) => void; 
 
   return (
     <div className="forgerealm-library">
-      {(['pla', 'petg'] as BookKey[]).map((key) => {
+      {(["pla", "petg"] as BookKey[]).map((key) => {
         const meta = BOOKS[key];
         const isChosen = pending === key;
         const isFading = pending !== null && pending !== key;
@@ -391,10 +461,10 @@ function BookSelector({ onSelect, isMobile }: { onSelect: (k: BookKey) => void; 
               height: cardH,
               padding: 0,
               border: 0,
-              cursor: pending ? 'default' : 'pointer',
+              cursor: pending ? "default" : "pointer",
               fontFamily: "'Inter', sans-serif",
               background: meta.coverGradient,
-              ['--spine-accent' as never]: meta.spineAccent,
+              ["--spine-accent" as never]: meta.spineAccent,
             }}
             aria-label={`Open the ${meta.title} codex`}
             initial={false}
@@ -408,16 +478,16 @@ function BookSelector({ onSelect, isMobile }: { onSelect: (k: BookKey) => void; 
           >
             <div
               style={{
-                width: '100%',
-                height: '100%',
-                position: 'relative',
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'center',
-                padding: '28px 22px',
-                textAlign: 'center',
-                boxSizing: 'border-box',
+                width: "100%",
+                height: "100%",
+                position: "relative",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+                padding: "28px 22px",
+                textAlign: "center",
+                boxSizing: "border-box",
               }}
             >
               <CoverContent meta={meta} />
@@ -443,7 +513,13 @@ function BookView({
   isMobile: boolean;
 }) {
   const meta = BOOKS[material];
-  const bookRef = useRef<{ pageFlip: () => { turnToPage: (n: number) => void; flipPrev: () => void; flipNext: () => void } } | null>(null);
+  const bookRef = useRef<{
+    pageFlip: () => {
+      turnToPage: (n: number) => void;
+      flipPrev: () => void;
+      flipNext: () => void;
+    };
+  } | null>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
   const hasAutoOpenedRef = useRef(false);
 
@@ -474,226 +550,303 @@ function BookView({
 
     // Front cover
     built.push(
-    <div className="page" key="cover">
-      <div className="page-content cover" style={{ background: meta.coverGradient }}>
-        <CoverContent meta={meta} />
-      </div>
-    </div>
-  );
-
-  // Material page
-  built.push(
-    <div className="page" key="material">
-      <div className="page-content">
-        <div className="material-container">
-          <div
-            className="material-swatch"
-            style={{ background: `linear-gradient(135deg, ${meta.swatchFrom} 0%, ${meta.swatchTo} 100%)` }}
-          >
-            {meta.title}
-          </div>
-          <h2 className="material-name">{meta.title}</h2>
-          <p className="material-sub">{meta.subtitle}</p>
-          <div>
-            {(material === 'pla' ? ['Eco', 'Biodegradable'] : ['Recyclable', 'Tough']).map((t) => (
-              <span key={t} className="material-type" style={{ background: TYPE_COLORS[t] || '#34495e' }}>
-                {t}
-              </span>
-            ))}
-          </div>
-          <p className="material-description">
-            {material === 'pla'
-              ? 'Made from fermented plant sugars rather than petroleum. Plant-derived, hand-finished, and engineered to return to nature when its time is up. Our go-to for figurines, miniatures, and most booth display work.'
-              : 'Tougher and more impact-resistant than PLA, with better layer adhesion and chemical resistance. Same plastic family as the bottles you recycle every week. We use it for functional prints and pieces that need to last.'}
-          </p>
+      <div className="page" key="cover">
+        <div
+          className="page-content cover"
+          style={{ background: meta.coverGradient }}
+        >
+          <CoverContent meta={meta} />
         </div>
-      </div>
-    </div>
-  );
+      </div>,
+    );
 
-  // Evidence page
+    // Material page
     built.push(
-    <div className="page" key="evidence">
-      <div className="page-content">
-        <p className="evidence-eyebrow">Evidence</p>
-        <h2 className="evidence-heading">
-          {material === 'pla' ? 'PLA returns to nature' : 'PETG holds up'}
-        </h2>
-        <p
-          className="evidence-quote"
-          style={{ borderLeftColor: material === 'pla' ? 'rgba(16,185,129,0.6)' : 'rgba(59,130,246,0.6)' }}
-        >
-          {material === 'pla'
-            ? '"PLA will eventually fully hydrolyze and biodegrade, meaning no persistent particles should remain and accumulate in the environment."'
-            : '"Improvements across multiple mechanical attributes including tensile strength, hardness, fatigue resistance, and impact strength."'}
-        </p>
-        <p className="evidence-source">
-          {material === 'pla'
-            ? 'Holland Bioplastics, meta-study by HYDRA Marine Sciences'
-            : 'Kuchampudi, Meena & Chekuri, Cogent Engineering, 2024'}
-        </p>
-        <p
-          style={{
-            fontSize: 13,
-            color: '#34495e',
-            marginTop: 14,
-            lineHeight: 1.5,
-            fontFamily: "'Inter', sans-serif",
-          }}
-        >
-          {material === 'pla' ? (
-            <>
-              PLA's building block, lactic acid, is recognised as{' '}
-              <strong style={{ color: '#1a2842' }}>Generally Recognized as Safe</strong> by the U.S. FDA.
-            </>
-          ) : (
-            <>
-              When tuned for print speed, layer height, and infill, PETG measurably outperforms on the metrics that matter for parts you actually
-              use.
-            </>
-          )}
-        </p>
-      </div>
-    </div>
-  );
-
-  // PLA-only Silk PLA variant page
-  if (material === 'pla') {
-      built.push(
-      <div className="page" key="silk">
+      <div className="page" key="material">
         <div className="page-content">
           <div className="material-container">
             <div
               className="material-swatch"
-              style={{ background: 'linear-gradient(135deg, #c2f5ff 0%, #7dd3fc 100%)' }}
+              style={{
+                background: `linear-gradient(135deg, ${meta.swatchFrom} 0%, ${meta.swatchTo} 100%)`,
+              }}
             >
-              Silk
+              {meta.title}
             </div>
-            <h2 className="material-name">Silk PLA</h2>
-            <p className="material-sub">Aesthetic variant</p>
+            <h2 className="material-name">{meta.title}</h2>
+            <p className="material-sub">{meta.subtitle}</p>
             <div>
-              {['Eco', 'Aesthetic'].map((t) => (
-                <span key={t} className="material-type" style={{ background: TYPE_COLORS[t] || '#34495e' }}>
+              {(material === "pla"
+                ? ["Eco", "Biodegradable"]
+                : ["Recyclable", "Tough"]
+              ).map((t) => (
+                <span
+                  key={t}
+                  className="material-type"
+                  style={{ background: TYPE_COLORS[t] || "#34495e" }}
+                >
                   {t}
                 </span>
               ))}
             </div>
             <p className="material-description">
-              Same plant-derived backbone as PLA, but the surface catches light like brushed metal, most striking in direct sunlight. Reach for it on
-              lamps, statement pieces, and anything we want to glow.
+              {material === "pla"
+                ? "Made from fermented plant sugars rather than petroleum. Plant-derived, hand-finished, and engineered to return to nature when its time is up. Our go-to for figurines, miniatures, and most booth display work."
+                : "Tougher and more impact-resistant than PLA, with better layer adhesion and chemical resistance. Same plastic family as the bottles you recycle every week. We use it for functional prints and pieces that need to last."}
             </p>
           </div>
         </div>
-      </div>
+      </div>,
     );
-  }
 
-  // Closing CTA
+    // Evidence page
     built.push(
-    <div className="page" key="cta">
-      <div className="page-content">
-        <p className="evidence-eyebrow">Order in {meta.title}</p>
-        <h2 className="evidence-heading">Tell us what it's for</h2>
-        <p className="material-description">
-          Every custom order specifies its filament. Let us know what the piece is for and we'll build it in {meta.title}.
-        </p>
-        <div className="cta-row">
-          <a className="cta-primary" href={`/custom-order?material=${meta.key}`}>
-            Get a custom quote
-          </a>
-          <a className="cta-secondary" href="/shop">
-            Browse the shop
-          </a>
+      <div className="page" key="evidence">
+        <div className="page-content">
+          <p className="evidence-eyebrow">Evidence</p>
+          <h2 className="evidence-heading">
+            {material === "pla" ? "PLA returns to nature" : "PETG holds up"}
+          </h2>
+          <p
+            className="evidence-quote"
+            style={{
+              borderLeftColor:
+                material === "pla"
+                  ? "rgba(16,185,129,0.6)"
+                  : "rgba(59,130,246,0.6)",
+            }}
+          >
+            {material === "pla"
+              ? '"PLA will eventually fully hydrolyze and biodegrade, meaning no persistent particles should remain and accumulate in the environment."'
+              : '"Improvements across multiple mechanical attributes including tensile strength, hardness, fatigue resistance, and impact strength."'}
+          </p>
+          <p className="evidence-source">
+            {material === "pla"
+              ? "Holland Bioplastics, meta-study by HYDRA Marine Sciences"
+              : "Kuchampudi, Meena & Chekuri, Cogent Engineering, 2024"}
+          </p>
+          <p
+            style={{
+              fontSize: 13,
+              color: "#34495e",
+              marginTop: 14,
+              lineHeight: 1.5,
+              fontFamily: "'Inter', sans-serif",
+            }}
+          >
+            {material === "pla" ? (
+              <>
+                PLA's building block, lactic acid, is recognised as{" "}
+                <strong style={{ color: "#1a2842" }}>
+                  Generally Recognized as Safe
+                </strong>{" "}
+                by the U.S. FDA.
+              </>
+            ) : (
+              <>
+                When tuned for print speed, layer height, and infill, PETG
+                measurably outperforms on the metrics that matter for parts you
+                actually use.
+              </>
+            )}
+          </p>
         </div>
-      </div>
-    </div>
-  );
+      </div>,
+    );
 
-  // Back cover
+    // PLA-only Silk PLA variant page
+    if (material === "pla") {
+      built.push(
+        <div className="page" key="silk">
+          <div className="page-content">
+            <div className="material-container">
+              <div
+                className="material-swatch"
+                style={{
+                  background:
+                    "linear-gradient(135deg, #c2f5ff 0%, #7dd3fc 100%)",
+                }}
+              >
+                Silk
+              </div>
+              <h2 className="material-name">Silk PLA</h2>
+              <p className="material-sub">Aesthetic variant</p>
+              <div>
+                {["Eco", "Aesthetic"].map((t) => (
+                  <span
+                    key={t}
+                    className="material-type"
+                    style={{ background: TYPE_COLORS[t] || "#34495e" }}
+                  >
+                    {t}
+                  </span>
+                ))}
+              </div>
+              <p className="material-description">
+                Same plant-derived backbone as PLA, but the surface catches
+                light like brushed metal, most striking in direct sunlight.
+                Reach for it on lamps, statement pieces, and anything we want to
+                glow.
+              </p>
+            </div>
+          </div>
+        </div>,
+      );
+    }
+
+    // Closing CTA
     built.push(
-    <div className="page" key="back">
-      <div className="page-content cover" style={{ background: meta.coverGradient }}>
-        <div className="cover-frame-outer" />
-        <div className="cover-frame-inner" style={{ borderColor: meta.innerFrame }} />
-        <div style={{ height: 1, width: 80, background: 'linear-gradient(90deg, transparent, rgba(250,222,106,0.6), transparent)' }} />
-        <p style={{ marginTop: 18, fontSize: 'clamp(1.4rem, 3.6vw, 2rem)', color: 'white', fontFamily: "'Cinzel', serif" }}>
-          ForgeRealm
-        </p>
-        <p
-          style={{
-            marginTop: 6,
-            fontSize: 10,
-            textTransform: 'uppercase',
-            letterSpacing: '0.4em',
-            color: 'rgba(103,232,249,0.7)',
-            fontFamily: "'Jost', sans-serif",
-          }}
-        >
-          Leeds, United Kingdom
-        </p>
-        <p
-          style={{
-            marginTop: 14,
-            fontSize: 13,
-            color: 'rgba(203,213,225,0.85)',
-            fontStyle: 'italic',
-            fontFamily: "'Cormorant Garamond', serif",
-            maxWidth: 220,
-            lineHeight: 1.5,
-          }}
-        >
-          Designed, printed, and finished in-house, one layer at a time.
-        </p>
+      <div className="page" key="cta">
+        <div className="page-content">
+          <p className="evidence-eyebrow">Order in {meta.title}</p>
+          <h2 className="evidence-heading">Tell us what it's for</h2>
+          <p className="material-description">
+            Every custom order specifies its filament. Let us know what the
+            piece is for and we'll build it in {meta.title}.
+          </p>
+          <div className="cta-row">
+            <a
+              className="cta-primary"
+              href={`/custom-order?material=${meta.key}`}
+            >
+              Get a custom quote
+            </a>
+            <a className="cta-secondary" href="/shop">
+              Browse the shop
+            </a>
+          </div>
+        </div>
+      </div>,
+    );
+
+    // Back cover
+    built.push(
+      <div className="page" key="back">
         <div
-          style={{
-            position: 'absolute',
-            bottom: 22,
-            display: 'flex',
-            alignItems: 'center',
-            gap: 12,
-            fontSize: 10,
-            textTransform: 'uppercase',
-            letterSpacing: '0.4em',
-            color: 'rgba(148,163,184,0.7)',
-            fontFamily: "'Jost', sans-serif",
-          }}
+          className="page-content cover"
+          style={{ background: meta.coverGradient }}
         >
-          <span>End</span>
-          <span style={{ height: 1, width: 28, background: 'rgba(148,163,184,0.5)' }} />
-          <span>{meta.title} Codex</span>
+          <div className="cover-frame-outer" />
+          <div
+            className="cover-frame-inner"
+            style={{ borderColor: meta.innerFrame }}
+          />
+          <div
+            style={{
+              height: 1,
+              width: 80,
+              background:
+                "linear-gradient(90deg, transparent, rgba(250,222,106,0.6), transparent)",
+            }}
+          />
+          <p
+            style={{
+              marginTop: 18,
+              fontSize: "clamp(1.4rem, 3.6vw, 2rem)",
+              color: "white",
+              fontFamily: "'Cinzel', serif",
+            }}
+          >
+            ForgeRealm
+          </p>
+          <p
+            style={{
+              marginTop: 6,
+              fontSize: 10,
+              textTransform: "uppercase",
+              letterSpacing: "0.4em",
+              color: "rgba(103,232,249,0.7)",
+              fontFamily: "'Jost', sans-serif",
+            }}
+          >
+            Leeds, United Kingdom
+          </p>
+          <p
+            style={{
+              marginTop: 14,
+              fontSize: 13,
+              color: "rgba(203,213,225,0.85)",
+              fontStyle: "italic",
+              fontFamily: "'Cormorant Garamond', serif",
+              maxWidth: 220,
+              lineHeight: 1.5,
+            }}
+          >
+            Designed, printed, and finished in-house, one layer at a time.
+          </p>
+          <div
+            style={{
+              position: "absolute",
+              bottom: 22,
+              display: "flex",
+              alignItems: "center",
+              gap: 12,
+              fontSize: 10,
+              textTransform: "uppercase",
+              letterSpacing: "0.4em",
+              color: "rgba(148,163,184,0.7)",
+              fontFamily: "'Jost', sans-serif",
+            }}
+          >
+            <span>End</span>
+            <span
+              style={{
+                height: 1,
+                width: 28,
+                background: "rgba(148,163,184,0.5)",
+              }}
+            />
+            <span>{meta.title} Codex</span>
+          </div>
         </div>
-      </div>
-    </div>
-  );
+      </div>,
+    );
 
     return built;
   }, [material, meta]);
 
   return (
-    <div ref={wrapperRef} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%' }}>
+    <div
+      ref={wrapperRef}
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        width: "100%",
+      }}
+    >
       {/* Back to library link */}
       <button
         type="button"
         onClick={onBack}
         style={{
           marginBottom: 18,
-          display: 'inline-flex',
-          alignItems: 'center',
+          display: "inline-flex",
+          alignItems: "center",
           gap: 8,
-          padding: '8px 16px',
+          padding: "8px 16px",
           borderRadius: 999,
-          border: '1px solid rgba(255,255,255,0.14)',
-          background: 'rgba(255,255,255,0.04)',
-          color: 'rgba(226,232,240,0.85)',
+          border: "1px solid rgba(255,255,255,0.14)",
+          background: "rgba(255,255,255,0.04)",
+          color: "rgba(226,232,240,0.85)",
           fontSize: 11,
           fontWeight: 600,
-          textTransform: 'uppercase',
-          letterSpacing: '0.22em',
+          textTransform: "uppercase",
+          letterSpacing: "0.22em",
           fontFamily: "'Jost', sans-serif",
-          cursor: 'pointer',
+          cursor: "pointer",
         }}
       >
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <svg
+          width="13"
+          height="13"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
           <path d="M15 19l-7-7 7-7" />
         </svg>
         Back to library
@@ -702,12 +855,14 @@ function BookView({
       <div
         style={{
           // No drop-shadow filter on mobile: react-pageflip's internal shadows handle it, and GPU filters are expensive
-          filter: isMobile ? undefined : 'drop-shadow(0 26px 50px rgba(0,0,0,0.5))',
-          willChange: 'transform',
+          filter: isMobile
+            ? undefined
+            : "drop-shadow(0 26px 50px rgba(0,0,0,0.5))",
+          willChange: "transform",
         }}
       >
         <HTMLFlipBook
-          key={`${material}-${isMobile ? 'm' : 'd'}`}
+          key={`${material}-${isMobile ? "m" : "d"}`}
           ref={bookRef as never}
           width={pageW}
           height={pageH}
@@ -738,11 +893,11 @@ function BookView({
       <div
         style={{
           marginTop: 22,
-          display: 'flex',
-          alignItems: 'center',
+          display: "flex",
+          alignItems: "center",
           gap: 10,
-          flexWrap: 'wrap',
-          justifyContent: 'center',
+          flexWrap: "wrap",
+          justifyContent: "center",
         }}
       >
         <button
@@ -751,7 +906,16 @@ function BookView({
           aria-label="Previous page"
           style={controlBtnStyle}
         >
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <svg
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
             <path d="M15 19l-7-7 7-7" />
           </svg>
         </button>
@@ -766,7 +930,16 @@ function BookView({
             color: meta.accent,
           }}
         >
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <svg
+            width="13"
+            height="13"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
             <path d="M11 17l-5-5 5-5" />
             <path d="M18 17l-5-5 5-5" />
           </svg>
@@ -779,7 +952,16 @@ function BookView({
           aria-label="Next page"
           style={controlBtnStyle}
         >
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <svg
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
             <path d="M9 5l7 7-7 7" />
           </svg>
         </button>
@@ -789,9 +971,9 @@ function BookView({
         style={{
           marginTop: 12,
           fontSize: 10,
-          textTransform: 'uppercase',
-          letterSpacing: '0.28em',
-          color: 'rgba(110,231,183,0.55)',
+          textTransform: "uppercase",
+          letterSpacing: "0.28em",
+          color: "rgba(110,231,183,0.55)",
           fontFamily: "'Jost', sans-serif",
         }}
       >
@@ -802,62 +984,76 @@ function BookView({
 }
 
 const controlBtnStyle: React.CSSProperties = {
-  display: 'inline-flex',
-  alignItems: 'center',
-  justifyContent: 'center',
+  display: "inline-flex",
+  alignItems: "center",
+  justifyContent: "center",
   width: 38,
   height: 38,
   borderRadius: 999,
-  border: '1px solid rgba(255,255,255,0.14)',
-  background: 'rgba(255,255,255,0.04)',
-  color: 'rgba(226,232,240,0.85)',
-  cursor: 'pointer',
+  border: "1px solid rgba(255,255,255,0.14)",
+  background: "rgba(255,255,255,0.04)",
+  color: "rgba(226,232,240,0.85)",
+  cursor: "pointer",
 };
 
 const pillBtnStyle: React.CSSProperties = {
-  display: 'inline-flex',
-  alignItems: 'center',
+  display: "inline-flex",
+  alignItems: "center",
   gap: 8,
-  padding: '9px 16px',
+  padding: "9px 16px",
   borderRadius: 999,
   fontSize: 11,
   fontWeight: 600,
-  textTransform: 'uppercase',
-  letterSpacing: '0.22em',
+  textTransform: "uppercase",
+  letterSpacing: "0.22em",
   fontFamily: "'Jost', sans-serif",
-  cursor: 'pointer',
+  cursor: "pointer",
 };
 
 /* ───────── Top-level component ───────── */
 
 export default function MaterialsBook() {
-  const [HTMLFlipBook, setHTMLFlipBook] = useState<ComponentType<Record<string, unknown>> | null>(null);
+  const [HTMLFlipBook, setHTMLFlipBook] = useState<ComponentType<
+    Record<string, unknown>
+  > | null>(null);
   const [isMobile, setIsMobile] = useState(false);
   const [active, setActive] = useState<BookKey | null>(null);
 
   useEffect(() => {
     injectCSS();
-    import('react-pageflip').then((mod) => {
-      setHTMLFlipBook(() => mod.default as unknown as ComponentType<Record<string, unknown>>);
+    import("react-pageflip").then((mod) => {
+      setHTMLFlipBook(
+        () => mod.default as unknown as ComponentType<Record<string, unknown>>,
+      );
     });
     const update = () => setIsMobile(window.innerWidth < 1024);
     update();
-    window.addEventListener('resize', update);
-    return () => window.removeEventListener('resize', update);
+    window.addEventListener("resize", update);
+    return () => window.removeEventListener("resize", update);
   }, []);
 
   return (
-    <div className="forgerealm-book" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%' }}>
-
+    <div
+      className="forgerealm-book"
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        width: "100%",
+      }}
+    >
       {!HTMLFlipBook ? (
-        <div className="flex items-center justify-center" style={{ minHeight: 480 }}>
+        <div
+          className="flex items-center justify-center"
+          style={{ minHeight: 480 }}
+        >
           <span
             style={{
               fontFamily: "'Jost', sans-serif",
               fontSize: 11,
-              textTransform: 'uppercase',
-              letterSpacing: '0.28em',
-              color: 'rgba(148,163,184,0.7)',
+              textTransform: "uppercase",
+              letterSpacing: "0.28em",
+              color: "rgba(148,163,184,0.7)",
             }}
           >
             Opening the library…
@@ -866,50 +1062,81 @@ export default function MaterialsBook() {
       ) : (
         <div
           style={{
-            position: 'relative',
-            width: '100%',
+            position: "relative",
+            width: "100%",
             // Each state (selector / open book) now has its own card around it, so
             // we size the parent's reserved height to the active state — keeps
             // page reflow minimal during the transition without leaving dead
             // space below the smaller closed-card state.
-            minHeight: active ? (isMobile ? 560 : 760) : (isMobile ? 460 : 540),
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'flex-start',
+            minHeight: active ? (isMobile ? 560 : 760) : isMobile ? 460 : 540,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "flex-start",
           }}
         >
           <AnimatePresence mode="wait" initial={false}>
             {active ? (
               <motion.div
                 key={`book-${active}`}
-                initial={isMobile ? { opacity: 0 } : { opacity: 0, scale: 0.96, y: 10 }}
-                animate={isMobile ? { opacity: 1 } : { opacity: 1, scale: 1, y: 0 }}
-                exit={isMobile ? { opacity: 0 } : { opacity: 0, scale: 0.97, y: 8 }}
-                transition={{ duration: isMobile ? 0.18 : 0.28, ease: [0.22, 1, 0.36, 1] }}
+                initial={
+                  isMobile ? { opacity: 0 } : { opacity: 0, scale: 0.96, y: 10 }
+                }
+                animate={
+                  isMobile ? { opacity: 1 } : { opacity: 1, scale: 1, y: 0 }
+                }
+                exit={
+                  isMobile ? { opacity: 0 } : { opacity: 0, scale: 0.97, y: 8 }
+                }
+                transition={{
+                  duration: isMobile ? 0.18 : 0.28,
+                  ease: [0.22, 1, 0.36, 1],
+                }}
                 className="md:p-8 lg:p-10 md:rounded-[2rem] md:border md:border-white/10 md:bg-white/[0.03] md:shadow-[0_30px_80px_-12px_rgba(0,0,0,0.75),inset_0_1px_0_rgba(255,255,255,0.05)]"
-                style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                }}
               >
-                <BookView material={active} onBack={() => setActive(null)} HTMLFlipBook={HTMLFlipBook} isMobile={isMobile} />
+                <BookView
+                  material={active}
+                  onBack={() => setActive(null)}
+                  HTMLFlipBook={HTMLFlipBook}
+                  isMobile={isMobile}
+                />
               </motion.div>
             ) : (
               <motion.div
                 key="selector"
-                initial={isMobile ? { opacity: 0 } : { opacity: 0, scale: 0.97, y: 8 }}
-                animate={isMobile ? { opacity: 1 } : { opacity: 1, scale: 1, y: 0 }}
-                exit={isMobile ? { opacity: 0 } : { opacity: 0, scale: 0.97, y: -6 }}
-                transition={{ duration: isMobile ? 0.15 : 0.25, ease: [0.22, 1, 0.36, 1] }}
+                initial={
+                  isMobile ? { opacity: 0 } : { opacity: 0, scale: 0.97, y: 8 }
+                }
+                animate={
+                  isMobile ? { opacity: 1 } : { opacity: 1, scale: 1, y: 0 }
+                }
+                exit={
+                  isMobile ? { opacity: 0 } : { opacity: 0, scale: 0.97, y: -6 }
+                }
+                transition={{
+                  duration: isMobile ? 0.15 : 0.25,
+                  ease: [0.22, 1, 0.36, 1],
+                }}
                 className="md:p-8 lg:p-10 md:rounded-[2rem] md:border md:border-white/10 md:bg-white/[0.03] md:shadow-[0_30px_80px_-12px_rgba(0,0,0,0.75),inset_0_1px_0_rgba(255,255,255,0.05)]"
-                style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                }}
               >
                 <BookSelector onSelect={setActive} isMobile={isMobile} />
                 <p
                   style={{
                     marginTop: 22,
                     fontSize: 10,
-                    textTransform: 'uppercase',
-                    letterSpacing: '0.28em',
-                    color: 'rgba(110,231,183,0.55)',
+                    textTransform: "uppercase",
+                    letterSpacing: "0.28em",
+                    color: "rgba(110,231,183,0.55)",
                     fontFamily: "'Jost', sans-serif",
                   }}
                 >

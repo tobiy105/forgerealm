@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 export default function ProductsMarquee() {
   return (
@@ -9,7 +9,10 @@ export default function ProductsMarquee() {
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative">
         <div className="flex items-center gap-8 overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]">
-          <div className="flex animate-[marquee_25s_linear_infinite] gap-10 whitespace-nowrap text-xs sm:text-sm uppercase tracking-[0.25em]" style={{ color: '#FADE6A' }}>
+          <div
+            className="flex animate-[marquee_25s_linear_infinite] gap-10 whitespace-nowrap text-xs sm:text-sm uppercase tracking-[0.25em]"
+            style={{ color: "#FADE6A" }}
+          >
             {[
               "Fidget Toys",
               "White Vases",

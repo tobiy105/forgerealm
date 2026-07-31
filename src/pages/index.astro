@@ -1,19 +1,21 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro';
-import Navbar from '../components/Navbar';
-import Hero from '../components/Hero';
-import Slider from '../components/Slider';
-import AnatomyShowcase from '../components/AnatomyShowcase';
-import Services from '../components/Services';
-import Work from '../components/Work';
-import Faq from '../components/Faq';
-import Contact from '../components/Contact';
-import Footer from '../components/Footer';
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Navbar from "../components/Navbar";
+import Hero from "../components/Hero";
+import Slider from "../components/Slider";
+import AnatomyShowcase from "../components/AnatomyShowcase";
+import Services from "../components/Services";
+import Work from "../components/Work";
+import Faq from "../components/Faq";
+import Contact from "../components/Contact";
+import Footer from "../components/Footer";
 ---
 
 <BaseLayout>
-  <div class="relative isolate text-white overflow-x-clip" style="font-family: 'Jost', sans-serif; background: linear-gradient(180deg, #080c14 0%, #0a0e18 30%, #0c1020 60%, #080c14 100%);">
-
+  <div
+    class="relative isolate text-white overflow-x-clip"
+    style="font-family: 'Jost', sans-serif; background: linear-gradient(180deg, #080c14 0%, #0a0e18 30%, #0c1020 60%, #080c14 100%);"
+  >
     <Navbar client:load />
     <Hero client:idle />
 
@@ -31,15 +33,22 @@ import Footer from '../components/Footer';
 </BaseLayout>
 
 <script is:inline>
-  document.documentElement.setAttribute('data-theme', 'dark');
-  document.documentElement.classList.add('dark');
+  document.documentElement.setAttribute("data-theme", "dark");
+  document.documentElement.classList.add("dark");
 
   // Cursor glow - desktop only
   if (window.innerWidth >= 768) {
-    const glow = document.createElement('div');
-    glow.style.cssText = 'position:fixed;width:400px;height:400px;border-radius:50%;pointer-events:none;z-index:1;background:radial-gradient(circle,rgba(59,130,246,0.06) 0%,transparent 70%);transform:translate(-50%,-50%);transition:opacity 0.3s ease;opacity:0;';
+    const glow = document.createElement("div");
+    glow.style.cssText =
+      "position:fixed;width:400px;height:400px;border-radius:50%;pointer-events:none;z-index:1;background:radial-gradient(circle,rgba(59,130,246,0.06) 0%,transparent 70%);transform:translate(-50%,-50%);transition:opacity 0.3s ease;opacity:0;";
     document.body.appendChild(glow);
-    document.addEventListener('mousemove', (e) => { glow.style.left = e.clientX + 'px'; glow.style.top = e.clientY + 'px'; glow.style.opacity = '1'; });
-    document.addEventListener('mouseleave', () => { glow.style.opacity = '0'; });
+    document.addEventListener("mousemove", (e) => {
+      glow.style.left = e.clientX + "px";
+      glow.style.top = e.clientY + "px";
+      glow.style.opacity = "1";
+    });
+    document.addEventListener("mouseleave", () => {
+      glow.style.opacity = "0";
+    });
   }
 </script>

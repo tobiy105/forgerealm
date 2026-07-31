@@ -323,7 +323,6 @@ export default function AnatomyShowcase() {
         background: "linear-gradient(180deg, #0a0e18 0%, #0c1020 100%)",
       }}
     >
-
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 relative">
         <div className="text-center mb-10 sm:mb-14">
           <div className="inline-flex items-center gap-3 mb-3">

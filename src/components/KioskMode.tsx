@@ -4,15 +4,20 @@ import { useEffect, useState, useRef } from "react";
 import { products } from "../data/products";
 
 const envBase =
-  typeof import.meta !== "undefined" && import.meta.env && typeof import.meta.env.PUBLIC_API_URL === "string"
+  typeof import.meta !== "undefined" &&
+  import.meta.env &&
+  typeof import.meta.env.PUBLIC_API_URL === "string"
     ? import.meta.env.PUBLIC_API_URL.trim().replace(/\/$/, "")
     : "";
 const envLocal =
-  typeof import.meta !== "undefined" && import.meta.env && typeof import.meta.env.PUBLIC_API_URL_LOCAL === "string"
+  typeof import.meta !== "undefined" &&
+  import.meta.env &&
+  typeof import.meta.env.PUBLIC_API_URL_LOCAL === "string"
     ? import.meta.env.PUBLIC_API_URL_LOCAL.trim().replace(/\/$/, "")
     : "";
 const API_BASE =
-  typeof window !== "undefined" && window.location.origin.startsWith("http://localhost")
+  typeof window !== "undefined" &&
+  window.location.origin.startsWith("http://localhost")
     ? envLocal || ""
     : envBase || "";
 
@@ -25,16 +30,24 @@ export default function KioskMode() {
     const check = async () => {
       try {
         const token = localStorage.getItem("forgerealm_admin_token");
-        if (!token) { setAuth("denied"); return; }
+        if (!token) {
+          setAuth("denied");
+          return;
+        }
         const res = await fetch(`${API_BASE}/api/auth/me`, {
           credentials: "include",
           headers: { Authorization: `Bearer ${token}` },
         });
-        if (!res.ok) { setAuth("denied"); return; }
+        if (!res.ok) {
+          setAuth("denied");
+          return;
+        }
         const data = await res.json();
         if (data?.user?.role === "admin") setAuth("granted");
         else setAuth("denied");
-      } catch { setAuth("denied"); }
+      } catch {
+        setAuth("denied");
+      }
     };
     check();
   }, []);
@@ -68,7 +81,9 @@ export default function KioskMode() {
   };
 
   // Filter out banner-only products
-  const displayProducts = products.filter((p) => !p.bannerOnly && p.stock !== 0);
+  const displayProducts = products.filter(
+    (p) => !p.bannerOnly && p.stock !== 0,
+  );
 
   if (auth === "loading") {
     return (
@@ -82,9 +97,23 @@ export default function KioskMode() {
     return (
       <div className="flex min-h-screen items-center justify-center bg-[#0a0a0a] text-white px-4">
         <div className="text-center">
-          <h1 className="text-2xl font-bold mb-3" style={{ fontFamily: "'Cinzel', serif" }}>Admin Required</h1>
-          <p className="text-stone-400 mb-6" style={{ fontFamily: "'Inter', sans-serif" }}>Kiosk mode is only available to admin users.</p>
-          <a href="/shop/sign-in" className="rounded-full bg-gradient-to-t from-amber-500 to-yellow-300 px-6 py-3 text-sm font-semibold text-black" style={{ fontFamily: "'Cinzel', serif" }}>
+          <h1
+            className="text-2xl font-bold mb-3"
+            style={{ fontFamily: "'Cinzel', serif" }}
+          >
+            Admin Required
+          </h1>
+          <p
+            className="text-stone-400 mb-6"
+            style={{ fontFamily: "'Inter', sans-serif" }}
+          >
+            Kiosk mode is only available to admin users.
+          </p>
+          <a
+            href="/shop/sign-in"
+            className="rounded-full bg-gradient-to-t from-amber-500 to-yellow-300 px-6 py-3 text-sm font-semibold text-black"
+            style={{ fontFamily: "'Cinzel', serif" }}
+          >
             Sign In
           </a>
         </div>
@@ -96,10 +125,23 @@ export default function KioskMode() {
     return (
       <div className="flex min-h-screen items-center justify-center bg-[#0a0a0a] text-white px-4">
         <div className="text-center max-w-md">
-          <img src="/frlogorv.png" alt="ForgeRealm" className="w-20 h-20 mx-auto mb-6" />
-          <h1 className="text-3xl font-bold mb-2" style={{ fontFamily: "'Cinzel', serif" }}>Kiosk Mode</h1>
-          <p className="text-stone-400 mb-8" style={{ fontFamily: "'Inter', sans-serif" }}>
-            Display your products and prices on a tablet at your stall. Goes fullscreen with no navigation.
+          <img
+            src="/frlogorv.png"
+            alt="ForgeRealm"
+            className="w-20 h-20 mx-auto mb-6"
+          />
+          <h1
+            className="text-3xl font-bold mb-2"
+            style={{ fontFamily: "'Cinzel', serif" }}
+          >
+            Kiosk Mode
+          </h1>
+          <p
+            className="text-stone-400 mb-8"
+            style={{ fontFamily: "'Inter', sans-serif" }}
+          >
+            Display your products and prices on a tablet at your stall. Goes
+            fullscreen with no navigation.
           </p>
           <button
             onClick={goFullscreen}
@@ -108,7 +150,9 @@ export default function KioskMode() {
           >
             Activate Kiosk
           </button>
-          <p className="mt-4 text-xs text-stone-600">Triple-tap the header bar to reveal the exit button</p>
+          <p className="mt-4 text-xs text-stone-600">
+            Triple-tap the header bar to reveal the exit button
+          </p>
         </div>
       </div>
     );
@@ -118,7 +162,13 @@ export default function KioskMode() {
   return <KioskDisplay products={displayProducts} onExit={exitKiosk} />;
 }
 
-function KioskDisplay({ products: items, onExit }: { products: typeof products; onExit: () => void }) {
+function KioskDisplay({
+  products: items,
+  onExit,
+}: {
+  products: typeof products;
+  onExit: () => void;
+}) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [isAutoScrolling, setIsAutoScrolling] = useState(true);
   const touchTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -159,7 +209,9 @@ function KioskDisplay({ products: items, onExit }: { products: typeof products; 
       // Auto-hide after 5 seconds
       setTimeout(() => setShowExit(false), 5000);
     } else {
-      exitTimerRef.current = setTimeout(() => { exitTapRef.current = 0; }, 800);
+      exitTimerRef.current = setTimeout(() => {
+        exitTapRef.current = 0;
+      }, 800);
     }
   };
 
@@ -172,18 +224,34 @@ function KioskDisplay({ products: items, onExit }: { products: typeof products; 
       </div>
 
       {/* Header - triple-tap to reveal exit */}
-      <div className="relative z-10 flex items-center justify-between px-8 py-6 border-b border-white/[0.06]" onClick={handleExitTap}>
+      <div
+        className="relative z-10 flex items-center justify-between px-8 py-6 border-b border-white/[0.06]"
+        onClick={handleExitTap}
+      >
         <div className="flex items-center gap-4">
           <img src="/frlogorv.png" alt="" className="h-12 w-12" />
           <div>
-            <h1 className="text-2xl font-bold text-white" style={{ fontFamily: "'Cinzel', serif" }}>ForgeRealm</h1>
-            <p className="text-[11px] uppercase tracking-[0.3em] text-blue-300/50" style={{ fontFamily: "'Jost', sans-serif" }}>Leeds Artisan 3D Printing</p>
+            <h1
+              className="text-2xl font-bold text-white"
+              style={{ fontFamily: "'Cinzel', serif" }}
+            >
+              ForgeRealm
+            </h1>
+            <p
+              className="text-[11px] uppercase tracking-[0.3em] text-blue-300/50"
+              style={{ fontFamily: "'Jost', sans-serif" }}
+            >
+              Leeds Artisan 3D Printing
+            </p>
           </div>
         </div>
         <div className="flex items-center gap-4">
           {showExit && (
             <button
-              onClick={(e) => { e.stopPropagation(); onExit(); }}
+              onClick={(e) => {
+                e.stopPropagation();
+                onExit();
+              }}
               className="rounded-full bg-red-500/20 border border-red-500/30 px-4 py-2 text-[10px] font-semibold uppercase tracking-wider text-red-300 transition hover:bg-red-500/30"
               style={{ fontFamily: "'Jost', sans-serif" }}
             >
@@ -191,8 +259,18 @@ function KioskDisplay({ products: items, onExit }: { products: typeof products; 
             </button>
           )}
           <div className="text-right">
-            <p className="text-[10px] uppercase tracking-[0.25em] text-stone-500" style={{ fontFamily: "'Jost', sans-serif" }}>Free delivery in Leeds</p>
-            <p className="text-[10px] uppercase tracking-[0.25em] text-emerald-400/60 mt-1" style={{ fontFamily: "'Jost', sans-serif" }}>Eco-friendly PLA</p>
+            <p
+              className="text-[10px] uppercase tracking-[0.25em] text-stone-500"
+              style={{ fontFamily: "'Jost', sans-serif" }}
+            >
+              Free delivery in Leeds
+            </p>
+            <p
+              className="text-[10px] uppercase tracking-[0.25em] text-emerald-400/60 mt-1"
+              style={{ fontFamily: "'Jost', sans-serif" }}
+            >
+              Eco-friendly PLA
+            </p>
           </div>
         </div>
       </div>
@@ -201,7 +279,7 @@ function KioskDisplay({ products: items, onExit }: { products: typeof products; 
       <div
         ref={scrollRef}
         className="relative z-10 px-6 py-6 h-[calc(100vh-100px)] overflow-y-auto scrollbar-hide"
-        style={{ WebkitOverflowScrolling: 'touch' }}
+        style={{ WebkitOverflowScrolling: "touch" }}
         onTouchStart={handleInteraction}
         onMouseDown={handleInteraction}
         onWheel={handleInteraction}
@@ -233,19 +311,30 @@ function KioskDisplay({ products: items, onExit }: { products: typeof products; 
                   </div>
                 )}
                 {/* Stock badge */}
-                {product.stock !== null && product.stock <= 3 && product.stock > 0 && (
-                  <div className="absolute top-2 right-2 rounded-full bg-black/70 px-2 py-0.5 text-[9px] font-semibold text-amber-400 backdrop-blur-sm">
-                    {product.stock} left
-                  </div>
-                )}
+                {product.stock !== null &&
+                  product.stock <= 3 &&
+                  product.stock > 0 && (
+                    <div className="absolute top-2 right-2 rounded-full bg-black/70 px-2 py-0.5 text-[9px] font-semibold text-amber-400 backdrop-blur-sm">
+                      {product.stock} left
+                    </div>
+                  )}
               </div>
 
               {/* Info */}
               <div className="p-3 text-center">
-                <h3 className="text-[13px] font-normal text-white truncate" style={{ fontFamily: "'Cinzel', serif" }}>
+                <h3
+                  className="text-[13px] font-normal text-white truncate"
+                  style={{ fontFamily: "'Cinzel', serif" }}
+                >
                   {product.name}
                 </h3>
-                <p className="text-[22px] font-bold mt-1" style={{ fontFamily: "'Cormorant Garamond', serif", color: '#FADE6A' }}>
+                <p
+                  className="text-[22px] font-bold mt-1"
+                  style={{
+                    fontFamily: "'Cormorant Garamond', serif",
+                    color: "#FADE6A",
+                  }}
+                >
                   {product.displayPrice}
                 </p>
               </div>
@@ -258,13 +347,30 @@ function KioskDisplay({ products: items, onExit }: { products: typeof products; 
       <div className="absolute bottom-0 left-0 right-0 z-10 bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/90 to-transparent pt-8 pb-4 px-8">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-6">
-            {['🌱 Plant-based PLA', '🏠 Made in Leeds', '♻️ Eco-friendly'].map((t) => (
-              <span key={t} className="text-[11px] text-stone-500" style={{ fontFamily: "'Inter', sans-serif" }}>{t}</span>
-            ))}
+            {["🌱 Plant-based PLA", "🏠 Made in Leeds", "♻️ Eco-friendly"].map(
+              (t) => (
+                <span
+                  key={t}
+                  className="text-[11px] text-stone-500"
+                  style={{ fontFamily: "'Inter', sans-serif" }}
+                >
+                  {t}
+                </span>
+              ),
+            )}
           </div>
           <div className="flex items-center gap-2">
-            <span className="text-[10px] uppercase tracking-[0.2em] text-stone-600" style={{ fontFamily: "'Jost', sans-serif" }}>forgerealm.co.uk</span>
-            <img src="/headfrlogorv.png" alt="" className="h-5 w-5 rounded-full opacity-40" />
+            <span
+              className="text-[10px] uppercase tracking-[0.2em] text-stone-600"
+              style={{ fontFamily: "'Jost', sans-serif" }}
+            >
+              forgerealm.co.uk
+            </span>
+            <img
+              src="/headfrlogorv.png"
+              alt=""
+              className="h-5 w-5 rounded-full opacity-40"
+            />
           </div>
         </div>
       </div>

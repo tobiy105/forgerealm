@@ -1,4 +1,4 @@
-import { useRef, useState, type ReactNode, type CSSProperties } from 'react';
+import { useRef, useState, type ReactNode, type CSSProperties } from "react";
 
 interface SpotlightCardProps {
   children: ReactNode;
@@ -9,8 +9,8 @@ interface SpotlightCardProps {
 
 export default function SpotlightCard({
   children,
-  className = '',
-  spotlightColor = 'rgba(59, 130, 246, 0.15)',
+  className = "",
+  spotlightColor = "rgba(59, 130, 246, 0.15)",
   style,
 }: SpotlightCardProps) {
   const ref = useRef<HTMLDivElement>(null);

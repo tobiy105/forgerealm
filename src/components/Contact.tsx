@@ -1,7 +1,13 @@
-'use client';
+"use client";
 
 import { useEffect, useRef, useState } from "react";
-import { FaEnvelope, FaMapMarkerAlt, FaClock, FaEnvelopeOpenText, FaPhoneAlt } from "react-icons/fa";
+import {
+  FaEnvelope,
+  FaMapMarkerAlt,
+  FaClock,
+  FaEnvelopeOpenText,
+  FaPhoneAlt,
+} from "react-icons/fa";
 
 export default function Contact() {
   const [isVisible, setIsVisible] = useState(false);
@@ -24,7 +30,7 @@ export default function Contact() {
           }
         });
       },
-      { threshold: 0.12, rootMargin: "120px 0px -10% 0px" }
+      { threshold: 0.12, rootMargin: "120px 0px -10% 0px" },
     );
 
     observer.observe(sectionRef.current);
@@ -53,23 +59,43 @@ export default function Contact() {
               >
                 Contact
               </h2>
-              <FaEnvelopeOpenText className="w-8 h-8 sm:w-10 sm:h-10 text-blue-400" aria-hidden />
+              <FaEnvelopeOpenText
+                className="w-8 h-8 sm:w-10 sm:h-10 text-blue-400"
+                aria-hidden
+              />
             </div>
 
             <p
               className="text-lg text-stone-400 leading-relaxed"
               style={{ fontFamily: "'Inter', sans-serif" }}
             >
-              Have a design, concept, or a project idea? Let's create something extraordinary together.
+              Have a design, concept, or a project idea? Let's create something
+              extraordinary together.
             </p>
 
             {/* Contact details */}
             <div className="space-y-4">
               {[
-                { title: "Location", detail: "Leeds, United Kingdom", icon: <FaMapMarkerAlt className="text-blue-400" /> },
-                { title: "Email", detail: "info@forgerealm.co.uk", icon: <FaEnvelope className="text-blue-400" /> },
-                { title: "Phone", detail: "+44 (0) 7344 237800", icon: <FaPhoneAlt className="text-blue-400" /> },
-                { title: "Hours", detail: "Mon-Fri 08:00-18:00", icon: <FaClock className="text-blue-400" /> },
+                {
+                  title: "Location",
+                  detail: "Leeds, United Kingdom",
+                  icon: <FaMapMarkerAlt className="text-blue-400" />,
+                },
+                {
+                  title: "Email",
+                  detail: "info@forgerealm.co.uk",
+                  icon: <FaEnvelope className="text-blue-400" />,
+                },
+                {
+                  title: "Phone",
+                  detail: "+44 (0) 7344 237800",
+                  icon: <FaPhoneAlt className="text-blue-400" />,
+                },
+                {
+                  title: "Hours",
+                  detail: "Mon-Fri 08:00-18:00",
+                  icon: <FaClock className="text-blue-400" />,
+                },
               ].map((item) => (
                 <div
                   key={item.title}
@@ -154,7 +180,8 @@ export default function Contact() {
                 className="text-lg max-w-lg leading-relaxed text-stone-400"
                 style={{ fontFamily: "'Inter', sans-serif" }}
               >
-                Reach out directly for collaborations, custom prints, or wholesale orders. We're here to bring your vision to life.
+                Reach out directly for collaborations, custom prints, or
+                wholesale orders. We're here to bring your vision to life.
               </p>
             </div>
 
@@ -172,7 +199,8 @@ export default function Contact() {
               className="text-sm max-w-sm text-stone-500"
               style={{ fontFamily: "'Inter', sans-serif" }}
             >
-              We usually respond within 24 hours on working days. Let's create something amazing together!
+              We usually respond within 24 hours on working days. Let's create
+              something amazing together!
             </p>
           </div>
         </div>
