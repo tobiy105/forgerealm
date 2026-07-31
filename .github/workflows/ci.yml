@@ -1,3 +1,4 @@
+# Frontend CI. Runs on every push to master/main and on every pull request.
 name: CI
 
 on:
