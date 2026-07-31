@@ -1,0 +1,48 @@
+name: CI
+
+on:
+  push:
+    branches: [master, main]
+  pull_request:
+    branches: [master, main]
+
+# Cancel in-flight runs for the same ref when a new push lands.
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  frontend:
+    name: Frontend (lint · typecheck · test · build)
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      # Order chosen to fail fast on the cheapest checks. Prettier before
+      # ESLint before Astro typecheck; unit tests before the (slow) build.
+      - name: Prettier
+        run: npm run check:prettier
+
+      - name: ESLint
+        run: npm run check:eslint
+
+      - name: Astro typecheck
+        run: npm run check:astro
+
+      - name: Unit tests (Vitest)
+        run: npm test
+
+      - name: Build (Astro)
+        run: npm run build
