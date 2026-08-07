@@ -44,7 +44,11 @@ function esc(v) {
         row.email_verified = Boolean(row.email_verified);
       }
       const vals = cols.map((c) => esc(row[c])).join(", ");
-      chunks.push(`INSERT INTO ${table} (${cols.join(", ")}) VALUES (${vals});`);
+      // OVERRIDING SYSTEM VALUE lets us keep the original MySQL primary keys
+      // even though our Postgres identity columns are `GENERATED ALWAYS`.
+      chunks.push(
+        `INSERT INTO ${table} (${cols.join(", ")}) OVERRIDING SYSTEM VALUE VALUES (${vals});`,
+      );
     }
     chunks.push("");
     totalRows += rows.length;
