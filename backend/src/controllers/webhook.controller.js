@@ -98,10 +98,12 @@ async function handleCheckoutComplete(stripe, session) {
     if (users.length > 0) userId = users[0].id;
   }
 
-  // Insert using Tobi's schema
-  const [result] = await pool.query(
+  // Insert using Tobi's schema. Postgres RETURNING id gives us the freshly
+  // assigned order primary key (mysql2 used `result.insertId`).
+  const [orderRows] = await pool.query(
     `INSERT INTO orders (order_id, user_id, total_amount, items_json, email, status, shipping_address, created_at)
-     VALUES (?, ?, ?, ?, ?, 'completed', ?, NOW())`,
+     VALUES (?, ?, ?, ?, ?, 'completed', ?, NOW())
+     RETURNING id`,
     [
       session.id,
       userId,
@@ -111,8 +113,9 @@ async function handleCheckoutComplete(stripe, session) {
       shippingAddress,
     ],
   );
+  const orderPk = orderRows[0].id;
 
-  console.log(`Order #${result.insertId} created for session ${session.id}`);
+  console.log(`Order #${orderPk} created for session ${session.id}`);
 
   // Generate receipt PDF, store in DB, and email to customer
   const subtotalPence = session.amount_subtotal || 0;
@@ -121,7 +124,7 @@ async function handleCheckoutComplete(stripe, session) {
     session.metadata?.customer_name ||
     session.customer_details?.name ||
     "Guest";
-  const invoiceNumber = `#FR-${new Date().getFullYear()}-${String(result.insertId).padStart(5, "0")}`;
+  const invoiceNumber = `#FR-${new Date().getFullYear()}-${String(orderPk).padStart(5, "0")}`;
 
   try {
     const pdfBuffer = await generateInvoicePdf({
@@ -154,7 +157,7 @@ async function handleCheckoutComplete(stripe, session) {
       ],
     );
     console.log(
-      `Receipt ${invoiceNumber} stored for order #${result.insertId}`,
+      `Receipt ${invoiceNumber} stored for order #${orderPk}`,
     );
 
     // Email customer with PDF attached

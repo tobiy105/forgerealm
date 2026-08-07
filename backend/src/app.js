@@ -194,66 +194,11 @@ passport.deserializeUser((user, done) => done(null, user));
 app.use(passport.initialize());
 app.use(passport.session());
 
-const ensureUsersTable = async () => {
-  try {
-    await pool.query(
-      `
-      CREATE TABLE IF NOT EXISTS users (
-        id INT AUTO_INCREMENT PRIMARY KEY,
-        username VARCHAR(64) NOT NULL UNIQUE,
-        email VARCHAR(255) NULL UNIQUE,
-        password_hash VARCHAR(255) NOT NULL,
-        salt VARCHAR(255) NOT NULL DEFAULT '',
-        role VARCHAR(32) NOT NULL DEFAULT 'user',
-        email_verified TINYINT(1) NOT NULL DEFAULT 0,
-        email_verification_token_hash VARCHAR(255) NULL,
-        email_verification_sent_at DATETIME NULL,
-        email_verified_at DATETIME NULL,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-      )
-      `,
-    );
-  } catch (err) {
-    console.error("Users table check failed:", err.message || err);
-  }
-};
-
-const ensureUsersColumns = async () => {
-  const columns = [
-    { name: "email_verified", definition: "TINYINT(1) NOT NULL DEFAULT 0" },
-    { name: "email_verification_token_hash", definition: "VARCHAR(255) NULL" },
-    { name: "email_verification_sent_at", definition: "DATETIME NULL" },
-    { name: "email_verified_at", definition: "DATETIME NULL" },
-    { name: "password_reset_token_hash", definition: "VARCHAR(255) NULL" },
-    { name: "password_reset_sent_at", definition: "DATETIME NULL" },
-  ];
-
-  try {
-    const [rows] = await pool.query(
-      `
-      SELECT COLUMN_NAME
-      FROM INFORMATION_SCHEMA.COLUMNS
-      WHERE TABLE_SCHEMA = DATABASE()
-        AND TABLE_NAME = 'users'
-      `,
-    );
-    const existing = new Set(rows.map((row) => row.COLUMN_NAME));
-
-    for (const column of columns) {
-      if (!existing.has(column.name)) {
-        await pool.query(
-          `ALTER TABLE users ADD COLUMN ${column.name} ${column.definition}`,
-        );
-      }
-    }
-  } catch (err) {
-    console.error("Users columns check failed:", err.message || err);
-  }
-};
-
-// Orders table managed by Tobi's schema - no auto-create needed
-
-ensureUsersTable().then(ensureUsersColumns);
+// Schema is now managed out-of-band via backend/migrations/001_init.sql
+// applied to Neon with psql. The old MySQL-flavoured `ensureUsersTable` /
+// `ensureUsersColumns` bootstrap that used to live here was removed with the
+// Postgres migration — it relied on `INFORMATION_SCHEMA.COLUMNS`, `TINYINT(1)`
+// and MySQL-shape ALTER statements that don't apply on Neon.
 
 // Health endpoints for load balancers
 app.get("/", (req, res) => res.json({ status: "ok" }));

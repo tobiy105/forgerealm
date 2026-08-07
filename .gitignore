@@ -3,6 +3,11 @@
 # dependencies
 /node_modules
 /backend/node_modules
+
+# One-shot DB migration artefacts — hold user PII and password hashes.
+# _dump-seed.cjs writes _seed.local.sql; both are deleted after the Neon
+# migration is verified. See backend/migrations/README.md.
+/backend/migrations/_seed.local.sql
 /.pnp
 .pnp.*
 .yarn/*

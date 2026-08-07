@@ -23,7 +23,7 @@ const getProducts = asyncHandler(async (req, res) => {
   const [rows] = await pool.query(
     `SELECT p.*, (
         SELECT path FROM product_images img
-        WHERE img.product_id = p.id AND img.is_primary = 1
+        WHERE img.product_id = p.id AND img.is_primary = TRUE
         ORDER BY img.id ASC LIMIT 1
       ) AS primary_image
      FROM products p
@@ -68,11 +68,11 @@ const createProduct = asyncHandler(async (req, res) => {
   try {
     await conn.beginTransaction();
 
-    const [result] = await conn.execute(
-      "INSERT INTO products (name, description, price, stock, created_at) VALUES (?, ?, ?, ?, NOW())",
+    const [productRows] = await conn.execute(
+      "INSERT INTO products (name, description, price, stock, created_at) VALUES (?, ?, ?, ?, NOW()) RETURNING id",
       [name, description || "", priceNum, stockNum],
     );
-    const productId = result.insertId;
+    const productId = productRows[0].id;
 
     const files = req.files || [];
     const imageInserts = [];
@@ -80,13 +80,16 @@ const createProduct = asyncHandler(async (req, res) => {
     for (let i = 0; i < files.length; i++) {
       const file = files[i];
       const paths = await moveFileToProductDir(productId, file);
-      imageInserts.push([productId, paths.relative, i === 0 ? 1 : 0]);
+      imageInserts.push([productId, paths.relative, i === 0]);
     }
 
-    if (imageInserts.length > 0) {
-      await conn.query(
-        "INSERT INTO product_images (product_id, path, is_primary, created_at) VALUES ?",
-        [imageInserts.map((row) => [...row, new Date()])],
+    // Postgres has no mysql2 `VALUES ?` bulk-insert shorthand. At the volumes
+    // this endpoint sees (admin uploading a handful of images per product)
+    // sequential inserts inside the transaction are fine.
+    for (const [pid, filePath, isPrimary] of imageInserts) {
+      await conn.execute(
+        "INSERT INTO product_images (product_id, path, is_primary, created_at) VALUES (?, ?, ?, NOW())",
+        [pid, filePath, isPrimary],
       );
     }
 
