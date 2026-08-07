@@ -156,9 +156,7 @@ async function handleCheckoutComplete(stripe, session) {
         pdfBuffer,
       ],
     );
-    console.log(
-      `Receipt ${invoiceNumber} stored for order #${orderPk}`,
-    );
+    console.log(`Receipt ${invoiceNumber} stored for order #${orderPk}`);
 
     // Email customer with PDF attached
     if (customerEmail) {

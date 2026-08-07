@@ -5,7 +5,9 @@
 // single-quoted strings or plpgsql $$ blocks). Enough for the schema and
 // seed files we ship — do NOT feed it hand-written dump files with random
 // procedural code.
-require("dotenv").config({ path: require("path").join(__dirname, "..", ".env") });
+require("dotenv").config({
+  path: require("path").join(__dirname, "..", ".env"),
+});
 const { Client } = require("pg");
 const fs = require("fs");
 const path = require("path");

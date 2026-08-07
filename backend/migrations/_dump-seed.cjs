@@ -3,7 +3,9 @@
 // The content NEVER surfaces to the tool transcript — it's written to disk and
 // then imported into Neon via `psql -f`. Delete both files after the migration
 // is verified.
-require("dotenv").config({ path: require("path").join(__dirname, "..", ".env") });
+require("dotenv").config({
+  path: require("path").join(__dirname, "..", ".env"),
+});
 const mysql = require("mysql2/promise");
 const fs = require("fs");
 const path = require("path");
