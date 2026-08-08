@@ -60,12 +60,12 @@ ForgeRealm is a UK-based 3D printing and design studio that blends creativity, p
 
 This repo powers **[forgerealm.co.uk](https://forgerealm.co.uk)** end to end, frontend through checkout to receipts.
 
-| Layer        | Stack                                                   |
-| ------------ | ------------------------------------------------------- |
-| **Frontend** | Astro 5, React 19, Tailwind 3, Framer Motion, Spline 3D |
-| **Backend**  | Node + Express, MySQL, JWT auth                         |
-| **Email**    | Brevo (transactional + mailing list)                    |
-| **Payments** | Stripe Checkout + webhooks, PDF invoices via PDFKit     |
+| Layer        | Stack                                               |
+| ------------ | ---------------------------------------------------- |
+| **Frontend** | Astro 5, React 19, Tailwind 3, Framer Motion         |
+| **Backend**  | Node + Express, Postgres (Neon), JWT auth            |
+| **Email**    | Brevo (transactional + mailing list)                 |
+| **Payments** | Stripe Checkout + webhooks, PDF invoices via PDFKit  |
 
 ### Run it locally
 
