@@ -290,7 +290,7 @@ const stalls: Stall[] = [
   {
     label: "Stall Session 12",
     date: "18 July 2026",
-    title: "City centre and the carnival: Albion and the Afrikan Market",
+    title: "Branching out",
     location: "Albion Place & Afrikan Market, Leeds",
     images: [
       {

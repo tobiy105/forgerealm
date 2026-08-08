@@ -371,7 +371,7 @@ export default function Work() {
               fontStyle: "italic",
             }}
           >
-            Some of our most popular prints
+            This month&apos;s highlights
           </p>
         </div>
       </div>
