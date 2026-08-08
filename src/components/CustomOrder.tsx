@@ -201,6 +201,29 @@ Thanks!`,
       </div>
 
       <div className="relative mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
+        {/* Brand mark above the main container. */}
+        <div className="mb-8 flex justify-center sm:justify-start">
+          <a
+            href="/"
+            className="inline-flex items-center gap-3 group"
+            aria-label="ForgeRealm home"
+          >
+            <img
+              src="/frlogorv.png"
+              alt=""
+              aria-hidden="true"
+              className="h-11 w-11 sm:h-12 sm:w-12 drop-shadow-[0_0_15px_rgba(59,130,246,0.3)] transition-all duration-500 group-hover:drop-shadow-[0_0_25px_rgba(59,130,246,0.6)] group-hover:rotate-6"
+              decoding="async"
+            />
+            <span
+              className="text-xl sm:text-2xl font-semibold text-white leading-none"
+              style={{ fontFamily: "'Cinzel', serif" }}
+            >
+              Forge<span className="text-cyan-300">Realm</span>
+            </span>
+          </a>
+        </div>
+
         {/* Main container */}
         <div className="rounded-2xl border border-white/[0.08] bg-[#0a0f1a]/80 backdrop-blur-2xl shadow-2xl shadow-black/30 p-6 sm:p-10 space-y-10">
           {/* Breadcrumb */}
