@@ -9,6 +9,29 @@ import React, {
 import { motion, AnimatePresence } from "framer-motion";
 import { products, type Product } from "../../data/products";
 
+/* Backend API base. Matches the detection used across the rest of the site
+   (see ShopNavbar). On localhost, uses PUBLIC_API_URL_LOCAL; otherwise
+   PUBLIC_API_URL. Kept as a function so window.location can be read at
+   call time rather than module-init time. */
+const _envApiBase =
+  typeof import.meta !== "undefined" &&
+  import.meta.env &&
+  typeof import.meta.env.PUBLIC_API_URL === "string"
+    ? import.meta.env.PUBLIC_API_URL.trim().replace(/\/$/, "")
+    : "";
+const _envApiBaseLocal =
+  typeof import.meta !== "undefined" &&
+  import.meta.env &&
+  typeof import.meta.env.PUBLIC_API_URL_LOCAL === "string"
+    ? import.meta.env.PUBLIC_API_URL_LOCAL.trim().replace(/\/$/, "")
+    : "";
+function apiBase(): string {
+  if (typeof window === "undefined") return _envApiBase;
+  return window.location.origin.startsWith("http://localhost")
+    ? _envApiBaseLocal || "http://localhost:8080"
+    : _envApiBase || "";
+}
+
 /* ═══════════════════════════ Cart Context ═══════════════════════════ */
 
 interface CartItem {
@@ -456,6 +479,7 @@ function ShopHeader({ onCartOpen }: { onCartOpen: () => void }) {
   const { count } = useCart();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [isAuthed, setIsAuthed] = useState(false);
 
   useEffect(() => {
     const fn = () => setScrolled(window.scrollY > 20);
@@ -463,6 +487,47 @@ function ShopHeader({ onCartOpen }: { onCartOpen: () => void }) {
     window.addEventListener("scroll", fn, { passive: true });
     return () => window.removeEventListener("scroll", fn);
   }, []);
+
+  // Track sign-in / sign-out so the logout button appears the moment a
+  // session lands (and disappears after clearing). Verifies the token
+  // against /api/auth/me so a stale token that the server has rejected
+  // doesn't leave the button showing.
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const check = () => {
+      const token = localStorage.getItem("forgerealm_admin_token");
+      if (!token) {
+        setIsAuthed(false);
+        return;
+      }
+      fetch(`${apiBase()}/api/auth/me`, {
+        credentials: "include",
+        headers: { Authorization: `Bearer ${token}` },
+      })
+        .then((res) => setIsAuthed(res.ok))
+        .catch(() => setIsAuthed(false));
+    };
+    check();
+    window.addEventListener("forgerealm-admin-token-changed", check);
+    return () =>
+      window.removeEventListener("forgerealm-admin-token-changed", check);
+  }, []);
+
+  const handleLogout = () => {
+    if (typeof window === "undefined") return;
+    fetch(`${apiBase()}/api/auth/logout`, {
+      method: "POST",
+      credentials: "include",
+    })
+      .catch(() => {})
+      .finally(() => {
+        localStorage.removeItem("forgerealm_admin_token");
+        window.dispatchEvent(new Event("forgerealm-admin-token-changed"));
+        setIsAuthed(false);
+        setMobileOpen(false);
+        window.location.href = "/shop";
+      });
+  };
 
   return (
     <header
@@ -516,6 +581,29 @@ function ShopHeader({ onCartOpen }: { onCartOpen: () => void }) {
           >
             Profile
           </a>
+          {isAuthed && (
+            <button
+              type="button"
+              onClick={handleLogout}
+              className="ml-1 inline-flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm text-red-300 transition-all hover:bg-red-500/[0.08] hover:text-red-200"
+              aria-label="Log out"
+            >
+              <svg
+                className="h-4 w-4"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={1.6}
+                  d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+                />
+              </svg>
+              Logout
+            </button>
+          )}
           <div className="ml-2 h-5 w-px bg-white/10" />
           <button
             onClick={onCartOpen}
@@ -647,6 +735,28 @@ function ShopHeader({ onCartOpen }: { onCartOpen: () => void }) {
               >
                 Profile
               </a>
+              {isAuthed && (
+                <button
+                  type="button"
+                  onClick={handleLogout}
+                  className="mt-1 flex w-full items-center gap-2 rounded-lg border border-red-400/20 bg-red-500/[0.06] px-3 py-2 text-left text-sm font-medium text-red-200 hover:bg-red-500/[0.12] hover:text-red-100"
+                >
+                  <svg
+                    className="h-4 w-4"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={1.6}
+                      d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+                    />
+                  </svg>
+                  Logout
+                </button>
+              )}
             </div>
           </motion.div>
         )}
