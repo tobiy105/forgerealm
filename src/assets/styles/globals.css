@@ -653,28 +653,6 @@ pre {
   display: none;
 }
 
-/* Global styles for Spline scaling */
-.spline-scene {
-  width: 100vw; /* Full viewport width */
-  height: 100vh; /* Full viewport height */
-}
-
-/* For tablets (max-width: 1024px), reduce the size a bit */
-@media (max-width: 1024px) {
-  .spline-scene {
-    width: 85vw;
-    height: 85vh;
-  }
-}
-
-/* For mobile screens (max-width: 640px), scale down even more */
-@media (max-width: 640px) {
-  .spline-scene {
-    width: 75vw;
-    height: 75vh;
-  }
-}
-
 /* Smooth spinning animation */
 
 /* Soft pulse animation */
@@ -701,16 +679,6 @@ pre {
   padding-top: 12px;
   padding-bottom: 12px;
   font-size: 1.125rem;
-}
-
-/* Hero spline positioning */
-.hero-spline {
-  position: absolute !important;
-  top: 0;
-  left: 0;
-  width: 100vw !important;
-  height: 100vh !important;
-  object-fit: cover;
 }
 
 .animate-fade-in {
