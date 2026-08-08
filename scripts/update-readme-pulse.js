@@ -32,7 +32,10 @@ function formatDateUtc(date) {
 function buildPulseSection() {
   const now = new Date();
   const today = formatDateUtc(now);
-  const commitDateHistory = safeRun("git log --reverse --format=%ad --date=short", "");
+  const commitDateHistory = safeRun(
+    "git log --reverse --format=%ad --date=short",
+    "",
+  );
   const firstCommitDate = commitDateHistory.split("\n").find(Boolean) || "";
   const totalCommits = safeRun("git rev-list --count HEAD", "0");
   const trackedFilesOutput = safeRun("git ls-files", "");
@@ -40,10 +43,16 @@ function buildPulseSection() {
     trackedFilesOutput
       .split("\n")
       .map((line) => line.trim())
-      .filter(Boolean).length
+      .filter(Boolean).length,
   );
-  const lastCommit = safeRun("git log -1 --pretty=format:\"%h - %s (%ad)\" --date=short", "n/a");
-  const recentCommitsRaw = safeRun("git log -5 --pretty=format:%ad%x09%h%x09%s --date=short", "");
+  const lastCommit = safeRun(
+    'git log -1 --pretty=format:"%h - %s (%ad)" --date=short',
+    "n/a",
+  );
+  const recentCommitsRaw = safeRun(
+    "git log -5 --pretty=format:%ad%x09%h%x09%s --date=short",
+    "",
+  );
   const recentCommitsLines = recentCommitsRaw
     .split("\n")
     .map((line) => line.trim())
@@ -52,7 +61,8 @@ function buildPulseSection() {
       const [date, hash, ...subject] = line.split("\t");
       return `- ${date} | ${hash} | ${subject.join("\t")}`;
     });
-  const recentCommits = recentCommitsLines.length > 0 ? recentCommitsLines.join("\n") : "- none";
+  const recentCommits =
+    recentCommitsLines.length > 0 ? recentCommitsLines.join("\n") : "- none";
 
   return [
     sectionStart,
@@ -81,7 +91,10 @@ function updateReadme() {
 
   const readme = fs.readFileSync(readmePath, "utf8");
   const pulse = buildPulseSection();
-  const blockPattern = new RegExp(`${sectionStart}[\\s\\S]*?${sectionEnd}`, "m");
+  const blockPattern = new RegExp(
+    `${sectionStart}[\\s\\S]*?${sectionEnd}`,
+    "m",
+  );
 
   let nextReadme;
   if (blockPattern.test(readme)) {

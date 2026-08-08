@@ -1,16 +1,19 @@
-const jwt = require('jsonwebtoken');
-const crypto = require('crypto');
-const bcrypt = require('bcrypt');
-const { ApiError, asyncHandler } = require('../utils/errors');
-const { sendBrevoEmail } = require('../utils/email');
-const pool = require('../config/db');
+const jwt = require("jsonwebtoken");
+const crypto = require("crypto");
+const bcrypt = require("bcrypt");
+const { ApiError, asyncHandler } = require("../utils/errors");
+const { sendBrevoEmail } = require("../utils/email");
+const pool = require("../config/db");
 
 const BCRYPT_ROUNDS = 12;
 
 /* ── Password helpers (rolling migration from SHA256 → bcrypt) ── */
 
 const legacySha256 = (password, salt) =>
-  crypto.createHash('sha256').update(password + salt).digest('hex');
+  crypto
+    .createHash("sha256")
+    .update(password + salt)
+    .digest("hex");
 
 /**
  * Verify a password against a stored hash.
@@ -18,49 +21,55 @@ const legacySha256 = (password, salt) =>
  * Returns { valid: boolean, needsRehash: boolean }.
  */
 const verifyPassword = async (plain, hash, legacySalt) => {
-  if (hash.startsWith('$2')) {
+  if (hash.startsWith("$2")) {
     const valid = await bcrypt.compare(plain, hash);
     return { valid, needsRehash: false };
   }
   // Legacy SHA256 path
-  const computed = legacySha256(plain, legacySalt || '');
+  const computed = legacySha256(plain, legacySalt || "");
   return { valid: computed === hash, needsRehash: true };
 };
 
 /** Silently upgrade a legacy hash to bcrypt after successful login. */
-const rehashIfNeeded = async (userId, plain, table = 'users') => {
+const rehashIfNeeded = async (userId, plain, table = "users") => {
   const newHash = await bcrypt.hash(plain, BCRYPT_ROUNDS);
-  await pool.query(`UPDATE ${table} SET password_hash = ?, salt = '' WHERE id = ?`, [newHash, userId]);
+  await pool.query(
+    `UPDATE ${table} SET password_hash = ?, salt = '' WHERE id = ?`,
+    [newHash, userId],
+  );
 };
 
 const getDbAdmin = async (username) => {
   const [rows] = await pool.query(
-    'SELECT id, username, password_hash, salt, role FROM admin_users WHERE username = ? LIMIT 1',
-    [username]
+    "SELECT id, username, password_hash, salt, role FROM admin_users WHERE username = ? LIMIT 1",
+    [username],
   );
   return rows[0];
 };
 
 const createUser = async ({ username, email, password }) => {
   const passwordHash = await bcrypt.hash(password, BCRYPT_ROUNDS);
-  const [result] = await pool.query(
-    'INSERT INTO users (username, email, password_hash, salt, role, email_verified, created_at) VALUES (?, ?, ?, ?, ?, ?, NOW())',
-    [username, email || null, passwordHash, '', 'user', 0]
+  // Postgres: RETURNING id gives back the freshly-assigned identity column.
+  // (mysql2 exposed this on `result.insertId`, which our pg pool wrapper does not.)
+  const [rows] = await pool.query(
+    "INSERT INTO users (username, email, password_hash, salt, role, email_verified, created_at) VALUES (?, ?, ?, ?, ?, ?, NOW()) RETURNING id",
+    [username, email || null, passwordHash, "", "user", false],
   );
-  return { id: result.insertId, username, email, role: 'user' };
+  return { id: rows[0].id, username, email, role: "user" };
 };
 
-const createVerificationToken = () => crypto.randomBytes(32).toString('hex');
-const hashToken = (token) => crypto.createHash('sha256').update(token).digest('hex');
+const createVerificationToken = () => crypto.randomBytes(32).toString("hex");
+const hashToken = (token) =>
+  crypto.createHash("sha256").update(token).digest("hex");
 
 const sendVerificationEmail = async ({ toEmail, toName, token }) => {
-  const appBaseUrl = process.env.APP_BASE_URL || 'https://forgerealm.co.uk';
+  const appBaseUrl = process.env.APP_BASE_URL || "https://forgerealm.co.uk";
   const verifyUrl = `${appBaseUrl}/shop/verify?token=${encodeURIComponent(token)}`;
 
   await sendBrevoEmail({
     to: toEmail,
     toName: toName || toEmail,
-    subject: 'Activate your ForgeRealm access',
+    subject: "Activate your ForgeRealm access",
     htmlContent: `
       <div style="margin:0;padding:0;background:#0b1220;font-family:'Trebuchet MS',Arial,sans-serif;color:#e2e8f0;">
         <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#0b1220;padding:32px 12px;">
@@ -89,7 +98,7 @@ const sendVerificationEmail = async ({ toEmail, toName, token }) => {
                       Light the ForgeRealm gateway
                     </h1>
                     <p style="margin:12px 0 0;font-size:15px;color:#cbd5f5;">
-                      Hey ${toName || 'Maker'}, your build slot is ready. Verify your email to unlock the ForgeRealm workshop.
+                      Hey ${toName || "Maker"}, your build slot is ready. Verify your email to unlock the ForgeRealm workshop.
                     </p>
                   </td>
                 </tr>
@@ -158,7 +167,7 @@ const addBrevoContact = async ({ email, username }) => {
   const listId = process.env.BREVO_LIST_ID;
 
   if (!apiKey) {
-    throw new ApiError(500, 'BREVO_API_KEY is not configured');
+    throw new ApiError(500, "BREVO_API_KEY is not configured");
   }
 
   const payload = {
@@ -173,69 +182,74 @@ const addBrevoContact = async ({ email, username }) => {
     payload.listIds = [Number(listId)];
   }
 
-  const response = await fetch('https://api.brevo.com/v3/contacts', {
-    method: 'POST',
+  const response = await fetch("https://api.brevo.com/v3/contacts", {
+    method: "POST",
     headers: {
-      'Content-Type': 'application/json',
-      'api-key': apiKey,
+      "Content-Type": "application/json",
+      "api-key": apiKey,
     },
     body: JSON.stringify(payload),
   });
 
   if (!response.ok) {
     const body = await response.json().catch(() => ({}));
-    console.error('Brevo contact create failed', {
+    console.error("Brevo contact create failed", {
       status: response.status,
       message: body.message,
       code: body.code,
     });
-    throw new ApiError(502, body.message || 'Failed to add Brevo contact');
+    throw new ApiError(502, body.message || "Failed to add Brevo contact");
   }
 };
 
 const login = asyncHandler(async (req, res) => {
   if (!req.user) {
-    throw new ApiError(401, 'Invalid credentials');
+    throw new ApiError(401, "Invalid credentials");
   }
   const jwtSecret = process.env.JWT_SECRET;
-  if (!jwtSecret) throw new ApiError(500, 'JWT_SECRET is not configured');
+  if (!jwtSecret) throw new ApiError(500, "JWT_SECRET is not configured");
 
   const token = jwt.sign(
     { role: req.user.role, username: req.user.username, userId: req.user.id },
     jwtSecret,
-    { expiresIn: '12h' }
+    { expiresIn: "12h" },
   );
 
   if (req.session) {
     await new Promise((resolve) => req.session.save(() => resolve()));
   }
 
-  res.json({ token, user: { username: req.user.username, role: req.user.role } });
+  res.json({
+    token,
+    user: { username: req.user.username, role: req.user.role },
+  });
 });
 
 const register = asyncHandler(async (req, res) => {
   const { username, email, password } = req.body;
   if (!username || !password || !email) {
-    throw new ApiError(400, 'Username, email, and password are required');
+    throw new ApiError(400, "Username, email, and password are required");
   }
-  if (username.length < 3) throw new ApiError(400, 'Username must be at least 3 characters');
-  if (password.length < 8) throw new ApiError(400, 'Password must be at least 8 characters');
+  if (username.length < 3)
+    throw new ApiError(400, "Username must be at least 3 characters");
+  if (password.length < 8)
+    throw new ApiError(400, "Password must be at least 8 characters");
 
   const [existingUsername] = await pool.query(
-    'SELECT id FROM users WHERE username = ? LIMIT 1',
-    [username]
+    "SELECT id FROM users WHERE username = ? LIMIT 1",
+    [username],
   );
   if (existingUsername.length > 0) {
-    throw new ApiError(409, 'Username already exists');
+    throw new ApiError(409, "Username already exists");
   }
 
   if (email) {
     const [existingEmail] = await pool.query(
-      'SELECT id FROM users WHERE email = ? LIMIT 1',
-      [email]
+      "SELECT id FROM users WHERE email = ? LIMIT 1",
+      [email],
     );
     if (existingEmail.length > 0) {
-      throw new ApiError(409, 'Email already exists');
+      throw new ApiError(409, "Email already exists");
     }
   }
 
@@ -244,8 +258,8 @@ const register = asyncHandler(async (req, res) => {
   const tokenHash = hashToken(token);
 
   await pool.query(
-    'UPDATE users SET email_verification_token_hash = ?, email_verification_sent_at = NOW() WHERE id = ?',
-    [tokenHash, user.id]
+    "UPDATE users SET email_verification_token_hash = ?, email_verification_sent_at = NOW() WHERE id = ?",
+    [tokenHash, user.id],
   );
 
   await sendVerificationEmail({ toEmail: email, toName: username, token });
@@ -254,19 +268,19 @@ const register = asyncHandler(async (req, res) => {
 });
 
 const verifyEmail = asyncHandler(async (req, res) => {
-  const token = String(req.query.token || '');
+  const token = String(req.query.token || "");
   if (!token) {
-    throw new ApiError(400, 'Verification token is required');
+    throw new ApiError(400, "Verification token is required");
   }
 
   const tokenHash = hashToken(token);
   const [rows] = await pool.query(
-    'SELECT id, email, username, email_verified, email_verification_sent_at FROM users WHERE email_verification_token_hash = ? LIMIT 1',
-    [tokenHash]
+    "SELECT id, email, username, email_verified, email_verification_sent_at FROM users WHERE email_verification_token_hash = ? LIMIT 1",
+    [tokenHash],
   );
   const user = rows[0];
   if (!user) {
-    throw new ApiError(400, 'Invalid or expired verification token');
+    throw new ApiError(400, "Invalid or expired verification token");
   }
 
   // Token expires after 24 hours
@@ -275,10 +289,13 @@ const verifyEmail = asyncHandler(async (req, res) => {
     const hoursElapsed = (Date.now() - sentAt.getTime()) / (1000 * 60 * 60);
     if (hoursElapsed > 24) {
       await pool.query(
-        'UPDATE users SET email_verification_token_hash = NULL, email_verification_sent_at = NULL WHERE id = ?',
-        [user.id]
+        "UPDATE users SET email_verification_token_hash = NULL, email_verification_sent_at = NULL WHERE id = ?",
+        [user.id],
       );
-      throw new ApiError(400, 'Verification link has expired. Please register again.');
+      throw new ApiError(
+        400,
+        "Verification link has expired. Please register again.",
+      );
     }
   }
 
@@ -286,20 +303,20 @@ const verifyEmail = asyncHandler(async (req, res) => {
     await pool.query(
       `
       UPDATE users
-      SET email_verified = 1,
+      SET email_verified = TRUE,
           email_verified_at = NOW(),
           email_verification_token_hash = NULL,
           email_verification_sent_at = NULL
       WHERE id = ?
       `,
-      [user.id]
+      [user.id],
     );
   }
 
   if (user.email) {
     await addBrevoContact({ email: user.email, username: user.username });
   } else {
-    console.warn('Brevo contact skipped: user has no email');
+    console.warn("Brevo contact skipped: user has no email");
   }
 
   res.json({ success: true });
@@ -311,23 +328,23 @@ const me = asyncHandler(async (req, res) => {
 });
 
 const logout = asyncHandler(async (req, res) => {
-  if (typeof req.logout === 'function') {
+  if (typeof req.logout === "function") {
     req.logout(() => {
-      if (req.session && typeof req.session.destroy === 'function') {
+      if (req.session && typeof req.session.destroy === "function") {
         req.session.destroy(() => {
-          res.clearCookie('fr.sid');
-          res.json({ message: 'Logged out' });
+          res.clearCookie("fr.sid");
+          res.json({ message: "Logged out" });
         });
         return;
       }
-      res.clearCookie('fr.sid');
-      res.json({ message: 'Logged out' });
+      res.clearCookie("fr.sid");
+      res.json({ message: "Logged out" });
     });
     return;
   }
 
-  res.clearCookie('fr.sid');
-  res.json({ message: 'Logged out' });
+  res.clearCookie("fr.sid");
+  res.json({ message: "Logged out" });
 });
 
 /* ═══════════════════════════ Password Change ═══════════════════════════ */
@@ -335,29 +352,39 @@ const logout = asyncHandler(async (req, res) => {
 const updatePassword = asyncHandler(async (req, res) => {
   const { currentPassword, newPassword } = req.body;
   if (!currentPassword || !newPassword) {
-    throw new ApiError(400, 'Current password and new password are required');
+    throw new ApiError(400, "Current password and new password are required");
   }
   if (newPassword.length < 8) {
-    throw new ApiError(400, 'New password must be at least 8 characters');
+    throw new ApiError(400, "New password must be at least 8 characters");
   }
 
   const userId = req.user.userId || req.user.id;
-  if (!userId || String(userId).startsWith('env:')) {
-    throw new ApiError(400, 'Password change is not available for environment-based accounts');
+  if (!userId || String(userId).startsWith("env:")) {
+    throw new ApiError(
+      400,
+      "Password change is not available for environment-based accounts",
+    );
   }
 
   const [rows] = await pool.query(
-    'SELECT id, password_hash, salt FROM users WHERE id = ? LIMIT 1',
-    [userId]
+    "SELECT id, password_hash, salt FROM users WHERE id = ? LIMIT 1",
+    [userId],
   );
   const user = rows[0];
-  if (!user) throw new ApiError(404, 'User not found');
+  if (!user) throw new ApiError(404, "User not found");
 
-  const { valid } = await verifyPassword(currentPassword, user.password_hash, user.salt);
-  if (!valid) throw new ApiError(401, 'Current password is incorrect');
+  const { valid } = await verifyPassword(
+    currentPassword,
+    user.password_hash,
+    user.salt,
+  );
+  if (!valid) throw new ApiError(401, "Current password is incorrect");
 
   const newHash = await bcrypt.hash(newPassword, BCRYPT_ROUNDS);
-  await pool.query("UPDATE users SET password_hash = ?, salt = '' WHERE id = ?", [newHash, userId]);
+  await pool.query(
+    "UPDATE users SET password_hash = ?, salt = '' WHERE id = ?",
+    [newHash, userId],
+  );
 
   res.json({ success: true });
 });
@@ -366,14 +393,14 @@ const updatePassword = asyncHandler(async (req, res) => {
 
 const requestPasswordReset = asyncHandler(async (req, res) => {
   const { email } = req.body;
-  if (!email) throw new ApiError(400, 'Email is required');
+  if (!email) throw new ApiError(400, "Email is required");
 
   // Always respond with success to prevent email enumeration
   const respond = () => res.json({ success: true });
 
   const [rows] = await pool.query(
-    'SELECT id, username, email FROM users WHERE email = ? LIMIT 1',
-    [email]
+    "SELECT id, username, email FROM users WHERE email = ? LIMIT 1",
+    [email],
   );
   const user = rows[0];
   if (!user) return respond();
@@ -382,18 +409,18 @@ const requestPasswordReset = asyncHandler(async (req, res) => {
   const tokenHash = hashToken(token);
 
   await pool.query(
-    'UPDATE users SET password_reset_token_hash = ?, password_reset_sent_at = NOW() WHERE id = ?',
-    [tokenHash, user.id]
+    "UPDATE users SET password_reset_token_hash = ?, password_reset_sent_at = NOW() WHERE id = ?",
+    [tokenHash, user.id],
   );
 
-  const appBaseUrl = process.env.APP_BASE_URL || 'https://forgerealm.co.uk';
+  const appBaseUrl = process.env.APP_BASE_URL || "https://forgerealm.co.uk";
   const resetUrl = `${appBaseUrl}/shop/reset-password?token=${encodeURIComponent(token)}`;
 
   try {
     await sendBrevoEmail({
       to: user.email,
       toName: user.username,
-      subject: 'Reset your ForgeRealm password',
+      subject: "Reset your ForgeRealm password",
       htmlContent: `
         <div style="margin:0;padding:0;background:#0b1220;font-family:'Trebuchet MS',Arial,sans-serif;color:#e2e8f0;">
           <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#0b1220;padding:32px 12px;">
@@ -452,7 +479,7 @@ const requestPasswordReset = asyncHandler(async (req, res) => {
       `,
     });
   } catch (err) {
-    console.error('Failed to send password reset email:', err.message);
+    console.error("Failed to send password reset email:", err.message);
   }
 
   respond();
@@ -461,20 +488,20 @@ const requestPasswordReset = asyncHandler(async (req, res) => {
 const resetPassword = asyncHandler(async (req, res) => {
   const { token, newPassword } = req.body;
   if (!token || !newPassword) {
-    throw new ApiError(400, 'Token and new password are required');
+    throw new ApiError(400, "Token and new password are required");
   }
   if (newPassword.length < 8) {
-    throw new ApiError(400, 'Password must be at least 8 characters');
+    throw new ApiError(400, "Password must be at least 8 characters");
   }
 
   const tokenHash = hashToken(token);
   const [rows] = await pool.query(
-    'SELECT id, password_reset_sent_at FROM users WHERE password_reset_token_hash = ? LIMIT 1',
-    [tokenHash]
+    "SELECT id, password_reset_sent_at FROM users WHERE password_reset_token_hash = ? LIMIT 1",
+    [tokenHash],
   );
   const user = rows[0];
   if (!user) {
-    throw new ApiError(400, 'Invalid or expired reset link');
+    throw new ApiError(400, "Invalid or expired reset link");
   }
 
   // Check 1 hour expiry
@@ -483,24 +510,34 @@ const resetPassword = asyncHandler(async (req, res) => {
     const hoursElapsed = (Date.now() - sentAt.getTime()) / (1000 * 60 * 60);
     if (hoursElapsed > 1) {
       await pool.query(
-        'UPDATE users SET password_reset_token_hash = NULL, password_reset_sent_at = NULL WHERE id = ?',
-        [user.id]
+        "UPDATE users SET password_reset_token_hash = NULL, password_reset_sent_at = NULL WHERE id = ?",
+        [user.id],
       );
-      throw new ApiError(400, 'Reset link has expired. Please request a new one.');
+      throw new ApiError(
+        400,
+        "Reset link has expired. Please request a new one.",
+      );
     }
   }
 
   const newHash = await bcrypt.hash(newPassword, BCRYPT_ROUNDS);
   await pool.query(
     "UPDATE users SET password_hash = ?, salt = '', password_reset_token_hash = NULL, password_reset_sent_at = NULL WHERE id = ?",
-    [newHash, user.id]
+    [newHash, user.id],
   );
 
   res.json({ success: true });
 });
 
 module.exports = {
-  login, register, me, logout, verifyEmail,
-  verifyPassword, rehashIfNeeded,
-  updatePassword, requestPasswordReset, resetPassword,
+  login,
+  register,
+  me,
+  logout,
+  verifyEmail,
+  verifyPassword,
+  rehashIfNeeded,
+  updatePassword,
+  requestPasswordReset,
+  resetPassword,
 };

@@ -1,32 +1,41 @@
-import path from 'path';
-import { fileURLToPath } from 'url';
+import path from "path";
+import { fileURLToPath } from "url";
 
-import { defineConfig } from 'astro/config';
+import { defineConfig } from "astro/config";
 
-import react from '@astrojs/react';
-import sitemap from '@astrojs/sitemap';
-import tailwind from '@astrojs/tailwind';
-import mdx from '@astrojs/mdx';
-import partytown from '@astrojs/partytown';
-import icon from 'astro-icon';
-import compress from 'astro-compress';
-import node from '@astrojs/node';
-import type { AstroIntegration } from 'astro';
+import react from "@astrojs/react";
+import sitemap from "@astrojs/sitemap";
+import tailwind from "@astrojs/tailwind";
+import mdx from "@astrojs/mdx";
+import partytown from "@astrojs/partytown";
+import icon from "astro-icon";
+import compress from "astro-compress";
+import node from "@astrojs/node";
+import type { AstroIntegration } from "astro";
 
-import astrowind from './vendor/integration';
+import astrowind from "./vendor/integration";
 
-import { readingTimeRemarkPlugin, responsiveTablesRehypePlugin, lazyImagesRehypePlugin } from './src/utils/frontmatter';
-
+import {
+  readingTimeRemarkPlugin,
+  responsiveTablesRehypePlugin,
+  lazyImagesRehypePlugin,
+} from "./src/utils/frontmatter";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const hasExternalScripts = false;
-const whenExternalScripts = (items: (() => AstroIntegration) | (() => AstroIntegration)[] = []) =>
-  hasExternalScripts ? (Array.isArray(items) ? items.map((item) => item()) : [items()]) : [];
+const whenExternalScripts = (
+  items: (() => AstroIntegration) | (() => AstroIntegration)[] = [],
+) =>
+  hasExternalScripts
+    ? Array.isArray(items)
+      ? items.map((item) => item())
+      : [items()]
+    : [];
 
 export default defineConfig({
-  output: 'static',
-  adapter: node({ mode: 'standalone' }),
+  output: "static",
+  adapter: node({ mode: "standalone" }),
 
   integrations: [
     react(),
@@ -37,31 +46,31 @@ export default defineConfig({
     mdx(),
     icon({
       include: {
-        tabler: ['*'],
-        'flat-color-icons': [
-          'template',
-          'gallery',
-          'approval',
-          'document',
-          'advertising',
-          'currency-exchange',
-          'voice-presentation',
-          'business-contact',
-          'database',
+        tabler: ["*"],
+        "flat-color-icons": [
+          "template",
+          "gallery",
+          "approval",
+          "document",
+          "advertising",
+          "currency-exchange",
+          "voice-presentation",
+          "business-contact",
+          "database",
         ],
       },
     }),
 
     ...whenExternalScripts(() =>
       partytown({
-        config: { forward: ['dataLayer.push'] },
-      })
+        config: { forward: ["dataLayer.push"] },
+      }),
     ),
 
     compress({
       CSS: true,
       HTML: {
-        'html-minifier-terser': {
+        "html-minifier-terser": {
           removeAttributeQuotes: false,
         },
       },
@@ -72,12 +81,12 @@ export default defineConfig({
     }),
 
     astrowind({
-      config: './src/config.yaml',
+      config: "./src/config.yaml",
     }),
   ],
 
   image: {
-    domains: ['cdn.pixabay.com'],
+    domains: ["cdn.pixabay.com"],
   },
 
   markdown: {
@@ -88,8 +97,8 @@ export default defineConfig({
   vite: {
     resolve: {
       alias: {
-        '~': path.resolve(__dirname, './src'),
-        '@': path.resolve(__dirname, './src'),
+        "~": path.resolve(__dirname, "./src"),
+        "@": path.resolve(__dirname, "./src"),
       },
     },
     server: {
@@ -97,8 +106,7 @@ export default defineConfig({
     },
     optimizeDeps: {
       // page-flip ships a UMD as its main entry; force Vite to pre-bundle both
-      include: ['react-pageflip', 'page-flip'],
+      include: ["react-pageflip", "page-flip"],
     },
   },
-
 });

@@ -40,7 +40,11 @@ export default function ShopGateHero() {
         ForgeRealm Shop
       </div>
       <div className="relative flex items-center justify-center">
-        <Lottie animationData={animationData} loop className="h-[16rem] w-[16rem] sm:h-[24rem] sm:w-[24rem] lg:h-[30rem] lg:w-[30rem]" />
+        <Lottie
+          animationData={animationData}
+          loop
+          className="h-[16rem] w-[16rem] sm:h-[24rem] sm:w-[24rem] lg:h-[30rem] lg:w-[30rem]"
+        />
       </div>
       <div className="absolute bottom-6 left-6 right-6 rounded-2xl border border-white/15 bg-white/10 px-4 py-3 text-xs uppercase tracking-[0.3em] text-blue-200 backdrop-blur">
         Shop preview loading

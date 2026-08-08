@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
 
 /**
  * Big CTA button that jumps the reader to the latest stall on the
@@ -7,22 +7,22 @@ import { useEffect, useState } from 'react';
  */
 export default function JumpToLatest() {
   const [mounted, setMounted] = useState(false);
-  const [label, setLabel] = useState<string>('');
-  const [date, setDate] = useState<string>('');
+  const [label, setLabel] = useState<string>("");
+  const [date, setDate] = useState<string>("");
 
   useEffect(() => {
     setMounted(true);
-    const target = document.querySelector<HTMLElement>('[data-latest-stall]');
+    const target = document.querySelector<HTMLElement>("[data-latest-stall]");
     if (target) {
-      setLabel(target.dataset.stallLabel ?? 'latest post');
-      setDate(target.dataset.stallDate ?? '');
+      setLabel(target.dataset.stallLabel ?? "latest post");
+      setDate(target.dataset.stallDate ?? "");
     }
   }, []);
 
   const jump = () => {
-    const target = document.querySelector<HTMLElement>('[data-latest-stall]');
+    const target = document.querySelector<HTMLElement>("[data-latest-stall]");
     if (!target) return;
-    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    target.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
   if (!mounted) return null;
@@ -31,7 +31,9 @@ export default function JumpToLatest() {
     <button
       type="button"
       onClick={jump}
-      aria-label={date ? `Jump to latest post, ${label}, ${date}` : 'Jump to latest post'}
+      aria-label={
+        date ? `Jump to latest post, ${label}, ${date}` : "Jump to latest post"
+      }
       className="group relative w-full overflow-hidden rounded-2xl border border-cyan-300/30 bg-gradient-to-r from-blue-500/20 via-cyan-500/15 to-blue-500/20 px-6 py-5 sm:px-8 sm:py-6 backdrop-blur-xl shadow-[0_10px_40px_-12px_rgba(34,211,238,0.45)] transition-all hover:-translate-y-0.5 hover:border-cyan-300/60 hover:shadow-[0_14px_50px_-10px_rgba(34,211,238,0.6)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300/80 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0a0f1a]"
     >
       {/* Decorative breathing glows */}
@@ -42,7 +44,7 @@ export default function JumpToLatest() {
       <span
         aria-hidden="true"
         className="pointer-events-none absolute -bottom-10 -left-10 h-28 w-28 rounded-full bg-blue-500/25 blur-3xl animate-pulse motion-reduce:animate-none"
-        style={{ animationDelay: '1.5s' }}
+        style={{ animationDelay: "1.5s" }}
       />
 
       <span className="relative flex flex-wrap items-center justify-between gap-4">
@@ -62,13 +64,26 @@ export default function JumpToLatest() {
             </svg>
           </span>
           <span>
-            <span className="block text-[10px] sm:text-[11px] font-medium uppercase tracking-[0.28em] text-cyan-300/80" style={{ fontFamily: "'Jost', sans-serif" }}>
+            <span
+              className="block text-[10px] sm:text-[11px] font-medium uppercase tracking-[0.28em] text-cyan-300/80"
+              style={{ fontFamily: "'Jost', sans-serif" }}
+            >
               Jump to latest post
             </span>
-            <span className="mt-1 block text-lg sm:text-xl lg:text-2xl text-white" style={{ fontFamily: "'Cinzel', serif" }}>
-              {label || 'Latest stall'}
+            <span
+              className="mt-1 block text-lg sm:text-xl lg:text-2xl text-white"
+              style={{ fontFamily: "'Cinzel', serif" }}
+            >
+              {label || "Latest stall"}
               {date && (
-                <em className="ml-2 text-cyan-300/90" style={{ fontFamily: "'Cormorant Garamond', serif", fontStyle: 'italic', fontWeight: 300 }}>
+                <em
+                  className="ml-2 text-cyan-300/90"
+                  style={{
+                    fontFamily: "'Cormorant Garamond', serif",
+                    fontStyle: "italic",
+                    fontWeight: 300,
+                  }}
+                >
                   {date}
                 </em>
               )}

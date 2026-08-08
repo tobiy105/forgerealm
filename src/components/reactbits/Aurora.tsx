@@ -1,5 +1,5 @@
-import { useEffect, useRef } from 'react';
-import { Renderer, Program, Mesh, Color, Triangle } from 'ogl';
+import { useEffect, useRef } from "react";
+import { Renderer, Program, Mesh, Color, Triangle } from "ogl";
 
 const VERT = `#version 300 es
 in vec2 position;
@@ -91,7 +91,12 @@ interface AuroraProps {
   speed?: number;
 }
 
-export default function Aurora({ colorStops = ['#3b82f6', '#06b6d4', '#3b82f6'], amplitude = 1.0, blend = 0.5, speed = 1.0 }: AuroraProps) {
+export default function Aurora({
+  colorStops = ["#3b82f6", "#06b6d4", "#3b82f6"],
+  amplitude = 1.0,
+  blend = 0.5,
+  speed = 1.0,
+}: AuroraProps) {
   const ctnDom = useRef<HTMLDivElement>(null);
   const propsRef = useRef({ colorStops, amplitude, blend, speed });
   propsRef.current = { colorStops, amplitude, blend, speed };
@@ -100,12 +105,16 @@ export default function Aurora({ colorStops = ['#3b82f6', '#06b6d4', '#3b82f6'],
     const ctn = ctnDom.current;
     if (!ctn) return;
 
-    const renderer = new Renderer({ alpha: true, premultipliedAlpha: true, antialias: true });
+    const renderer = new Renderer({
+      alpha: true,
+      premultipliedAlpha: true,
+      antialias: true,
+    });
     const gl = renderer.gl;
     gl.clearColor(0, 0, 0, 0);
     gl.enable(gl.BLEND);
     gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
-    gl.canvas.style.backgroundColor = 'transparent';
+    gl.canvas.style.backgroundColor = "transparent";
 
     const geometry = new Triangle(gl);
     if (geometry.attributes.uv) delete geometry.attributes.uv;
@@ -116,7 +125,12 @@ export default function Aurora({ colorStops = ['#3b82f6', '#06b6d4', '#3b82f6'],
       uniforms: {
         uTime: { value: 0 },
         uAmplitude: { value: amplitude },
-        uColorStops: { value: colorStops.map(hex => { const c = new Color(hex); return [c.r, c.g, c.b]; }) },
+        uColorStops: {
+          value: colorStops.map((hex) => {
+            const c = new Color(hex);
+            return [c.r, c.g, c.b];
+          }),
+        },
         uResolution: { value: [ctn.offsetWidth, ctn.offsetHeight] },
         uBlend: { value: blend },
       },
@@ -130,7 +144,7 @@ export default function Aurora({ colorStops = ['#3b82f6', '#06b6d4', '#3b82f6'],
       renderer.setSize(ctn.offsetWidth, ctn.offsetHeight);
       program.uniforms.uResolution.value = [ctn.offsetWidth, ctn.offsetHeight];
     };
-    window.addEventListener('resize', resize);
+    window.addEventListener("resize", resize);
     resize();
 
     let animId = 0;
@@ -140,16 +154,21 @@ export default function Aurora({ colorStops = ['#3b82f6', '#06b6d4', '#3b82f6'],
       program.uniforms.uTime.value = t * 0.01 * (p.speed ?? 1) * 0.1;
       program.uniforms.uAmplitude.value = p.amplitude ?? 1;
       program.uniforms.uBlend.value = p.blend ?? 0.5;
-      program.uniforms.uColorStops.value = (p.colorStops ?? colorStops).map(hex => { const c = new Color(hex); return [c.r, c.g, c.b]; });
+      program.uniforms.uColorStops.value = (p.colorStops ?? colorStops).map(
+        (hex) => {
+          const c = new Color(hex);
+          return [c.r, c.g, c.b];
+        },
+      );
       renderer.render({ scene: mesh });
     };
     animId = requestAnimationFrame(update);
 
     return () => {
       cancelAnimationFrame(animId);
-      window.removeEventListener('resize', resize);
+      window.removeEventListener("resize", resize);
       if (ctn && gl.canvas.parentNode === ctn) ctn.removeChild(gl.canvas);
-      gl.getExtension('WEBGL_lose_context')?.loseContext();
+      gl.getExtension("WEBGL_lose_context")?.loseContext();
     };
   }, []);
 
