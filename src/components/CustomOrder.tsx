@@ -1,368 +1,534 @@
-import { useState, useEffect, useRef, useCallback } from "react";
+"use client";
+
+import { useEffect, useMemo, useRef, useState } from "react";
+import type { FormEvent } from "react";
 import {
-  FiArrowLeft,
-  FiMail,
-  FiImage,
-  FiBox,
-  FiMessageCircle,
-  FiChevronRight,
+  FiSend,
+  FiCheckCircle,
+  FiAlertCircle,
+  FiX,
+  FiSearch,
+  FiExternalLink,
 } from "react-icons/fi";
+import { products } from "../data/products";
+import ScrambleLabel from "./anime/ScrambleLabel";
+import AnimatedHeading from "./anime/AnimatedHeading";
 
-const EMAIL = "info@forgerealm.co.uk";
+/* ── API base (same detection used across the site) ── */
 
-const GUIDE_STEPS = [
-  {
-    icon: FiMessageCircle,
-    title: "Describe your idea",
-    description:
-      "What do you want printed? Be as detailed as you like: character, animal, functional item, home decor, or something entirely new.",
-    example: 'e.g. "An articulated phoenix with spread wings, about 15cm tall"',
-  },
-  {
-    icon: FiBox,
-    title: "Size & dimensions",
-    description:
-      "Give us a rough size. Use centimetres, or compare it to something: palm-sized, desk-sized, shelf piece, etc.",
-    example: 'e.g. "About the size of a coffee mug" or "20cm x 10cm"',
-  },
-  {
-    icon: FiImage,
-    title: "Reference image (optional)",
-    description:
-      "Attach a photo, sketch, or link to something similar. This helps us nail the design. Screenshots, Pinterest links, anything works.",
-    example: "Attach to your email or paste a link",
-  },
-];
+const envBase =
+  typeof import.meta !== "undefined" &&
+  import.meta.env &&
+  typeof import.meta.env.PUBLIC_API_URL === "string"
+    ? import.meta.env.PUBLIC_API_URL.trim().replace(/\/$/, "")
+    : "";
 
-const EXTRAS = [
-  "Preferred colour or finish",
-  "Quantity needed",
-  "Any deadline or occasion",
-  "Budget range (helps us suggest options)",
-];
+const envLocal =
+  typeof import.meta !== "undefined" &&
+  import.meta.env &&
+  typeof import.meta.env.PUBLIC_API_URL_LOCAL === "string"
+    ? import.meta.env.PUBLIC_API_URL_LOCAL.trim().replace(/\/$/, "")
+    : "";
 
-/* ── Particle Canvas ── */
+function apiBase(): string {
+  if (typeof window === "undefined") return envBase;
+  return window.location.origin.startsWith("http://localhost")
+    ? envLocal || "http://localhost:8080"
+    : envBase || "";
+}
 
-function ParticleBackground() {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
+/* ── Types ── */
 
-  const init = useCallback(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
+type ProductRef = { slug: string; name: string; category?: string };
+type Variant = { colour: string; size: string; quantity: string };
+type SubmitState = "idle" | "sending" | "success" | "error";
 
-    let animId: number;
-    let particles: {
-      x: number;
-      y: number;
-      vx: number;
-      vy: number;
-      r: number;
-      o: number;
-    }[] = [];
+/* ── Small building blocks ── */
 
-    const resize = () => {
-      canvas.width = canvas.offsetWidth * window.devicePixelRatio;
-      canvas.height = canvas.offsetHeight * window.devicePixelRatio;
-      ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
-    };
+const inputCls =
+  "w-full rounded-xl bg-white/[0.03] border border-white/[0.1] px-4 py-3 text-sm text-white " +
+  "placeholder:text-slate-500 outline-none transition " +
+  "focus:border-cyan-300/50 focus:bg-white/[0.05] focus:ring-2 focus:ring-cyan-300/15";
 
-    const createParticles = () => {
-      const count = Math.min(
-        80,
-        Math.floor((canvas.offsetWidth * canvas.offsetHeight) / 12000),
-      );
-      particles = Array.from({ length: count }, () => ({
-        x: Math.random() * canvas.offsetWidth,
-        y: Math.random() * canvas.offsetHeight,
-        vx: (Math.random() - 0.5) * 0.3,
-        vy: (Math.random() - 0.5) * 0.3,
-        r: Math.random() * 1.5 + 0.5,
-        o: Math.random() * 0.4 + 0.1,
-      }));
-    };
+const labelCls =
+  "block text-[11px] font-medium uppercase tracking-[0.2em] text-blue-300/70 mb-2";
 
-    const draw = () => {
-      const w = canvas.offsetWidth;
-      const h = canvas.offsetHeight;
-      ctx.clearRect(0, 0, w, h);
-
-      for (const p of particles) {
-        p.x += p.vx;
-        p.y += p.vy;
-        if (p.x < 0) p.x = w;
-        if (p.x > w) p.x = 0;
-        if (p.y < 0) p.y = h;
-        if (p.y > h) p.y = 0;
-
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(96, 165, 250, ${p.o})`;
-        ctx.fill();
-      }
-
-      const maxDist = 120;
-      for (let i = 0; i < particles.length; i++) {
-        for (let j = i + 1; j < particles.length; j++) {
-          const dx = particles[i].x - particles[j].x;
-          const dy = particles[i].y - particles[j].y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-          if (dist < maxDist) {
-            ctx.beginPath();
-            ctx.moveTo(particles[i].x, particles[i].y);
-            ctx.lineTo(particles[j].x, particles[j].y);
-            ctx.strokeStyle = `rgba(96, 165, 250, ${0.08 * (1 - dist / maxDist)})`;
-            ctx.lineWidth = 0.5;
-            ctx.stroke();
-          }
-        }
-      }
-
-      animId = requestAnimationFrame(draw);
-    };
-
-    resize();
-    createParticles();
-    draw();
-
-    const onResize = () => {
-      resize();
-      createParticles();
-    };
-    window.addEventListener("resize", onResize);
-
-    return () => {
-      cancelAnimationFrame(animId);
-      window.removeEventListener("resize", onResize);
-    };
-  }, []);
-
-  useEffect(() => {
-    const cleanup = init();
-    return cleanup;
-  }, [init]);
-
+function Field({
+  label,
+  hint,
+  children,
+}: {
+  label: string;
+  hint?: string;
+  children: React.ReactNode;
+}) {
   return (
-    <canvas
-      ref={canvasRef}
-      className="absolute inset-0 w-full h-full pointer-events-none"
-    />
+    <div>
+      <label className={labelCls}>{label}</label>
+      {children}
+      {hint && <p className="mt-1.5 text-[11px] text-slate-500">{hint}</p>}
+    </div>
   );
 }
 
-/* ── Main Component ── */
+/* ── Main ── */
 
 export default function CustomOrder() {
-  const [copied, setCopied] = useState(false);
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [description, setDescription] = useState("");
 
-  const subject = encodeURIComponent("Custom Order Request");
-  const body = encodeURIComponent(
-    `Hi ForgeRealm,
+  const [productRef, setProductRef] = useState<ProductRef | null>(null);
+  const [productQuery, setProductQuery] = useState("");
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const searchRef = useRef<HTMLInputElement>(null);
 
-I'd like to request a custom 3D print.
+  const [variant, setVariant] = useState<Variant>({
+    colour: "",
+    size: "",
+    quantity: "",
+  });
 
-WHAT I'D LIKE:
-[Describe your idea here]
+  const [state, setState] = useState<SubmitState>("idle");
+  const [errorMsg, setErrorMsg] = useState("");
 
-SIZE:
-[Approximate dimensions or comparison]
+  // ?product=<slug> pre-fills the reference. Used by the in-store barcode.
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const slug = new URLSearchParams(window.location.search).get("product");
+    if (!slug) return;
+    const p = products.find((x) => x.slug === slug || x.id === slug);
+    if (p) setProductRef({ slug: p.slug, name: p.name, category: p.category });
+  }, []);
 
-COLOUR / FINISH:
-[Any preference]
+  const filtered = useMemo(() => {
+    const q = productQuery.trim().toLowerCase();
+    if (!q) return [];
+    return products
+      .filter((p) => !p.bannerOnly)
+      .filter(
+        (p) =>
+          p.name.toLowerCase().includes(q) ||
+          p.category.toLowerCase().includes(q),
+      )
+      .slice(0, 8);
+  }, [productQuery]);
 
-QUANTITY:
-[How many]
+  const canSubmit =
+    !!name.trim() &&
+    /^\S+@\S+\.\S+$/.test(email) &&
+    description.trim().length >= 10 &&
+    state !== "sending";
 
-ADDITIONAL NOTES:
-[Anything else: deadline, budget, etc.]
-
-Thanks!`,
-  );
-
-  const mailtoLink = `mailto:${EMAIL}?subject=${subject}&body=${body}`;
-
-  const handleCopy = () => {
-    navigator.clipboard.writeText(EMAIL);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+  const submit = async (e: FormEvent) => {
+    e.preventDefault();
+    if (!canSubmit) return;
+    setState("sending");
+    setErrorMsg("");
+    try {
+      const res = await fetch(`${apiBase()}/api/enquiry`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: name.trim(),
+          email: email.trim(),
+          phone: phone.trim() || undefined,
+          description: description.trim(),
+          product: productRef
+            ? { slug: productRef.slug, name: productRef.name }
+            : undefined,
+          variant: productRef
+            ? {
+                colour: variant.colour.trim() || undefined,
+                size: variant.size.trim() || undefined,
+                quantity: variant.quantity
+                  ? Number(variant.quantity)
+                  : undefined,
+              }
+            : undefined,
+        }),
+      });
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({}));
+        throw new Error(body.error || `Request failed (${res.status})`);
+      }
+      setState("success");
+    } catch (err) {
+      setState("error");
+      setErrorMsg(err instanceof Error ? err.message : "Something went wrong");
+    }
   };
 
-  return (
-    <div className="relative min-h-screen">
-      {/* Particle background */}
-      <ParticleBackground />
+  /* ── Success state ── */
 
-      {/* Ambient glows */}
-      <div className="pointer-events-none absolute inset-0">
-        <div className="absolute -left-40 -top-40 h-[500px] w-[500px] rounded-full bg-blue-600/10 blur-[250px]" />
-        <div className="absolute -right-40 top-1/3 h-[400px] w-[400px] rounded-full bg-indigo-600/8 blur-[200px]" />
-        <div className="absolute bottom-0 left-1/3 h-[400px] w-[400px] rounded-full bg-cyan-500/6 blur-[200px]" />
-      </div>
-
-      <div className="relative mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
-        {/* Main container */}
-        <div className="rounded-2xl border border-white/[0.08] bg-[#0a0f1a]/80 backdrop-blur-2xl shadow-2xl shadow-black/30 p-6 sm:p-10 space-y-10">
-          {/* Breadcrumb */}
-          <nav className="flex items-center gap-2 text-xs text-slate-500">
-            <a href="/" className="hover:text-white transition">
-              Home
-            </a>
-            <span>/</span>
-            <a href="/shop" className="hover:text-white transition">
-              Shop
-            </a>
-            <span>/</span>
-            <span className="text-slate-300">Custom Order</span>
-          </nav>
-
-          {/* Header */}
-          <div className="space-y-4">
-            <a
-              href="/shop"
-              className="inline-flex items-center gap-1.5 text-xs text-slate-400 transition hover:text-white"
-            >
-              <FiArrowLeft className="text-sm" />
-              Back to shop
-            </a>
-            <h1 className="text-3xl font-extrabold text-white sm:text-4xl">
-              Custom Order
-            </h1>
-            <p className="text-sm sm:text-base text-slate-400 leading-relaxed max-w-xl">
-              Got something specific in mind? We love a challenge. Tell us your
-              idea and we'll quote you a price, timeline, and bring it to life
-              in eco-friendly PLA.
-            </p>
-          </div>
-
-          {/* How it works */}
-          <section className="space-y-5">
-            <h2 className="text-[11px] font-semibold uppercase tracking-[0.25em] text-blue-400/80">
-              What to include
-            </h2>
-
-            <div className="space-y-3">
-              {GUIDE_STEPS.map((step, i) => (
-                <div
-                  key={step.title}
-                  className="group rounded-xl border border-white/[0.06] bg-white/[0.02] p-4 sm:p-5 transition hover:border-white/[0.1] hover:bg-white/[0.04]"
-                >
-                  <div className="flex gap-4">
-                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-white/[0.08] bg-white/[0.04] text-blue-400">
-                      <step.icon className="text-lg" />
-                    </div>
-                    <div className="space-y-1.5">
-                      <div className="flex items-center gap-2">
-                        <span className="text-[10px] font-bold text-blue-400/60">
-                          {String(i + 1).padStart(2, "0")}
-                        </span>
-                        <h3 className="text-sm font-semibold text-white">
-                          {step.title}
-                        </h3>
-                      </div>
-                      <p className="text-[13px] leading-relaxed text-slate-400">
-                        {step.description}
-                      </p>
-                      <p className="text-[11px] text-slate-500 italic">
-                        {step.example}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </section>
-
-          {/* Optional extras */}
-          <section className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-4 sm:p-5">
-            <h3 className="text-[11px] font-semibold uppercase tracking-[0.25em] text-slate-400 mb-4">
-              Helpful extras (optional)
-            </h3>
-            <div className="grid gap-2 sm:grid-cols-2">
-              {EXTRAS.map((item) => (
-                <div
-                  key={item}
-                  className="flex items-center gap-2.5 text-[13px] text-slate-400"
-                >
-                  <FiChevronRight className="text-blue-400/50 text-xs shrink-0" />
-                  {item}
-                </div>
-              ))}
-            </div>
-          </section>
-
-          {/* CTA - mailto */}
-          <section className="rounded-xl border border-white/[0.06] bg-gradient-to-br from-white/[0.04] to-white/[0.01] p-5 sm:p-8 space-y-5">
-            <div className="space-y-2">
-              <h2 className="text-xl font-bold text-white sm:text-2xl">
-                Ready? Send us an email
-              </h2>
-              <p className="text-sm text-slate-400 leading-relaxed">
-                No forms, no sign-ups. Just hit the button below and it'll open
-                your email with a template ready to fill in. Attach any
-                reference images directly to the email.
-              </p>
-            </div>
-
-            <a
-              href={mailtoLink}
-              className="group inline-flex items-center gap-3 rounded-xl bg-white px-6 py-3.5 text-sm font-semibold text-slate-900 shadow-lg shadow-white/10 transition-all hover:bg-white/90 hover:-translate-y-0.5"
-            >
-              <FiMail className="text-lg" />
-              Open email with template
-            </a>
-
-            <div className="flex flex-wrap items-center gap-3 pt-4 border-t border-white/[0.06]">
-              <p className="text-xs text-slate-500">Or email us directly at</p>
-              <button
-                onClick={handleCopy}
-                className="inline-flex items-center gap-1.5 rounded-lg border border-white/[0.08] bg-white/[0.03] px-3 py-1.5 text-xs font-medium text-slate-300 transition hover:bg-white/[0.06] hover:text-white"
-              >
-                {EMAIL}
-                <span className="text-[10px] text-slate-500">
-                  {copied ? "copied!" : "click to copy"}
-                </span>
-              </button>
-            </div>
-          </section>
-
-          {/* What to expect */}
-          <section className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-4 sm:p-5">
-            <h3 className="text-[11px] font-semibold uppercase tracking-[0.25em] text-slate-400 mb-3">
-              What happens next
-            </h3>
-            <div className="space-y-3 text-[13px] text-slate-400 leading-relaxed">
-              <div className="flex gap-3">
-                <span className="shrink-0 text-blue-400/60 font-bold text-[10px] mt-0.5">
-                  01
-                </span>
-                <p>
-                  We'll review your request and get back to you within 24-48
-                  hours with a quote and estimated timeline.
-                </p>
-              </div>
-              <div className="flex gap-3">
-                <span className="shrink-0 text-blue-400/60 font-bold text-[10px] mt-0.5">
-                  02
-                </span>
-                <p>
-                  Once you approve, we'll start printing. Most custom orders
-                  take 3-7 days depending on complexity.
-                </p>
-              </div>
-              <div className="flex gap-3">
-                <span className="shrink-0 text-blue-400/60 font-bold text-[10px] mt-0.5">
-                  03
-                </span>
-                <p>
-                  We'll send you a photo of the finished piece before shipping.
-                  Payment is handled securely via our shop.
-                </p>
-              </div>
-            </div>
-          </section>
+  if (state === "success") {
+    return (
+      <div className="mx-auto max-w-2xl px-4 sm:px-6 lg:px-8 py-24 sm:py-32 text-center">
+        <div className="inline-flex items-center justify-center h-16 w-16 rounded-full border border-cyan-300/30 bg-cyan-300/10 mb-6">
+          <FiCheckCircle className="text-3xl text-cyan-300" />
+        </div>
+        <h1
+          className="text-3xl sm:text-4xl font-normal text-white mb-4"
+          style={{ fontFamily: "'Cinzel', serif" }}
+        >
+          Enquiry{" "}
+          <em
+            className="text-cyan-300"
+            style={{
+              fontFamily: "'Cormorant Garamond', serif",
+              fontStyle: "italic",
+              fontWeight: 300,
+            }}
+          >
+            received
+          </em>
+        </h1>
+        <p className="text-slate-400 max-w-md mx-auto leading-relaxed">
+          Thanks, we've got your enquiry and one of us will reply within 24-48
+          hours. If it's urgent, drop us a message on Instagram at
+          @forgerealmltd.
+        </p>
+        <div className="mt-10 flex flex-wrap justify-center gap-3">
+          <a
+            href="/shop"
+            className="inline-flex items-center gap-2 rounded-full border border-white/[0.1] bg-white/[0.04] px-6 py-3 text-[13px] font-semibold uppercase tracking-[0.14em] text-slate-200 backdrop-blur-xl transition hover:border-cyan-300/30 hover:text-cyan-100"
+            style={{ fontFamily: "'Jost', sans-serif" }}
+          >
+            Back to the shop
+          </a>
+          <button
+            type="button"
+            onClick={() => {
+              setName("");
+              setEmail("");
+              setPhone("");
+              setDescription("");
+              setProductRef(null);
+              setProductQuery("");
+              setVariant({ colour: "", size: "", quantity: "" });
+              setState("idle");
+            }}
+            className="inline-flex items-center gap-2 rounded-full border border-cyan-300/30 bg-cyan-300/[0.06] px-6 py-3 text-[13px] font-semibold uppercase tracking-[0.14em] text-cyan-100 transition hover:bg-cyan-300/[0.12]"
+            style={{ fontFamily: "'Jost', sans-serif" }}
+          >
+            Send another
+          </button>
         </div>
       </div>
+    );
+  }
+
+  /* ── Form ── */
+
+  return (
+    <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
+      {/* Heading */}
+      <div className="mb-10 sm:mb-14 text-center">
+        <div className="inline-flex items-center gap-3 mb-4">
+          <div className="w-8 h-px bg-gradient-to-r from-blue-400 to-cyan-400" />
+          <ScrambleLabel
+            className="text-[10px] sm:text-[11px] font-medium uppercase tracking-[0.3em] text-blue-300/60"
+            style={{ fontFamily: "'Jost', sans-serif" }}
+          >
+            Commission a piece
+          </ScrambleLabel>
+          <div className="w-8 h-px bg-gradient-to-l from-blue-400 to-cyan-400" />
+        </div>
+        <AnimatedHeading
+          as="h1"
+          className="text-3xl sm:text-4xl lg:text-5xl font-normal text-white"
+          style={{ fontFamily: "'Cinzel', serif" }}
+          from="center"
+        >
+          Custom{" "}
+          <em
+            className="text-cyan-300"
+            style={{
+              fontFamily: "'Cormorant Garamond', serif",
+              fontStyle: "italic",
+              fontWeight: 300,
+            }}
+          >
+            order
+          </em>
+        </AnimatedHeading>
+        <p className="mt-5 max-w-xl mx-auto text-sm sm:text-base text-slate-400 leading-relaxed">
+          Tell us what you'd like printed. Describe it in your own words, or
+          point at something in the shop and say what you'd change. We'll quote
+          you a price and a timeline within a day or two.
+        </p>
+      </div>
+
+      {/* Form */}
+      <form
+        onSubmit={submit}
+        className="relative rounded-2xl border border-white/[0.08] bg-[#0a0f1a]/60 backdrop-blur-xl p-6 sm:p-8 lg:p-10 space-y-8 shadow-2xl shadow-black/40"
+      >
+        {/* Corner bracket markers for the blueprint feel */}
+        <span className="pointer-events-none absolute top-0 left-0 h-4 w-4 border-t border-l border-cyan-300/40 rounded-tl-2xl" />
+        <span className="pointer-events-none absolute top-0 right-0 h-4 w-4 border-t border-r border-cyan-300/40 rounded-tr-2xl" />
+        <span className="pointer-events-none absolute bottom-0 left-0 h-4 w-4 border-b border-l border-cyan-300/40 rounded-bl-2xl" />
+        <span className="pointer-events-none absolute bottom-0 right-0 h-4 w-4 border-b border-r border-cyan-300/40 rounded-br-2xl" />
+
+        {/* Section: About you */}
+        <fieldset className="space-y-5">
+          <legend className="text-[11px] font-semibold uppercase tracking-[0.25em] text-cyan-300/80 mb-2">
+            01 &nbsp;·&nbsp; About you
+          </legend>
+          <div className="grid gap-5 sm:grid-cols-2">
+            <Field label="Name">
+              <input
+                type="text"
+                required
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className={inputCls}
+                placeholder="Jane Doe"
+                maxLength={120}
+              />
+            </Field>
+            <Field label="Email">
+              <input
+                type="email"
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className={inputCls}
+                placeholder="you@example.com"
+                maxLength={200}
+              />
+            </Field>
+          </div>
+          <Field label="Phone (optional)" hint="If you'd rather we call.">
+            <input
+              type="tel"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              className={inputCls}
+              placeholder="+44 …"
+              maxLength={40}
+            />
+          </Field>
+        </fieldset>
+
+        {/* Section: Reference product (optional) */}
+        <fieldset className="space-y-5 relative">
+          <legend className="text-[11px] font-semibold uppercase tracking-[0.25em] text-cyan-300/80 mb-2">
+            02 &nbsp;·&nbsp; Reference an existing product{" "}
+            <span className="text-slate-500 tracking-normal normal-case font-normal">
+              (optional)
+            </span>
+          </legend>
+
+          {productRef ? (
+            <div className="flex items-center justify-between gap-3 rounded-xl border border-cyan-300/25 bg-cyan-300/[0.06] px-4 py-3">
+              <div className="min-w-0">
+                <div className="flex items-center gap-2 text-[10px] uppercase tracking-[0.22em] text-cyan-300/70 mb-1">
+                  <FiCheckCircle className="text-cyan-300" />
+                  Referenced
+                </div>
+                <div className="text-white font-semibold truncate">
+                  {productRef.name}
+                </div>
+                {productRef.category && (
+                  <div className="text-[11px] text-slate-400">
+                    {productRef.category}
+                  </div>
+                )}
+              </div>
+              <button
+                type="button"
+                onClick={() => {
+                  setProductRef(null);
+                  setProductQuery("");
+                }}
+                className="shrink-0 rounded-full p-2 text-slate-400 hover:bg-white/[0.06] hover:text-white transition"
+                aria-label="Clear reference product"
+              >
+                <FiX />
+              </button>
+            </div>
+          ) : (
+            <div className="relative">
+              <div className="relative">
+                <FiSearch className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-slate-500" />
+                <input
+                  ref={searchRef}
+                  type="text"
+                  value={productQuery}
+                  onChange={(e) => {
+                    setProductQuery(e.target.value);
+                    setDropdownOpen(true);
+                  }}
+                  onFocus={() => setDropdownOpen(true)}
+                  onBlur={() =>
+                    // small delay so a click on a dropdown item registers
+                    setTimeout(() => setDropdownOpen(false), 120)
+                  }
+                  className={inputCls + " pl-11"}
+                  placeholder="Search the shop, e.g. 'elephant', 'dragon', 'keychain'"
+                />
+              </div>
+              {dropdownOpen && filtered.length > 0 && (
+                <ul
+                  role="listbox"
+                  className="absolute z-20 mt-2 w-full max-h-72 overflow-y-auto rounded-xl border border-white/[0.1] bg-[#0c1220] shadow-2xl shadow-black/60 divide-y divide-white/[0.04]"
+                >
+                  {filtered.map((p) => (
+                    <li key={p.id}>
+                      <button
+                        type="button"
+                        onMouseDown={(e) => {
+                          // preserve focus so onBlur doesn't fire first
+                          e.preventDefault();
+                        }}
+                        onClick={() => {
+                          setProductRef({
+                            slug: p.slug,
+                            name: p.name,
+                            category: p.category,
+                          });
+                          setProductQuery("");
+                          setDropdownOpen(false);
+                        }}
+                        className="flex w-full items-center justify-between gap-3 px-4 py-3 text-left transition hover:bg-white/[0.04]"
+                      >
+                        <div className="min-w-0">
+                          <div className="text-sm text-white truncate">
+                            {p.name}
+                          </div>
+                          <div className="text-[11px] text-slate-500">
+                            {p.category} · {p.displayPrice}
+                          </div>
+                        </div>
+                        <FiExternalLink className="shrink-0 text-slate-500" />
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              )}
+              {dropdownOpen &&
+                productQuery.trim().length > 0 &&
+                filtered.length === 0 && (
+                  <p className="mt-2 text-[12px] text-slate-500 px-1">
+                    No match. Describe what you'd like in your own words below
+                    instead.
+                  </p>
+                )}
+              <p className="mt-2 text-[11px] text-slate-500">
+                Or leave blank if it's something new. In store, scan the
+                product's QR/barcode to skip this step.
+              </p>
+            </div>
+          )}
+
+          {/* Variant fields — only when a product is referenced */}
+          {productRef && (
+            <div className="grid gap-4 sm:grid-cols-3 pt-2">
+              <Field label="Colour" hint="e.g. 'silk red' or 'natural white'">
+                <input
+                  type="text"
+                  value={variant.colour}
+                  onChange={(e) =>
+                    setVariant((v) => ({ ...v, colour: e.target.value }))
+                  }
+                  className={inputCls}
+                  placeholder="As-is"
+                  maxLength={80}
+                />
+              </Field>
+              <Field label="Size" hint="Relative or in cm">
+                <input
+                  type="text"
+                  value={variant.size}
+                  onChange={(e) =>
+                    setVariant((v) => ({ ...v, size: e.target.value }))
+                  }
+                  className={inputCls}
+                  placeholder="Same size"
+                  maxLength={80}
+                />
+              </Field>
+              <Field label="Quantity">
+                <input
+                  type="number"
+                  min={1}
+                  max={999}
+                  value={variant.quantity}
+                  onChange={(e) =>
+                    setVariant((v) => ({ ...v, quantity: e.target.value }))
+                  }
+                  className={inputCls}
+                  placeholder="1"
+                />
+              </Field>
+            </div>
+          )}
+        </fieldset>
+
+        {/* Section: Describe */}
+        <fieldset className="space-y-3">
+          <legend className="text-[11px] font-semibold uppercase tracking-[0.25em] text-cyan-300/80 mb-2">
+            03 &nbsp;·&nbsp; Describe what you'd like
+          </legend>
+          <Field
+            label="Description"
+            hint={
+              productRef
+                ? "Explain the changes you'd like. Colour, size, finish, quantity, deadline."
+                : "Describe the piece in your own words. Character, animal, home decor, prop — anything. Include size and any deadline if it matters."
+            }
+          >
+            <textarea
+              required
+              minLength={10}
+              maxLength={4000}
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              rows={6}
+              className={inputCls + " resize-y"}
+              placeholder={
+                productRef
+                  ? "e.g. Same shape, but printed in translucent silk red PLA and 20% larger. Needed by end of next month for a birthday."
+                  : "e.g. An articulated phoenix, wings spread, about 15cm tall. Any warm colour is fine — silk gold would be ideal."
+              }
+            />
+            <div className="mt-1.5 text-right text-[11px] text-slate-500 tabular-nums">
+              {description.length} / 4000
+            </div>
+          </Field>
+        </fieldset>
+
+        {/* Error */}
+        {state === "error" && (
+          <div className="flex items-start gap-3 rounded-xl border border-red-400/30 bg-red-500/[0.06] px-4 py-3 text-sm text-red-200">
+            <FiAlertCircle className="shrink-0 mt-0.5" />
+            <div>
+              <div className="font-semibold">Couldn't send the enquiry</div>
+              <div className="text-red-200/70 text-[13px]">{errorMsg}</div>
+            </div>
+          </div>
+        )}
+
+        {/* Submit */}
+        <div className="flex flex-wrap items-center justify-between gap-3 pt-2 border-t border-white/[0.06]">
+          <p className="text-[11px] text-slate-500">
+            We reply within 24-48 hours. No spam, ever.
+          </p>
+          <button
+            type="submit"
+            disabled={!canSubmit}
+            className="group inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-blue-500 to-cyan-400 px-6 py-3 text-[13px] font-semibold uppercase tracking-[0.14em] text-white shadow-lg shadow-blue-500/25 transition-all hover:-translate-y-0.5 hover:shadow-blue-500/40 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:translate-y-0"
+            style={{ fontFamily: "'Cinzel', serif" }}
+          >
+            {state === "sending" ? "Sending…" : "Send enquiry"}
+            {state !== "sending" && (
+              <FiSend className="transition-transform group-hover:translate-x-0.5" />
+            )}
+          </button>
+        </div>
+      </form>
     </div>
   );
 }
