@@ -14,6 +14,34 @@ type Stall = {
 
 const stalls: Stall[] = [
   {
+    label: "Stall Session 13",
+    date: "1 August 2026",
+    title: "A local celebrity stops by",
+    location: "Albion Place, Leeds",
+    images: [
+      {
+        src: "/blog/session13-albion.jpg",
+        alt: "ForgeRealm's display at Stall Session 13, Albion Place, with the dragon and castle prints laid out on the table.",
+        portrait: true,
+      },
+      {
+        src: "/blog/session13-albion-2.jpg",
+        alt: "Odin the bearded dragon perched on top of one of ForgeRealm's printed castles at the Albion Place stall.",
+        portrait: true,
+      },
+      {
+        src: "/blog/session13-albion-3.jpg",
+        alt: "Close-up of the smaller ForgeRealm figures on display at Stall Session 13.",
+      },
+    ],
+    paragraphs: [
+      "Albion Place, and we had a proper local celebrity stop by: Odin, a bearded dragon who's become something of a fixture around town, always spotted in the palm of his owner's hand. He came over to the stall and, dragon enthusiasts that we are, we couldn't let him leave empty-handed.",
+      "We gifted him one of our castles. All dragons deserve somewhere to sleep, and by the loosest possible technicality, a bearded dragon is a dragon, so Odin qualifies. He climbed straight up and posed like he'd been doing it for years, easily the best product photo we didn't have to set up ourselves.",
+      "Commercially it was a big one too: our second-best stall to date by revenue, behind only Stall Session 3, which is still out in front as the bar.",
+    ],
+    pull: "All dragons deserve a castle to sleep on, and by the loosest possible technicality, Odin qualifies.",
+  },
+  {
     kind: "note",
     label: "Studio",
     date: "29 July 2026",
@@ -54,7 +82,7 @@ const stalls: Stall[] = [
     ],
     paragraphs: [
       "Split day, both still in Leeds but on opposite ends of it. Ishmam ran Albion in the city centre solo, Tobi took the Afrikan Market out by Leeds Carnival to represent us there as a Black-owned business.",
-      "Albion did the numbers. On the day it was arguably our second-best Albion ever, only sitting behind the sunny March 14 stall we still use as the bar. Steady flow the whole day, silk PLA doing its usual crowd-stopping thing.",
+      "Albion did the numbers. Comfortably one of our stronger Albion days, with the sunny March 14 stall still out in front as the bar. Steady flow the whole day, silk PLA doing its usual crowd-stopping thing.",
       "The Afrikan Market was quieter for us commercially. It was not our strongest stall by a wide margin, but we still walked away in profit by the end, which is not a given for a first-time market away from the city centre crowd. More importantly it was the right room to be in, and we would go back.",
     ],
     pull: "Two ends of Leeds, one Saturday. Albion did the numbers, the Afrikan Market did the point.",
@@ -80,7 +108,7 @@ const stalls: Stall[] = [
       },
     ],
     paragraphs: [
-      "Round two of the dual setup, Albion + Kirkgate. Beat our second-best Albion record yet again, and the overall total across both venues basically tied the first dual on Stall Session 10. A bit more if you squint, the same if you do the maths. Different day, same outcome, the model holds.",
+      "Round two of the dual setup, Albion + Kirkgate. Beat our recent Albion average yet again, and the overall total across both venues basically tied the first dual on Stall Session 10. A bit more if you squint, the same if you do the maths. Different day, same outcome, the model holds.",
       "When Tobi closed Kirkgate at 4 he came over to Albion and we restocked the whole display together. The third photo is what it looked like after, possibly the best the stall has ever looked. Gorgeous weather all day, and lucky timing on top: the heatwave landed the next morning.",
     ],
     pull: "Possibly the best the stall has ever looked, and the heatwave waited until the morning after.",
