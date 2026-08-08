@@ -1,5 +1,6 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+import ShopNavbar from "../components/ShopNavbar";
 import CustomOrderApp from "../components/CustomOrder";
 ---
 
@@ -7,9 +8,12 @@ import CustomOrderApp from "../components/CustomOrder";
   title="Custom Order | ForgeRealm"
   description="Request a custom 3D print from ForgeRealm. Tell us your idea and we'll bring it to life."
 >
-  <main
+  <div
     class="relative isolate min-h-[100svh] bg-[#0a0f1a] text-white overflow-x-hidden"
   >
-    <CustomOrderApp client:load />
-  </main>
+    <ShopNavbar client:load />
+    <main class="pt-20 sm:pt-24">
+      <CustomOrderApp client:load />
+    </main>
+  </div>
 </BaseLayout>
