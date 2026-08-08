@@ -49,11 +49,13 @@ const getDbAdmin = async (username) => {
 
 const createUser = async ({ username, email, password }) => {
   const passwordHash = await bcrypt.hash(password, BCRYPT_ROUNDS);
-  const [result] = await pool.query(
-    "INSERT INTO users (username, email, password_hash, salt, role, email_verified, created_at) VALUES (?, ?, ?, ?, ?, ?, NOW())",
-    [username, email || null, passwordHash, "", "user", 0],
+  // Postgres: RETURNING id gives back the freshly-assigned identity column.
+  // (mysql2 exposed this on `result.insertId`, which our pg pool wrapper does not.)
+  const [rows] = await pool.query(
+    "INSERT INTO users (username, email, password_hash, salt, role, email_verified, created_at) VALUES (?, ?, ?, ?, ?, ?, NOW()) RETURNING id",
+    [username, email || null, passwordHash, "", "user", false],
   );
-  return { id: result.insertId, username, email, role: "user" };
+  return { id: rows[0].id, username, email, role: "user" };
 };
 
 const createVerificationToken = () => crypto.randomBytes(32).toString("hex");
@@ -301,7 +303,7 @@ const verifyEmail = asyncHandler(async (req, res) => {
     await pool.query(
       `
       UPDATE users
-      SET email_verified = 1,
+      SET email_verified = TRUE,
           email_verified_at = NOW(),
           email_verification_token_hash = NULL,
           email_verification_sent_at = NULL
