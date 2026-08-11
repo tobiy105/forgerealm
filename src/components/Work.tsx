@@ -28,6 +28,34 @@ type Product = {
 
 const products: Product[] = [
   {
+    id: "ivysaur-planter",
+    name: "Ivysaur Planter",
+    description:
+      "Our new unofficial mascot at The Mini Mall, Merrion Centre — a large Ivysaur planter made in collaboration with the plant trader next door.",
+    shopDescription:
+      "One of the other traders at The Mini Mall sells plants, so we teamed up: a large-scale Ivysaur planter, printed to actually hold a real one. It's turned into a bit of a showcase piece, a look at what happens when our prints meet their greenery, and it's quietly become the unofficial mascot of the shop.",
+    detail:
+      "It sits in the shop's front window at Merrion Centre, so it's the first thing people see walking past The Mini Mall. If you're after something that mixes a print with something living, that's exactly the kind of commission we love.",
+    image: "/featured1.jpg",
+    background: "#0a0a0a",
+    textColor: "#FADE6A",
+    accentColor: "#F59E0B",
+  },
+  {
+    id: "blackthorn-manor",
+    name: "Blackthorn Manor",
+    description:
+      "A hand-finished half-timbered manor, all steep gables and turrets, straight out of old English storybook country.",
+    shopDescription:
+      "Every panel of timber framing, brickwork and roof tile on this one was sculpted and printed by hand, channelling that unmistakable Tudor look — half history, half fairytale. It's on display at The Mini Mall, Merrion Centre, in the same front window as Ivysaur, so it's one of the first things people see walking past.",
+    detail:
+      "If turrets, timber framing and old English charm are your thing, this is the kind of build we could happily spend a week on. Get in touch if you want your own version.",
+    image: "/featured2.jpg",
+    background: "#0a0a0a",
+    textColor: "#FADE6A",
+    accentColor: "#F59E0B",
+  },
+  {
     id: "loving-memory",
     name: "In Loving Memory",
     description:
@@ -36,43 +64,11 @@ const products: Product[] = [
       "This one wasn't a shop piece. It was a commission we took on when a customer asked us to recreate their beloved dog in 3D. We measured, we sculpted, we sanded, and we hand-finished every last layer to make sure the little details felt right. A small piece of a much-loved friend, forever on the shelf.",
     detail:
       "It's commissions like this that remind us why we do what we do. If there's a piece of your life you'd like us to bring into the real world, we'd be honoured to help.",
-    image: "/featured1.jpg",
-    background: "#0a0a0a",
-    lifestyleImage: "/featured1bg.jpg",
-    thumbnailScale: 0.7,
-    expandedScale: 0.55,
-    textColor: "#FADE6A",
-    accentColor: "#F59E0B",
-  },
-  {
-    id: "orins-dagger",
-    name: "Orin's Dagger",
-    description:
-      "A custom scale replica of Orin the Red's dagger from Baldur's Gate 3, printed for a customer who wanted a piece of the game on their shelf.",
-    shopDescription:
-      "Sculpted from the in-game model and hand-finished in PLA, this dagger tries to hit every curve, twist and jagged edge Larian put on the source. If you're a BG3 fan and want a signature piece from the story, this is the kind of commission we love doing.",
-    detail:
-      "Fan-favourite pieces from your favourite games are one of our happy places. Send us the character, the weapon, or the trinket and we'll take it from there.",
-    image: "/featured2.jpg",
-    background: "#0a0a0a",
-    lifestyleImage: "/featured2bg.jpg",
-    textColor: "#FADE6A",
-    accentColor: "#F59E0B",
-  },
-  {
-    id: "voronoi-elephant",
-    name: "Voronoi Elephant Tealight",
-    description:
-      "Our best seller since we opened at The Mini Mall, Merrion Centre. A Voronoi-lattice elephant that scatters a warm tea-light glow across the wall behind it.",
-    shopDescription:
-      "From this month you can find ForgeRealm at The Mini Mall inside Leeds' Merrion Centre, sharing the shelves with a load of other exciting small-maker goods. The Voronoi Elephant tealight has been the piece walking out fastest, so pop in and see it lit up in person before you take one home.",
-    detail:
-      "Printed in translucent PLA so a standard tea light inside casts the Voronoi lattice as a moving pattern on the wall. Quiet ambient lighting with a talking-piece silhouette.",
     image: "/featured3.jpg",
     background: "#0a0a0a",
     lifestyleImage: "/featured3bg.jpg",
-    thumbnailScale: 1.35,
-    shopUrl: "/shop?product=voronoi-elephant-tealight",
+    thumbnailScale: 0.7,
+    expandedScale: 0.55,
     textColor: "#FADE6A",
     accentColor: "#F59E0B",
   },
@@ -371,7 +367,7 @@ export default function Work() {
               fontStyle: "italic",
             }}
           >
-            This month&apos;s highlights
+            Recently forged
           </p>
         </div>
       </div>
