@@ -38,6 +38,9 @@ const products: Product[] = [
       "It sits in the shop's front window at Merrion Centre, so it's the first thing people see walking past The Mini Mall. If you're after something that mixes a print with something living, that's exactly the kind of commission we love.",
     image: "/featured1.jpg",
     background: "#0a0a0a",
+    lifestyleImage: "/featured1bg.jpg",
+    thumbnailScale: 0.7,
+    expandedScale: 0.4,
     textColor: "#FADE6A",
     accentColor: "#F59E0B",
   },
@@ -52,6 +55,8 @@ const products: Product[] = [
       "If turrets, timber framing and old English charm are your thing, this is the kind of build we could happily spend a week on. Get in touch if you want your own version.",
     image: "/featured2.jpg",
     background: "#0a0a0a",
+    lifestyleImage: "/featured2bg.jpg",
+    expandedScale: 0.7,
     textColor: "#FADE6A",
     accentColor: "#F59E0B",
   },
@@ -453,7 +458,7 @@ export default function Work() {
                     isCoarsePointer && isNarrowScreen
                       ? "max-h-[52vh] max-w-[70vw]"
                       : "max-h-[40vh] max-w-[34vw] sm:max-h-[44vh] sm:max-w-[36vw]"
-                  } w-auto object-contain drop-shadow-[0_40px_80px_rgba(0,0,0,0.4)]`}
+                  } w-auto object-contain drop-shadow-[0_0_35px_rgba(0,0,0,0.55)] drop-shadow-[0_40px_80px_rgba(0,0,0,0.4)]`}
                   animate={{
                     scale:
                       (product.thumbnailScale ?? 1) *
@@ -581,7 +586,7 @@ export default function Work() {
                         <motion.img
                           src={activeProduct.image}
                           alt={activeProduct.name}
-                          className="h-[45vh] w-[85vw] max-h-[45vh] max-w-[92vw] object-contain drop-shadow-[0_45px_90px_rgba(0,0,0,0.55)]"
+                          className="h-[45vh] w-[85vw] max-h-[45vh] max-w-[92vw] object-contain drop-shadow-[0_0_40px_rgba(0,0,0,0.6)] drop-shadow-[0_45px_90px_rgba(0,0,0,0.55)]"
                           style={{
                             transform: `scale(${activeProduct.expandedScale ?? 1})`,
                             transformOrigin: "center",
@@ -662,7 +667,7 @@ export default function Work() {
                         <img
                           src={activeProduct.image}
                           alt={activeProduct.name}
-                          className="h-[85vh] w-[80vw] max-h-[85vh] max-w-[90vw] sm:h-[85vh] sm:w-[75vw] sm:max-w-[85vw] object-contain drop-shadow-[0_55px_110px_rgba(0,0,0,0.6)]"
+                          className="h-[85vh] w-[80vw] max-h-[85vh] max-w-[90vw] sm:h-[85vh] sm:w-[75vw] sm:max-w-[85vw] object-contain drop-shadow-[0_0_50px_rgba(0,0,0,0.65)] drop-shadow-[0_55px_110px_rgba(0,0,0,0.6)]"
                           style={{
                             transform: `scale(${activeProduct.expandedScale ?? 1})`,
                             transformOrigin: "center",
