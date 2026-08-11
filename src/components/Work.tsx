@@ -31,7 +31,7 @@ const products: Product[] = [
     id: "ivysaur-planter",
     name: "Ivysaur Planter",
     description:
-      "Our new unofficial mascot at The Mini Mall, Merrion Centre — a large Ivysaur planter made in collaboration with the plant trader next door.",
+      "Our new unofficial mascot at The Mini Mall, Merrion Centre: a large Ivysaur planter made in collaboration with the plant trader next door.",
     shopDescription:
       "One of the other traders at The Mini Mall sells plants, so we teamed up: a large-scale Ivysaur planter, printed to actually hold a real one. It's turned into a bit of a showcase piece, a look at what happens when our prints meet their greenery, and it's quietly become the unofficial mascot of the shop.",
     detail:
@@ -47,7 +47,7 @@ const products: Product[] = [
     description:
       "A hand-finished half-timbered manor, all steep gables and turrets, straight out of old English storybook country.",
     shopDescription:
-      "Every panel of timber framing, brickwork and roof tile on this one was sculpted and printed by hand, channelling that unmistakable Tudor look — half history, half fairytale. It's on display at The Mini Mall, Merrion Centre, in the same front window as Ivysaur, so it's one of the first things people see walking past.",
+      "Every panel of timber framing, brickwork and roof tile on this one was sculpted and printed by hand, channelling that unmistakable Tudor look, half history and half fairytale. It's on display at The Mini Mall, Merrion Centre, in the same front window as Ivysaur, so it's one of the first things people see walking past.",
     detail:
       "If turrets, timber framing and old English charm are your thing, this is the kind of build we could happily spend a week on. Get in touch if you want your own version.",
     image: "/featured2.jpg",
