@@ -14,6 +14,28 @@ type Stall = {
 
 const stalls: Stall[] = [
   {
+    label: "Stall Session 14",
+    date: "15 August 2026",
+    title: "The quiet one",
+    location: "Albion Place & Kirkgate Market, Leeds",
+    images: [
+      {
+        src: "/blog/session14-albion.jpg",
+        alt: "ForgeRealm's display at Stall Session 14, Albion Place, with the dragon and castle prints laid out on the table.",
+        portrait: true,
+      },
+      {
+        src: "/blog/session14-kirkgate.jpg",
+        alt: "ForgeRealm's stall at Kirkgate Market for Stall Session 14, set up under the market hall roof.",
+      },
+    ],
+    paragraphs: [
+      "Back to the dual setup for 15 August, Ishmam at Albion, Tobi at Kirkgate. Both stalls were about as quiet as we've seen. Term's just ended and the city empties out fast: students back in their home towns, and everyone else seemingly on holiday too.",
+      "You win some, you lose some. Possibly our quietest day yet on both sides, but the maths still landed in profit by the end. A slow Saturday beats no Saturday.",
+    ],
+    pull: "A slow Saturday beats no Saturday.",
+  },
+  {
     label: "Stall Session 13",
     date: "1 August 2026",
     title: "A local celebrity stops by",
