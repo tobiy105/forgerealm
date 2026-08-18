@@ -31,9 +31,9 @@ const stalls: Stall[] = [
     ],
     paragraphs: [
       "Back to the dual setup for 15 August, Ishmam at Albion, Tobi at Kirkgate. Both stalls were about as quiet as we've seen. Term's just ended and the city empties out fast: students back in their home towns, and everyone else seemingly on holiday too.",
-      "You win some, you lose some. Possibly our quietest day yet on both sides, but the maths still landed in profit by the end. A slow Saturday beats no Saturday.",
+      "You win some, you lose some. Possibly our quietest day yet on both sides, but the maths still landed in profit by the end. Some Saturdays are just like that.",
     ],
-    pull: "A slow Saturday beats no Saturday.",
+    pull: "Some Saturdays are just like that.",
   },
   {
     label: "Stall Session 13",
