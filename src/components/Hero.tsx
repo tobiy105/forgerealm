@@ -120,7 +120,7 @@ const WORDS = [
 export default function Hero() {
   const [printAnim, setPrintAnim] = useState<any>(null);
   const typed = useTypewriter(WORDS);
-  const printsRef = useAnimatedCount(442, 2200);
+  const printsRef = useAnimatedCount(514, 2200);
   const designsRef = useAnimatedCount(50, 1800);
   const mobileLottieRef = useRef<LottieRefCurrentProps>(null);
   const desktopLottieRef = useRef<LottieRefCurrentProps>(null);
