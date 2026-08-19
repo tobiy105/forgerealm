@@ -14,6 +14,28 @@ type Stall = {
 
 const stalls: Stall[] = [
   {
+    label: "Stall Session 14",
+    date: "15 August 2026",
+    title: "The quiet one",
+    location: "Albion Place & Kirkgate Market, Leeds",
+    images: [
+      {
+        src: "/blog/session14-albion.jpg",
+        alt: "ForgeRealm's display at Stall Session 14, Albion Place, with the dragon and castle prints laid out on the table.",
+        portrait: true,
+      },
+      {
+        src: "/blog/session14-kirkgate.jpg",
+        alt: "ForgeRealm's stall at Kirkgate Market for Stall Session 14, set up under the market hall roof.",
+      },
+    ],
+    paragraphs: [
+      "Back to the dual setup for 15 August, Ishmam at Albion, Tobi at Kirkgate. Both stalls were about as quiet as we've seen. Term's just ended and the city empties out fast: students back in their home towns, and everyone else seemingly on holiday too.",
+      "You win some, you lose some. Possibly our quietest day yet on both sides, but the maths still landed in profit by the end. Some Saturdays are just like that.",
+    ],
+    pull: "Some Saturdays are just like that.",
+  },
+  {
     label: "Stall Session 13",
     date: "1 August 2026",
     title: "A local celebrity stops by",
@@ -49,20 +71,20 @@ const stalls: Stall[] = [
     images: [
       {
         src: "/blog/minimall-opening-1.jpg",
-        alt: "ForgeRealm shelf inside The Mini Mall at the Merrion Centre in Leeds.",
+        alt: "Inside The Mini Mall at the Merrion Centre in Leeds on opening day.",
       },
       {
         src: "/blog/minimall-opening-2.jpg",
-        alt: "Opening day at The Mini Mall inside the Merrion Centre, Leeds.",
+        alt: "ForgeRealm's shelves at The Mini Mall, stacked with printed dragons, dragon eggs, lamps and figurines.",
         portrait: true,
       },
     ],
     paragraphs: [
-      "From this month our prints have a proper permanent home in Leeds. ForgeRealm is now stocked at The Mini Mall inside the Merrion Centre, sharing the shelves with a load of other exciting small-maker goods.",
+      "From this month you can find our prints on a shelf in Leeds city centre. ForgeRealm is now stocked at The Mini Mall inside the Merrion Centre, sharing the space with a load of other exciting small-maker goods.",
       "We were honoured to play a big part in the process leading up to the launch, and invited to the opening ceremony too. Being in the room while a new small-business hub in the city got off the ground was a moment.",
       "So far it has been doing well. The Voronoi Elephant Tealight has been the piece walking out fastest, and we are looking forward to seeing where The Mini Mall goes from here. If you are in the Merrion Centre, pop in and see us on the shelf.",
     ],
-    pull: "A proper permanent home in Leeds. Pop into the Merrion Centre and see us on the shelf.",
+    pull: "Pop into the Merrion Centre and see us on the shelf.",
   },
   {
     label: "Stall Session 12",
