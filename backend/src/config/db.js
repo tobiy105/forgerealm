@@ -1,44 +1,45 @@
 /**
  * Postgres pool for Neon.
  *
- * Preserves the mysql2-style call shape the rest of the app already uses:
+ * Preserves the `?`-placeholder, tuple-returning call shape the rest of the
+ * app already uses:
  *   const [rows] = await pool.query('SELECT * FROM x WHERE id = ?', [42]);
  *
  * so the ~30 existing call sites don't need touching. The wrapper:
  *   - rewrites `?` placeholders to Postgres `$1, $2, ...` positional params
- *   - returns a [rows, meta] tuple so `const [rows] = ...` destructures the
- *     way mysql2 always did
+ *   - returns a [rows, meta] tuple so `const [rows] = ...` destructures
  *
- * Configuration order:
- *   1. DATABASE_URL — Neon-style URL, `postgresql://user:pass@host/db`.
- *      SSL is forced on because Neon (and any managed Postgres worth using)
- *      refuses non-TLS connections.
- *   2. Falls back to individual DB_HOST / DB_USER / DB_PASS / DB_NAME env
- *      vars for local dev against a plain Postgres instance without TLS.
+ * Configuration is DATABASE_URL only, and it is required. There is
+ * deliberately no host/user/password fallback: those variable names are
+ * still set on some deploy targets and pointing at retired infrastructure,
+ * so a fallback would let a missing DATABASE_URL silently connect somewhere
+ * unintended instead of failing loudly.
  *
- * Sites that need Postgres-specific SQL (`RETURNING id` instead of
- * mysql2's `result.insertId`, multi-row inserts via UNNEST rather than
- * MySQL's `VALUES ?` shorthand) have been hand-fixed at the call sites.
+ * Sites that need Postgres-specific SQL (`RETURNING id` for generated keys,
+ * multi-row inserts via UNNEST) have been hand-fixed at the call sites.
  */
 
 const { Pool } = require("pg");
 
-const config = process.env.DATABASE_URL
-  ? {
-      connectionString: process.env.DATABASE_URL,
-      ssl: { rejectUnauthorized: false },
-      max: 10,
-    }
-  : {
-      host: process.env.DB_HOST || "localhost",
-      port: Number(process.env.DB_PORT) || 5432,
-      user: process.env.DB_USER || "postgres",
-      password: process.env.DB_PASS || undefined,
-      database: process.env.DB_NAME || "forgerealm",
-      max: 10,
-    };
+const connectionString = process.env.DATABASE_URL;
+if (!connectionString) {
+  console.error(
+    "FATAL: DATABASE_URL environment variable is required (Postgres connection string)",
+  );
+  process.exit(1);
+}
 
-const rawPool = new Pool(config);
+// Managed Postgres refuses non-TLS connections; a local instance usually has
+// no certificate at all, so only ask for TLS when we are not on localhost.
+const isLocalConnection =
+  /@(localhost|127\.0\.0\.1)[:/]/.test(connectionString) ||
+  /[?&]sslmode=disable\b/.test(connectionString);
+
+const rawPool = new Pool({
+  connectionString,
+  ...(isLocalConnection ? {} : { ssl: { rejectUnauthorized: false } }),
+  max: 10,
+});
 
 /**
  * Rewrite mysql2-style `?` placeholders to Postgres `$1, $2, ...`.
