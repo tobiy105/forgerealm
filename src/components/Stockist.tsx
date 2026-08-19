@@ -50,28 +50,43 @@ export default function Stockist() {
       suppressHydrationWarning
       className={`reveal landing-ambience relative py-16 sm:py-24 overflow-hidden bg-transparent ${isVisible ? "is-visible" : ""}`}
     >
-      {/* Top divider, matching the section rhythm used across the page */}
-      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#FADE6A]/20 to-transparent" />
-
+      {/* No top divider here: this sits directly under the marquee strip,
+          which already closes with its own border. */}
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative">
         <div className="grid items-center gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:gap-16">
           {/* ── The shelf ─────────────────────────────────────────────── */}
           <div className="order-2 lg:order-1">
-            <div className="relative mx-auto max-w-sm lg:mx-0">
-              {/* The piece sitting on it */}
-              <div className="relative overflow-hidden rounded-t-xl border border-b-0 border-white/[0.08] bg-[#0c1220]">
-                <img
-                  src="/blog/minimall-opening-2.jpg"
-                  alt="ForgeRealm's shelves at The Mini Mall, stacked with printed dragons, dragon eggs, lamps and figurines."
-                  loading="lazy"
-                  decoding="async"
-                  className="aspect-[3/4] h-full w-full object-cover"
-                />
-                {/* Light falling from above, so the top lip of the shelf reads */}
-                <div
-                  aria-hidden="true"
-                  className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent"
-                />
+            <div className="relative mx-auto max-w-md lg:mx-0">
+              {/* Two pieces standing on it, different heights the way real
+                  objects on a shelf are. Bottoms align on the ledge. */}
+              <div className="flex items-end gap-3">
+                <div className="relative w-[58%] overflow-hidden rounded-t-xl border border-b-0 border-white/[0.08] bg-[#0c1220]">
+                  <img
+                    src="/blog/minimall-opening-2.jpg"
+                    alt="ForgeRealm's shelves at The Mini Mall, stacked with printed dragons, dragon eggs, lamps and figurines."
+                    loading="lazy"
+                    decoding="async"
+                    className="aspect-[3/4] h-full w-full object-cover"
+                  />
+                  {/* Light falling from above, so the top lip of the shelf reads */}
+                  <div
+                    aria-hidden="true"
+                    className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent"
+                  />
+                </div>
+                <div className="relative w-[42%] overflow-hidden rounded-t-xl border border-b-0 border-white/[0.08] bg-[#0c1220]">
+                  <img
+                    src="/blog/minimall-opening-1.jpg"
+                    alt="Inside The Mini Mall at the Merrion Centre in Leeds."
+                    loading="lazy"
+                    decoding="async"
+                    className="aspect-[4/5] h-full w-full object-cover"
+                  />
+                  <div
+                    aria-hidden="true"
+                    className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent"
+                  />
+                </div>
               </div>
 
               {/* Shelf: lit top lip, dark underside, cast shadow */}
