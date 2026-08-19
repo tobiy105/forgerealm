@@ -6,14 +6,42 @@ import { useEffect, useRef, useState } from "react";
  * Stockist announcement: ForgeRealm prints are now carried at The Mini Mall,
  * Merrion Centre, Leeds.
  *
- * Design note: the signature here is the shelf. The photo rests on a rendered
- * shelf edge (lit top lip, dark underside, cast shadow) so the section reads
- * as a physical object on a physical shelf rather than another gradient
- * banner. Everything else is kept quiet so the shelf is the thing you
- * remember. Gold is used rather than the site's blue because on this page
- * gold is the craft/product accent (see Featured Prints) while blue is the
- * system accent (Hero, FAQ, Contact) - a stockist belongs to the former.
+ * Design note: copy sits up top, then a bento of four photos below it. The
+ * grid is deliberately uneven, a tall portrait of our shelves anchoring the
+ * left, two lit tealights beside it, and the venue itself running wide along
+ * the bottom, so it reads as a display rather than a row of thumbnails. The
+ * whole block rests on a gold ledge, which is the one literal nod to the
+ * "on the shelf" line in the heading. Gold is used rather than the site's
+ * blue because on this page gold is the craft/product accent (see Featured
+ * Prints) while blue is the system accent (Hero, FAQ, Contact).
  */
+
+/* Tiles are placed by the shape of the photo rather than by importance: the
+   two portraits take the full-height cells, the two landscapes run wide
+   beside them, so nothing is cropped against its grain. */
+const TILES = [
+  {
+    src: "/blog/minimall-shelf-tower.jpg",
+    alt: "A full ForgeRealm shelving tower at The Mini Mall, holding printed lamps, cats, a dragon and castle, cones and mermaid tails.",
+    className: "col-span-1 row-span-2 lg:col-span-3 lg:row-span-2",
+  },
+  {
+    src: "/blog/minimall-opening-2.jpg",
+    alt: "ForgeRealm's shelves at The Mini Mall, stacked with printed dragons, dragon eggs, lamps and figurines.",
+    className: "col-span-1 row-span-2 lg:col-span-3 lg:row-span-2",
+  },
+  {
+    src: "/blog/minimall-opening-1.jpg",
+    alt: "Inside The Mini Mall at the Merrion Centre in Leeds.",
+    className: "col-span-2 lg:col-span-6",
+  },
+  {
+    src: "/blog/minimall-shelf-detail.jpg",
+    alt: "A close-up of one ForgeRealm shelf, lined with small printed figurines, mushrooms and trinkets.",
+    className: "col-span-2 lg:col-span-6",
+  },
+];
+
 export default function Stockist() {
   const [isVisible, setIsVisible] = useState(false);
   const sectionRef = useRef<HTMLElement | null>(null);
@@ -53,54 +81,9 @@ export default function Stockist() {
       {/* No top divider here: this sits directly under the marquee strip,
           which already closes with its own border. */}
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative">
-        <div className="grid items-center gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:gap-16">
-          {/* ── The shelf ─────────────────────────────────────────────── */}
-          <div className="order-2 lg:order-1">
-            <div className="relative mx-auto max-w-md lg:mx-0">
-              {/* Two pieces standing on it, different heights the way real
-                  objects on a shelf are. Bottoms align on the ledge. */}
-              <div className="flex items-end gap-3">
-                <div className="relative w-[58%] overflow-hidden rounded-t-xl border border-b-0 border-white/[0.08] bg-[#0c1220]">
-                  <img
-                    src="/blog/minimall-opening-2.jpg"
-                    alt="ForgeRealm's shelves at The Mini Mall, stacked with printed dragons, dragon eggs, lamps and figurines."
-                    loading="lazy"
-                    decoding="async"
-                    className="aspect-[3/4] h-full w-full object-cover"
-                  />
-                  {/* Light falling from above, so the top lip of the shelf reads */}
-                  <div
-                    aria-hidden="true"
-                    className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent"
-                  />
-                </div>
-                <div className="relative w-[42%] overflow-hidden rounded-t-xl border border-b-0 border-white/[0.08] bg-[#0c1220]">
-                  <img
-                    src="/blog/minimall-opening-1.jpg"
-                    alt="Inside The Mini Mall at the Merrion Centre in Leeds."
-                    loading="lazy"
-                    decoding="async"
-                    className="aspect-[4/5] h-full w-full object-cover"
-                  />
-                  <div
-                    aria-hidden="true"
-                    className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent"
-                  />
-                </div>
-              </div>
-
-              {/* Shelf: lit top lip, dark underside, cast shadow */}
-              <div aria-hidden="true" className="relative">
-                <div className="h-[3px] w-full bg-gradient-to-r from-[#FADE6A]/30 via-[#FADE6A]/80 to-[#FADE6A]/30" />
-                <div className="h-3 w-full rounded-b-md bg-gradient-to-b from-[#6b5a24] to-[#171208] shadow-[0_22px_28px_-16px_rgba(0,0,0,0.95)]" />
-                {/* Shelf runs past the object, the way a real one does */}
-                <div className="absolute -left-4 -right-4 top-0 -z-10 hidden h-[3px] bg-gradient-to-r from-transparent via-[#FADE6A]/25 to-transparent sm:block" />
-              </div>
-            </div>
-          </div>
-
-          {/* ── The announcement ──────────────────────────────────────── */}
-          <div className="order-1 lg:order-2">
+        {/* ── The announcement ────────────────────────────────────────── */}
+        <div className="grid gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:items-end lg:gap-16">
+          <div>
             <div className="inline-flex items-center gap-2.5 rounded-full border border-[#FADE6A]/25 bg-[#FADE6A]/[0.07] px-3 py-1.5">
               <span className="relative flex h-2 w-2">
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#FADE6A] opacity-70 motion-reduce:animate-none" />
@@ -138,9 +121,11 @@ export default function Stockist() {
               inside the Merrion Centre, Leeds. Come and see the pieces up
               close, sharing the space with a load of other independent makers.
             </p>
+          </div>
 
+          <div>
             {/* Address, set as a labelled detail rather than another sentence */}
-            <dl className="mt-7 flex flex-wrap gap-x-10 gap-y-4">
+            <dl className="flex flex-wrap gap-x-10 gap-y-4">
               <div>
                 <dt
                   className="text-[10px] uppercase tracking-[0.22em] text-[#FADE6A]/70"
@@ -171,7 +156,7 @@ export default function Stockist() {
               </div>
             </dl>
 
-            <div className="mt-8 flex flex-wrap items-center gap-3">
+            <div className="mt-7 flex flex-wrap items-center gap-3">
               <a
                 href="https://www.google.com/maps/search/?api=1&query=Merrion+Centre+Leeds"
                 target="_blank"
@@ -203,6 +188,36 @@ export default function Stockist() {
                 Browse the shop
               </a>
             </div>
+          </div>
+        </div>
+
+        {/* ── The bento, resting on a shelf ───────────────────────────── */}
+        <div className="mt-12 sm:mt-14">
+          <div className="grid auto-rows-[132px] grid-cols-2 gap-3 sm:auto-rows-[190px] sm:gap-4 lg:auto-rows-[240px] lg:grid-cols-12">
+            {TILES.map((tile) => (
+              <figure
+                key={tile.src}
+                className={`group relative overflow-hidden rounded-xl border border-white/[0.08] bg-[#0c1220] transition-colors duration-500 hover:border-[#FADE6A]/35 ${tile.className}`}
+              >
+                <img
+                  src={tile.src}
+                  alt={tile.alt}
+                  loading="lazy"
+                  decoding="async"
+                  className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04] motion-reduce:transform-none motion-reduce:transition-none"
+                />
+                <div
+                  aria-hidden="true"
+                  className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-transparent"
+                />
+              </figure>
+            ))}
+          </div>
+
+          {/* Shelf: lit top lip, dark underside, cast shadow */}
+          <div aria-hidden="true" className="relative mt-0">
+            <div className="h-[3px] w-full bg-gradient-to-r from-transparent via-[#FADE6A]/70 to-transparent" />
+            <div className="h-3 w-full rounded-b-md bg-gradient-to-b from-[#6b5a24]/80 to-[#171208] shadow-[0_22px_28px_-16px_rgba(0,0,0,0.95)]" />
           </div>
         </div>
       </div>
