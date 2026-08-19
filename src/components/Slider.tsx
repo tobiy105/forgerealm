@@ -1,11 +1,17 @@
 "use client";
 
+import { useReveal } from "../hooks/useReveal";
+
 export default function ProductsMarquee() {
+  const marquee = useReveal<HTMLDivElement>();
+
   return (
     <div
       aria-label="What we make"
+      ref={marquee.ref}
       data-observe
-      className="reveal relative py-6 border-y border-white/10 bg-[#0a0a0a] overflow-hidden"
+      suppressHydrationWarning
+      className={`reveal relative py-6 border-y border-white/10 bg-[#0a0a0a] overflow-hidden ${marquee.isVisible ? "is-visible" : ""}`}
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative">
         <div className="flex items-center gap-8 overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]">

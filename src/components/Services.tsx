@@ -15,16 +15,21 @@ import {
   FiShare2,
   FiUsers,
 } from "react-icons/fi";
+import { useReveal } from "../hooks/useReveal";
 import MaterialsBook from "./MaterialsBook";
 
 export default function Services() {
+  const services = useReveal<HTMLElement>();
+  const materials = useReveal<HTMLElement>();
+
   return (
     <div className="relative overflow-hidden bg-[#0a0e18]">
       <section
         id="services"
+        ref={services.ref}
         data-observe
         suppressHydrationWarning
-        className="reveal landing-ambience relative py-16 sm:py-24"
+        className={`reveal landing-ambience relative py-16 sm:py-24 ${services.isVisible ? "is-visible" : ""}`}
       >
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative">
           {/* Header */}
@@ -201,9 +206,10 @@ export default function Services() {
       {/* Materials section — no divider; grid + shared accent unify it with Services. */}
       <section
         id="materials"
+        ref={materials.ref}
         data-observe
         suppressHydrationWarning
-        className="reveal landing-ambience relative py-16 sm:py-24"
+        className={`reveal landing-ambience relative py-16 sm:py-24 ${materials.isVisible ? "is-visible" : ""}`}
       >
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative">
           <div className="mb-2">
