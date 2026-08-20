@@ -170,9 +170,7 @@ export default function Contact() {
                 className="text-4xl sm:text-5xl font-bold max-w-[32rem] leading-tight"
                 style={{ fontFamily: "'Cinzel', serif" }}
               >
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-300">
-                  Get in touch
-                </span>
+                <span className="text-white">Get in touch</span>
                 <br />
                 <span className="text-white">with ForgeRealm</span>
               </h2>

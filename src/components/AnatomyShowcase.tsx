@@ -4,7 +4,6 @@ import { useEffect, useRef, useState } from "react";
 import { animate, createTimeline, stagger, svg, scrambleText } from "animejs";
 import type { JSAnimation } from "animejs";
 import AnimatedHeading from "./anime/AnimatedHeading";
-import ScrambleLabel from "./anime/ScrambleLabel";
 import { EASE, DUR, STEP, prefersReducedMotion } from "../hooks/motion";
 import { useScrollScrub } from "../hooks/useScrollScrub";
 import { useLoopGroup } from "../hooks/useLoopGroup";
@@ -324,34 +323,16 @@ export default function AnatomyShowcase() {
       }}
     >
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 relative">
+        {/* Header: centred and bare. The callout labels on the diagram below
+            carry the detail, so the heading does not repeat them. */}
         <div className="text-center mb-10 sm:mb-14">
-          <div className="inline-flex items-center gap-3 mb-3">
-            <div className="w-8 h-px bg-gradient-to-r from-blue-400 to-cyan-400" />
-            <ScrambleLabel
-              className="text-[10px] sm:text-[11px] font-medium uppercase tracking-[0.3em] text-blue-300/60"
-              style={{ fontFamily: "'Jost', sans-serif" }}
-            >
-              Anatomy of a print
-            </ScrambleLabel>
-            <div className="w-8 h-px bg-gradient-to-l from-blue-400 to-cyan-400" />
-          </div>
           <AnimatedHeading
             as="h2"
-            className="text-2xl sm:text-3xl lg:text-4xl font-normal text-white"
+            className="text-3xl sm:text-4xl lg:text-5xl font-normal leading-[1.15] text-white"
             style={{ fontFamily: "'Cinzel', serif" }}
             from="center"
           >
-            Every piece,{" "}
-            <em
-              className="text-cyan-300"
-              style={{
-                fontFamily: "'Cormorant Garamond', serif",
-                fontStyle: "italic",
-                fontWeight: 300,
-              }}
-            >
-              engineered
-            </em>
+            Every piece, engineered
           </AnimatedHeading>
         </div>
 

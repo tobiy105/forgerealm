@@ -400,7 +400,6 @@ export default function Hero() {
                 >
                   3D Printed in Leeds
                 </ScrambleLabel>
-                <div className="w-16 h-px bg-gradient-to-r from-blue-400 to-purple-400 mt-1" />
               </div>
             </div>
 
@@ -603,8 +602,7 @@ export default function Hero() {
                 <div className="absolute bottom-0 left-0 right-0 p-5 sm:p-6">
                   <div className="flex items-center justify-between">
                     <div>
-                      <div className="flex items-center gap-2 mb-1">
-                        <div className="w-5 h-px bg-black/30" />
+                      <div className="mb-1">
                         <span
                           className="text-[9px] font-medium uppercase tracking-[0.25em] text-black/50"
                           style={{ fontFamily: "'Jost', sans-serif" }}

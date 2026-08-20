@@ -338,39 +338,17 @@ export default function Work() {
       <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#FADE6A]/40 to-transparent" />
       <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#FADE6A]/40 to-transparent" />
       <div className="relative z-10 mx-auto max-w-7xl px-4 pt-10 sm:px-6 lg:px-8 lg:pt-12">
-        <div className="max-w-2xl">
-          <div className="relative">
-            <div className="inline-flex items-center gap-3 mb-3">
-              <div className="w-8 h-px bg-gradient-to-r from-blue-400 to-purple-400" />
-              <span
-                className="text-[10px] sm:text-[11px] font-medium uppercase tracking-[0.3em] text-blue-300/60"
-                style={{ fontFamily: "'Jost', sans-serif" }}
-              >
-                Curated
-              </span>
-            </div>
-            <h2
-              className="text-2xl sm:text-3xl lg:text-4xl font-normal text-white"
-              style={{ fontFamily: "'Cinzel', serif" }}
-            >
-              Featured{" "}
-              <em
-                className="text-[#FADE6A]"
-                style={{
-                  fontFamily: "'Cormorant Garamond', serif",
-                  fontWeight: 300,
-                }}
-              >
-                Prints
-              </em>
-            </h2>
-          </div>
+        {/* Header: title and note share a baseline instead of stacking. */}
+        <div className="flex max-w-4xl flex-wrap items-baseline gap-x-5 gap-y-1">
+          <h2
+            className="text-3xl sm:text-4xl lg:text-5xl font-normal leading-[1.15] text-white"
+            style={{ fontFamily: "'Cinzel', serif" }}
+          >
+            Featured Prints
+          </h2>
           <p
-            className="work-text-force mt-2 text-sm text-stone-400"
-            style={{
-              fontFamily: "'Cormorant Garamond', serif",
-              fontStyle: "italic",
-            }}
+            className="work-text-force text-base text-stone-400"
+            style={{ fontFamily: "'Inter', sans-serif" }}
           >
             Recently forged
           </p>
