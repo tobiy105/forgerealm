@@ -819,7 +819,6 @@ function HeroBanner() {
             transition={{ duration: 0.8 }}
           >
             <div className="mb-4 sm:mb-5 inline-flex items-center gap-3">
-              <div className="w-8 h-px bg-blue-400/50" />
               <span
                 className="text-[13px] sm:text-[15px] font-medium uppercase tracking-[0.28em] text-blue-300/70"
                 style={{ fontFamily: "'Jost', sans-serif" }}
@@ -1040,7 +1039,6 @@ function FeaturedRow({ onQuickView }: { onQuickView: (p: Product) => void }) {
                 {/* Text overlay at bottom */}
                 <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-5">
                   <div className="flex items-center gap-2 mb-2">
-                    <div className="w-5 h-px bg-cyan-400/50" />
                     <span
                       className="text-[8px] sm:text-[9px] font-medium uppercase tracking-[0.25em] text-cyan-300/60"
                       style={{ fontFamily: "'Jost', sans-serif" }}
@@ -1749,7 +1747,6 @@ function LampBanner({ onQuickView }: { onQuickView: (p: Product) => void }) {
         <div className="relative z-10 flex items-end sm:col-start-1 sm:row-start-1 sm:items-center">
           <div className="max-w-xl p-5 sm:p-10 lg:p-14">
             <div className="inline-flex items-center gap-2 mb-3">
-              <div className="w-10 h-px bg-amber-400/60" />
               <span
                 className="text-[10px] sm:text-[11px] font-medium uppercase tracking-[0.3em] text-amber-300/70"
                 style={{ fontFamily: "'Jost', sans-serif" }}
@@ -1825,6 +1822,133 @@ function LampBanner({ onQuickView }: { onQuickView: (p: Product) => void }) {
             Premium
           </span>
         </div>
+      </div>
+    </div>
+  );
+}
+
+/* The set is priced against what the four pieces cost separately, so both
+   figures are derived from the catalogue rather than typed in. If a member
+   price changes, the saving follows it. */
+const BUNDLE_LINES = [
+  { id: "voronoi-cat", qty: 2 },
+  { id: "small-voronoi-cat-tealight", qty: 2 },
+];
+const BUNDLE_PRICE = 1200;
+
+function BundlePanel() {
+  const lines = BUNDLE_LINES.map((line) => ({
+    ...line,
+    product: products.find((p) => p.id === line.id),
+  })).filter((l) => l.product);
+
+  if (lines.length !== BUNDLE_LINES.length) return null;
+
+  const separately = lines.reduce(
+    (sum, l) => sum + (l.product?.price ?? 0) * l.qty,
+    0,
+  );
+  const saving = separately - BUNDLE_PRICE;
+  const money = (pence: number) => `£${(pence / 100).toFixed(2)}`;
+
+  return (
+    <div
+      className="relative overflow-hidden rounded-2xl bg-[#0d1220]"
+      style={{ border: "1px solid rgba(255,255,255,0.12)" }}
+    >
+      <div className="grid gap-8 p-5 sm:p-8 lg:grid-cols-[0.85fr_1.15fr] lg:gap-12 lg:p-12">
+        <div className="flex flex-col justify-center">
+          <span
+            className="text-[10px] sm:text-[11px] font-medium uppercase tracking-[0.3em] text-cyan-300/70"
+            style={{ fontFamily: "'Jost', sans-serif" }}
+          >
+            Bundle
+          </span>
+          <h3
+            className="mt-3 text-3xl sm:text-4xl lg:text-5xl font-bold leading-[1.05] text-white"
+            style={{ fontFamily: "'Cinzel', serif" }}
+          >
+            Voronoi Cat Family
+          </h3>
+          <p
+            className="mt-4 max-w-sm text-[14px] sm:text-[15px] leading-relaxed text-white/55"
+            style={{ fontFamily: "'Inter', sans-serif" }}
+          >
+            The whole litter: two full-size cats and two small ones, in matte
+            black and white.
+          </p>
+
+          <div className="mt-6 flex flex-wrap items-baseline gap-x-3 gap-y-1">
+            <span
+              className="text-3xl sm:text-4xl font-bold text-cyan-300"
+              style={{ fontFamily: "'Inter', sans-serif" }}
+            >
+              {money(BUNDLE_PRICE)}
+            </span>
+            <span
+              className="text-base text-white/35 line-through"
+              style={{ fontFamily: "'Inter', sans-serif" }}
+            >
+              {money(separately)}
+            </span>
+            {saving > 0 && (
+              <span
+                className="text-[11px] uppercase tracking-[0.16em] text-cyan-200/80"
+                style={{ fontFamily: "'Jost', sans-serif" }}
+              >
+                Save {money(saving)}
+              </span>
+            )}
+          </div>
+
+          <a
+            href="#products"
+            className="mt-7 inline-flex w-fit items-center gap-2 rounded-full border border-white/20 px-5 py-2.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-white/80 transition-all hover:border-cyan-300/40 hover:text-cyan-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300/70 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0d1220]"
+            style={{ fontFamily: "'Cinzel', serif" }}
+          >
+            Shop the pieces
+          </a>
+        </div>
+
+        {/* What is actually in the set, rather than a styled scene of it */}
+        <ul className="grid grid-cols-2 gap-3 sm:gap-4">
+          {lines.map((line) => (
+            <li
+              key={line.id}
+              className="overflow-hidden rounded-xl border border-white/[0.08] bg-white/[0.03]"
+            >
+              <div className="relative bg-white">
+                <img
+                  src={line.product!.image}
+                  alt={line.product!.name}
+                  loading="lazy"
+                  decoding="async"
+                  className="aspect-square w-full object-contain"
+                />
+                <span
+                  className="absolute left-2.5 top-2.5 rounded-full bg-black/80 px-2 py-0.5 text-[11px] font-semibold text-white"
+                  style={{ fontFamily: "'Inter', sans-serif" }}
+                >
+                  &times;{line.qty}
+                </span>
+              </div>
+              <div className="px-3 py-2.5">
+                <p
+                  className="text-[12px] sm:text-[13px] leading-snug text-white/80"
+                  style={{ fontFamily: "'Inter', sans-serif" }}
+                >
+                  {line.product!.name}
+                </p>
+                <p
+                  className="mt-0.5 text-[11px] text-white/35"
+                  style={{ fontFamily: "'Inter', sans-serif" }}
+                >
+                  {money(line.product!.price)} each
+                </p>
+              </div>
+            </li>
+          ))}
+        </ul>
       </div>
     </div>
   );
@@ -3308,93 +3432,7 @@ function ShopContent() {
           {/* Bundle Banner - cinematic full-bleed */}
 
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pb-4">
-            <div
-              className="relative overflow-hidden rounded-2xl cursor-pointer group"
-              style={{ border: "1px solid rgba(255,255,255,0.12)" }}
-            >
-              <div className="relative h-[260px] sm:h-[340px] lg:h-[480px]">
-                <img
-                  src="/shop-products/bundle1.png"
-                  alt="Voronoi Cat Family Bundle"
-                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
-                  style={{ objectPosition: "50% 35%" }}
-                />
-                <div className="absolute inset-0 bg-gradient-to-r from-black/75 via-black/35 to-transparent" />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-black/15" />
-
-                <div className="absolute inset-0 flex items-end sm:items-center">
-                  <div className="max-w-xl p-5 sm:p-10 lg:p-14">
-                    <div className="inline-flex items-center gap-2 mb-3">
-                      <div className="w-10 h-px bg-cyan-400/60" />
-                      <span
-                        className="text-[10px] sm:text-[11px] font-medium uppercase tracking-[0.3em] text-cyan-300/70"
-                        style={{ fontFamily: "'Jost', sans-serif" }}
-                      >
-                        Bundle
-                      </span>
-                    </div>
-                    <h3
-                      className="text-2xl sm:text-4xl lg:text-5xl font-bold text-white leading-[0.95] mb-3"
-                      style={{ fontFamily: "'Cinzel', serif" }}
-                    >
-                      Voronoi Cat
-                      <br />
-                      <span
-                        className="text-cyan-300"
-                        style={{
-                          fontFamily: "'Cormorant Garamond', serif",
-                          fontWeight: 300,
-                          fontStyle: "italic",
-                          fontSize: "1.1em",
-                        }}
-                      >
-                        Family
-                      </span>
-                    </h3>
-                    <p
-                      className="text-[13px] sm:text-[15px] text-white/50 max-w-sm leading-relaxed mb-3 hidden sm:block"
-                      style={{ fontFamily: "'Inter', sans-serif" }}
-                    >
-                      4-piece set in matte black &amp; white. Two sizes, one
-                      price.
-                    </p>
-                    <div className="flex items-baseline gap-3 mb-3 sm:mb-4">
-                      <span
-                        className="text-2xl sm:text-4xl font-bold text-cyan-300"
-                        style={{ fontFamily: "'Inter', sans-serif" }}
-                      >
-                        &pound;10
-                      </span>
-                      <span
-                        className="text-[11px] text-white/30 uppercase tracking-wider"
-                        style={{ fontFamily: "'Jost', sans-serif" }}
-                      >
-                        4-piece set
-                      </span>
-                    </div>
-                    <div
-                      className="inline-flex items-center gap-2 px-4 py-2 sm:px-5 sm:py-2.5 text-[9px] sm:text-[10px] font-semibold uppercase tracking-[0.14em] text-white/80 border border-white/20 rounded-full transition-all group-hover:border-cyan-300/40 group-hover:text-cyan-200"
-                      style={{ fontFamily: "'Cinzel', serif" }}
-                    >
-                      View Bundle
-                      <svg
-                        className="h-3 w-3 transition-transform group-hover:translate-x-1"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                        strokeWidth={2}
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M9 5l7 7-7 7"
-                        />
-                      </svg>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+            <BundlePanel />
           </div>
 
           {/* Sidebar + Grid layout */}
