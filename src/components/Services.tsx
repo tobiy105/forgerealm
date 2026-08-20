@@ -32,37 +32,16 @@ export default function Services() {
         className={`reveal landing-ambience relative py-16 sm:py-24 ${services.isVisible ? "is-visible" : ""}`}
       >
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative">
-          {/* Header */}
-          <div className="mb-2">
-            <div className="inline-flex items-center gap-3 mb-3">
-              <div className="w-8 h-px bg-gradient-to-r from-blue-400 to-cyan-400" />
-              <span
-                className="text-[10px] sm:text-[11px] font-medium uppercase tracking-[0.3em] text-blue-300/60"
-                style={{ fontFamily: "'Jost', sans-serif" }}
-              >
-                What we offer
-              </span>
-            </div>
-            <h2
-              className="text-2xl sm:text-3xl lg:text-4xl font-normal text-white"
-              style={{ fontFamily: "'Cinzel', serif" }}
-            >
-              Our{" "}
-              <em
-                className="text-cyan-300"
-                style={{
-                  fontFamily: "'Cormorant Garamond', serif",
-                  fontStyle: "italic",
-                  fontWeight: 300,
-                }}
-              >
-                Services
-              </em>
-            </h2>
-          </div>
+          {/* Header: heading alone, lead paragraph does the explaining. */}
+          <h2
+            className="max-w-3xl text-3xl sm:text-4xl lg:text-5xl font-normal leading-[1.15] text-white"
+            style={{ fontFamily: "'Cinzel', serif" }}
+          >
+            Our Services
+          </h2>
 
           <p
-            className="mt-3 max-w-2xl text-stone-400"
+            className="mt-5 max-w-2xl text-base sm:text-lg leading-[1.8] text-stone-400"
             style={{ fontFamily: "'Inter', sans-serif" }}
           >
             ForgeRealm is a UK-based business offering unique, customisable
@@ -212,36 +191,14 @@ export default function Services() {
         className={`reveal landing-ambience relative py-16 sm:py-24 ${materials.isVisible ? "is-visible" : ""}`}
       >
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative">
-          <div className="mb-2">
-            <div className="inline-flex items-center gap-3 mb-3">
-              <div className="w-8 h-px bg-gradient-to-r from-blue-400 to-cyan-400" />
-              <span
-                className="text-[10px] sm:text-[11px] font-medium uppercase tracking-[0.3em] text-blue-300/60"
-                style={{ fontFamily: "'Jost', sans-serif" }}
-              >
-                Eco printing
-              </span>
-            </div>
-            <h2
-              className="text-2xl sm:text-3xl lg:text-4xl font-normal text-white"
-              style={{ fontFamily: "'Cinzel', serif" }}
-            >
-              Our{" "}
-              <em
-                className="text-cyan-300"
-                style={{
-                  fontFamily: "'Cormorant Garamond', serif",
-                  fontStyle: "italic",
-                  fontWeight: 300,
-                }}
-              >
-                Materials
-              </em>
-            </h2>
-          </div>
-
+          <h2
+            className="text-3xl sm:text-4xl lg:text-5xl font-normal leading-[1.15] text-white"
+            style={{ fontFamily: "'Cinzel', serif" }}
+          >
+            Our Materials
+          </h2>
           <p
-            className="mt-3 text-stone-400 max-w-xl"
+            className="mt-3 max-w-xl text-stone-400"
             style={{ fontFamily: "'Inter', sans-serif" }}
           >
             We offer the following filaments for 3D printing. Flip through to

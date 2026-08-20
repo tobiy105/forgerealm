@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useReveal } from "../hooks/useReveal";
 
 /**
  * Stockist announcement: ForgeRealm prints are now carried at The Mini Mall,
@@ -8,12 +8,11 @@ import { useEffect, useRef, useState } from "react";
  *
  * Design note: copy sits up top, then a bento of four photos below it. The
  * grid is deliberately uneven, a tall portrait of our shelves anchoring the
- * left, two lit tealights beside it, and the venue itself running wide along
- * the bottom, so it reads as a display rather than a row of thumbnails. The
- * whole block rests on a gold ledge, which is the one literal nod to the
- * "on the shelf" line in the heading. Gold is used rather than the site's
- * blue because on this page gold is the craft/product accent (see Featured
- * Prints) while blue is the system accent (Hero, FAQ, Contact).
+ * left and the venue running wide along the bottom, so it reads as a display
+ * rather than a row of thumbnails. The whole block rests on a gold ledge,
+ * picking up the shelf the copy describes. Gold is used rather than the
+ * site's blue because on this page gold is the craft/product accent (see
+ * Featured Prints) while blue is the system accent (Hero, FAQ, Contact).
  */
 
 /* Tiles are placed by the shape of the photo rather than by importance: the
@@ -43,40 +42,15 @@ const TILES = [
 ];
 
 export default function Stockist() {
-  const [isVisible, setIsVisible] = useState(false);
-  const sectionRef = useRef<HTMLElement | null>(null);
-
-  useEffect(() => {
-    if (!sectionRef.current) return;
-    if (typeof window === "undefined") return;
-    if (!("IntersectionObserver" in window)) {
-      setIsVisible(true);
-      return;
-    }
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setIsVisible(true);
-            observer.unobserve(entry.target);
-          }
-        });
-      },
-      { threshold: 0.12, rootMargin: "120px 0px -10% 0px" },
-    );
-
-    observer.observe(sectionRef.current);
-    return () => observer.disconnect();
-  }, []);
+  const section = useReveal<HTMLElement>();
 
   return (
     <section
       id="stockist"
-      ref={sectionRef}
+      ref={section.ref}
       data-observe
       suppressHydrationWarning
-      className={`reveal landing-ambience relative py-16 sm:py-24 overflow-hidden bg-transparent ${isVisible ? "is-visible" : ""}`}
+      className={`reveal landing-ambience relative py-16 sm:py-24 overflow-hidden bg-transparent ${section.isVisible ? "is-visible" : ""}`}
     >
       {/* No top divider here: this sits directly under the marquee strip,
           which already closes with its own border. */}
@@ -84,33 +58,11 @@ export default function Stockist() {
         {/* ── The announcement ────────────────────────────────────────── */}
         <div className="grid gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:items-end lg:gap-16">
           <div>
-            <div className="inline-flex items-center gap-2.5 rounded-full border border-[#FADE6A]/25 bg-[#FADE6A]/[0.07] px-3 py-1.5">
-              <span className="relative flex h-2 w-2">
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#FADE6A] opacity-70 motion-reduce:animate-none" />
-                <span className="relative inline-flex h-2 w-2 rounded-full bg-[#FADE6A]" />
-              </span>
-              <span
-                className="text-[11px] font-medium uppercase tracking-[0.24em] text-[#FADE6A]"
-                style={{ fontFamily: "'Jost', sans-serif" }}
-              >
-                Now stocked in Leeds
-              </span>
-            </div>
-
             <h2
-              className="mt-5 text-3xl leading-[1.1] text-white sm:text-4xl lg:text-5xl"
+              className="text-3xl leading-[1.15] text-white sm:text-4xl lg:text-5xl"
               style={{ fontFamily: "'Cinzel', serif" }}
             >
-              Now on the shelf at The{" "}
-              <em
-                className="text-[#FADE6A]"
-                style={{
-                  fontFamily: "'Cormorant Garamond', serif",
-                  fontWeight: 300,
-                }}
-              >
-                Mini Mall
-              </em>
+              Now on the shelf at The Mini Mall
             </h2>
 
             <p

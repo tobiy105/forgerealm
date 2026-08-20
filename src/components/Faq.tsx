@@ -1,7 +1,6 @@
 "use client";
 
 import { HiChevronDown } from "react-icons/hi";
-import { FaQuestionCircle } from "react-icons/fa";
 import { useEffect, useRef, useState } from "react";
 
 export default function Faq() {
@@ -61,28 +60,12 @@ export default function Faq() {
           {/* Left spotlight */}
           <div className="relative order-1 lg:order-1">
             <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-6 transition-colors duration-300 hover:border-blue-400/40">
-              <div className="flex items-center gap-3">
-                <div className="rounded-full border border-blue-400/30 bg-blue-400/10 p-2">
-                  <FaQuestionCircle
-                    className="h-6 w-6 text-blue-400"
-                    aria-hidden
-                  />
-                </div>
-                <div>
-                  <p
-                    className="text-xs uppercase tracking-[0.35em] text-blue-400/70"
-                    style={{ fontFamily: "'Jost', sans-serif" }}
-                  >
-                    Help Center
-                  </p>
-                  <h2
-                    className="text-3xl font-bold text-white"
-                    style={{ fontFamily: "'Cinzel', serif" }}
-                  >
-                    FAQs
-                  </h2>
-                </div>
-              </div>
+              <h2
+                className="text-3xl font-bold text-white"
+                style={{ fontFamily: "'Cinzel', serif" }}
+              >
+                FAQs
+              </h2>
               <p
                 className="mt-4 text-sm text-stone-400"
                 style={{ fontFamily: "'Inter', sans-serif" }}

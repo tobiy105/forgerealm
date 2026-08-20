@@ -131,10 +131,7 @@ export const products: Product[] = [
       "Petite Voronoi cat perched on a tealight holder base. Candlelight glows through the lattice silhouette for cosy evenings.",
     stock: 6,
     image: "/shop-products/Photoroom_20260412_74123_pm.jpg",
-    images: [
-      "/shop-products/Photoroom_20260412_74123_pm.jpg",
-      "/shop-products/tealight-cat-lit.jpg",
-    ],
+    images: ["/shop-products/Photoroom_20260412_74123_pm.jpg"],
   },
   {
     id: "small-voronoi-elephant-tealight",
@@ -310,8 +307,8 @@ export const products: Product[] = [
       "Layered petal lamp with warm ambient glow. 3D printed shade, hand-assembled in Leeds.",
     stock: 4,
     badge: "Premium",
-    image: "/shop-products/lamps1.webp",
-    images: ["/shop-products/lamps1.webp", "/shop-products/lamps2.webp"],
+    image: "/shop-products/lamps2.webp",
+    images: ["/shop-products/lamps2.webp", "/ablamp2.webp"],
     bannerOnly: true,
   },
 
