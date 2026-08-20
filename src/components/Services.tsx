@@ -191,25 +191,20 @@ export default function Services() {
         className={`reveal landing-ambience relative py-16 sm:py-24 ${materials.isVisible ? "is-visible" : ""}`}
       >
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative">
-          {/* Header: heading and explanation sit side by side rather than
-              stacked, so this section does not open the same way as the one
-              above it. */}
-          <div className="grid gap-5 md:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)] md:items-end md:gap-14">
-            <h2
-              className="text-3xl sm:text-4xl lg:text-5xl font-normal leading-[1.15] text-white"
-              style={{ fontFamily: "'Cinzel', serif" }}
-            >
-              Our Materials
-            </h2>
-            <p
-              className="text-base sm:text-lg leading-[1.8] text-stone-400 md:pb-2"
-              style={{ fontFamily: "'Inter', sans-serif" }}
-            >
-              We offer the following filaments for 3D printing. Flip through to
-              see what each one is, where we use it, and the science behind the
-              claims.
-            </p>
-          </div>
+          <h2
+            className="text-3xl sm:text-4xl lg:text-5xl font-normal leading-[1.15] text-white"
+            style={{ fontFamily: "'Cinzel', serif" }}
+          >
+            Our Materials
+          </h2>
+          <p
+            className="mt-3 max-w-xl text-stone-400"
+            style={{ fontFamily: "'Inter', sans-serif" }}
+          >
+            We offer the following filaments for 3D printing. Flip through to
+            see what each one is, where we use it, and the science behind the
+            claims.
+          </p>
 
           <div className="mt-12 flex justify-center">
             <MaterialsBook />

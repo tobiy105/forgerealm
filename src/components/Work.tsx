@@ -338,8 +338,7 @@ export default function Work() {
       <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#FADE6A]/40 to-transparent" />
       <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#FADE6A]/40 to-transparent" />
       <div className="relative z-10 mx-auto max-w-7xl px-4 pt-10 sm:px-6 lg:px-8 lg:pt-12">
-        {/* Header: title and note share a baseline instead of stacking. */}
-        <div className="flex max-w-4xl flex-wrap items-baseline gap-x-5 gap-y-1">
+        <div className="max-w-2xl">
           <h2
             className="text-3xl sm:text-4xl lg:text-5xl font-normal leading-[1.15] text-white"
             style={{ fontFamily: "'Cinzel', serif" }}
@@ -347,8 +346,11 @@ export default function Work() {
             Featured Prints
           </h2>
           <p
-            className="work-text-force text-base text-stone-400"
-            style={{ fontFamily: "'Inter', sans-serif" }}
+            className="work-text-force mt-2 text-sm text-stone-400"
+            style={{
+              fontFamily: "'Cormorant Garamond', serif",
+              fontStyle: "italic",
+            }}
           >
             Recently forged
           </p>
