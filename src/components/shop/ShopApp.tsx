@@ -1733,18 +1733,20 @@ function LampBanner({ onQuickView }: { onQuickView: (p: Product) => void }) {
       style={{ border: "1px solid rgba(255,255,255,0.12)" }}
       onClick={() => onQuickView(lamp)}
     >
-      <div className="relative h-[300px] sm:h-[400px] lg:h-[450px]">
+      {/* Split rather than full-bleed: the lamp shots are portrait, so a wide
+          crop would cut the shades off. Copy takes the left, photo the right. */}
+      <div className="relative grid h-[300px] grid-cols-[1fr] sm:h-[400px] sm:grid-cols-[1.05fr_0.95fr] lg:h-[450px]">
         <img
-          src="/shop-products/lamps1.webp"
-          alt="Artichoke Lamp"
-          className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
-          style={{ objectPosition: "50% 30%" }}
+          src="/shop-products/lamps2.webp"
+          alt="Two artichoke lamps lit on a shelf"
+          className="absolute inset-0 h-full w-full object-cover transition-transform duration-1000 group-hover:scale-105 sm:relative sm:col-start-2 sm:inset-auto"
+          style={{ objectPosition: "50% 38%" }}
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/30 to-transparent" />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20" />
-        <div className="absolute inset-0 mix-blend-soft-light bg-gradient-to-br from-amber-900/20 to-transparent" />
+        {/* Full-bleed scrim on mobile where the photo sits behind the copy;
+            on larger screens it only feathers the seam between the two. */}
+        <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/55 to-black/20 sm:from-[#0f1420] sm:via-[#0f1420]/95 sm:to-transparent sm:col-span-2" />
 
-        <div className="absolute inset-0 flex items-end sm:items-center">
+        <div className="relative z-10 flex items-end sm:col-start-1 sm:row-start-1 sm:items-center">
           <div className="max-w-xl p-5 sm:p-10 lg:p-14">
             <div className="inline-flex items-center gap-2 mb-3">
               <div className="w-10 h-px bg-amber-400/60" />
